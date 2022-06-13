@@ -30,8 +30,7 @@ namespace CardFileApi.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> LogIn(UserLoginDTO user)
         {
             if (user == null)
@@ -61,8 +60,7 @@ namespace CardFileApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("signup")]
+        [HttpPost("signup")]
         public async Task<IActionResult> SignUp(UserRegisterDTO user)
         {
             if (user == null)
