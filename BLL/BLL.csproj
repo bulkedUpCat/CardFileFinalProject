@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BLL.Abstractions.cs\BLL.Abstractions.cs.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 
