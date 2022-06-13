@@ -1,0 +1,40 @@
+<form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+    <div class="grid-container">
+        <div class="login">
+            Log in
+        </div>
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter your email" formControlName="email" />
+            <div class="error" *ngIf="submitted && email.errors">
+                <div class="error" *ngIf="email.errors['required']">
+                    This field is required
+                </div>
+                <div class="error" *ngIf="email.errors['email']">
+                    Email is invalid
+                </div>
+            </div>
+        </div>
+        <div class="input">
+            <input class="input-item" type="password" placeholder="Enter your password" formControlName="password" />
+            <div class="error" *ngIf="submitted && password.errors">
+                <div class="error" *ngIf="password.errors['required']">
+                    This field is required
+                </div>
+            </div>
+        </div>
+        <div class="btn">
+            <button type="submit">
+      Log in
+          </button>
+        </div>
+
+        <div class="no-account">
+            <a routerLink="/signup" routerLinkActive="active">
+      Don't have an account yet?
+    </a>
+        </div>
+        <!-- <div class="forgot-password">
+            <a (click)="onForgotPassword()" routerLink="/login">Forgot your password?</a>
+        </div> -->
+    </div>
+</form>

@@ -1,0 +1,37 @@
+.grid-container {
+    display: grid;
+    width: 50vw;
+    font-size: 1.1em;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.option {
+    display: grid;
+}
+
+.submit-btn {
+    padding: 2%;
+    background-color: rgb(20, 20, 222);
+    color: #FFF;
+    border: none;
+    margin-top: 5%;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: rgb(184, 184, 223);
+    color: #000;
+}
+
+@media screen and (min-width: 601px) {
+    .grid-container {
+        width: 30vw;
+        font-size: 1.5em;
+    }
+}

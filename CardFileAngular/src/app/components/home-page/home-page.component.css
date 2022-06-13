@@ -1,0 +1,23 @@
+p {
+    margin: 2% 0 2% 2%;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(3, 3, 48);
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 1%;
+}
+
+.buttons>button {
+    padding: 1%;
+    margin: 0 1%;
+    background-color: rgb(55, 55, 205);
+    color: #FFF;
+    font-weight: bold;
+    font-size: 1.5em;
+    cursor: pointer;
+    border: none;
+}

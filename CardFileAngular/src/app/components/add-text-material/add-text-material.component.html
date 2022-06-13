@@ -1,0 +1,20 @@
+<form [formGroup]="textMaterialForm" (ngSubmit)="onSubmit()">
+    <div class="grid-container">
+        <div class="create-text-material">
+            Create a text material
+        </div>
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter a title" formControlName="title">
+        </div>
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter a category" formControlName="categoryTitle">
+        </div>
+        <div class="input">
+            <ejs-richtexteditor [toolbarSettings]="tools" formControlName="content">
+            </ejs-richtexteditor>
+        </div>
+        <div class="btn">
+            <button type="submit">Submit</button>
+        </div>
+    </div>
+</form>

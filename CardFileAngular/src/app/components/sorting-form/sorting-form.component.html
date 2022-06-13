@@ -1,0 +1,68 @@
+<form [formGroup]="sortingParamsForm" (ngSubmit)="onSubmit()">
+    <div class="grid-container">
+        <div class="prop sorting">
+            <p class="header">Sorting</p>
+            <div class="sorting-menu">
+                <div>
+                    <span>Title:&nbsp;&nbsp;&nbsp;</span>
+                    <label>Asc:
+                  <input id="titleAsc" [value]="true" type="radio" formControlName="sortByTitle">
+                </label>&nbsp;&nbsp;
+                    <label>Desc:
+                  <input id="titleDesc" [value]="false" type="radio" formControlName="sortByTitle">
+                </label>
+                </div>
+                <div>
+                    <span>Category:&nbsp;&nbsp;&nbsp;</span>
+                    <label>Asc:
+                <input id="categoryAsc" [value]="true" type="radio" formControlName="sortByCategory">
+              </label>&nbsp;&nbsp;
+                    <label>Desc:
+                <input id="categoryDesc" [value]="false" type="radio" formControlName="sortByCategory">
+              </label>
+                </div>
+            </div>
+        </div>
+        <div class="prop filtering">
+            <p class="header">Filtering</p>
+            <div class="filter-menu">
+                <div>
+                    <label for="fromDate">From:</label>
+                    <input id="fromDate" type="date" formControlName="filterFromDate" (change)="validateFromDate()">
+                </div>
+                <div>
+                    <label for="toDate">To:</label>
+                    <input id="toDate" type="date" formControlName="filterToDate" (change)="validateToDate()">
+                </div>
+                <div *ngIf="isManager || userId">
+                    <label for="pending">Pending:</label>
+                    <input id="pending" type="checkbox" formControlName="pending">
+                    <label for="approved">Approved: </label>
+                    <input id="approved" type="checkbox" formControlName="approved">
+                    <label *ngIf="isAdmin || userId" for="rejected">Rejected: </label>
+                    <input *ngIf="isAdmin || userId" id="rejected" type="checkbox" formControlName="rejected">
+                </div>
+            </div>
+        </div>
+        <div class="prop searching">
+            <p class="header">Searching</p>
+            <div class="search-menu">
+                <div>
+                    <label for="title">Title:</label>
+                    <input id="title" type="text" formControlName="searchTitle" placeholder="Enter a title">
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input id="category" type="text" formControlName="searchCategory" placeholder="Enter a category">
+                </div>
+                <div *ngIf="!userId">
+                    <label for="author">Author:</label>
+                    <input id="author" type="text" formControlName="searchAuthor" placeholder="Enter an author">
+                </div>
+            </div>
+        </div>
+        <div class="btn-submit">
+            <button type="submit" class="btn-apply">Apply</button>
+        </div>
+    </div>
+</form>

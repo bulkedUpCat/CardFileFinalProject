@@ -1,0 +1,31 @@
+.item {
+    cursor: pointer;
+}
+
+.body {
+    text-align: center;
+    position: relative;
+}
+
+.body>div {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    color: rgb(255, 0, 0);
+    padding: 1%;
+    background-color: #FFF;
+    border: 2px solid rgb(255, 0, 0);
+}
+
+.body>img {
+    height: 30vh;
+    width: 100%;
+}
+
+@media screen and (min-width: 601px) {
+    .body>div {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+}

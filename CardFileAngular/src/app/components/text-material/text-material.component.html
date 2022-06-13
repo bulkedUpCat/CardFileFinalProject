@@ -1,0 +1,9 @@
+<div class="item" (click)="onShow()">
+    <span class="title">{{textMaterial.title}}</span>
+    <div>
+        <span *ngIf="textMaterial.approvalStatusId == 0" class="status pending">Pending</span>
+        <span *ngIf="textMaterial.approvalStatusId == 2" class="status rejected">Rejected</span>
+    </div>
+    <span class="date">{{textMaterial.datePublished | date: 'MMM d,y'}}</span>
+    <span class="author">{{textMaterial.userName}}</span>
+</div>

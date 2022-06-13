@@ -1,0 +1,89 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: rgb(8, 161, 243);
+    color: #FFF;
+    padding: 1%;
+    row-gap: 1em;
+    column-gap: 1em;
+}
+
+.prop {
+    font-size: 1em;
+}
+
+.header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 2%;
+}
+
+.sorting-menu {
+    display: grid;
+}
+
+.filter-menu {
+    display: grid;
+}
+
+.filter-menu>div {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    margin: 1% 0;
+}
+
+.filter-menu>div input {
+    height: 5vh;
+    padding: 1%;
+    border-radius: 5px;
+    border: none;
+}
+
+.search-menu {
+    display: grid;
+}
+
+.search-menu>div {
+    display: grid;
+    grid-template-columns: 30% 40%;
+    margin: 1% 0;
+}
+
+.search-menu>div input {
+    height: 5vh;
+    padding: 1%;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn-submit {
+    grid-column: 2/3;
+}
+
+.btn-apply {
+    padding: 2%;
+    width: 100%;
+    background-color: rgb(22, 22, 230);
+    color: #FFF;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-apply:hover {
+    background-color: rgb(184, 184, 223);
+    color: #000;
+}
+
+@media screen and (min-width: 601px) {
+    .prop {
+        font-size: 1.2em;
+    }
+    .header {
+        font-size: 1.5em;
+    }
+    .search-menu>div {
+        grid-template-columns: 30% 70%;
+    }
+}

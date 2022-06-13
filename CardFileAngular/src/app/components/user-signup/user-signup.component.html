@@ -1,0 +1,58 @@
+<form (ngSubmit)="onSignup()" [formGroup]="signupForm">
+    <div class="grid-container">
+        <div class="signup">
+            Sign up
+        </div>
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter your name" formControlName="name" />
+            <div class="error" *ngIf="submitted && name.errors">
+                <div *ngIf="name.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="name.errors['minlength']">
+                    Name must be at lest 4 symbols long
+                </div>
+            </div>
+        </div>
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter your email" formControlName="email" />
+            <div class="error" *ngIf="submitted && email.errors">
+                <div *ngIf="email.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="email.errors['email']">
+                    Invalid email
+                </div>
+            </div>
+        </div>
+        <div class="input">
+            <input class="input-item" type="password" placeholder="Create your password" formControlName="password" />
+            <div class="error" *ngIf="submitted && password.errors">
+                <div *ngIf="password.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="password.errors['minlength']">
+                    Password must be at least 6 symbols long
+                </div>
+            </div>
+        </div>
+        <div class="input">
+            <input class="input-item" type="password" placeholder="Confirm the password" formControlName="confirmPassword" />
+            <div class="error" *ngIf="submitted && confirmPassword.errors">
+                <div *ngIf="confirmPassword.errors['required']">
+                    This field is required
+                </div>
+            </div>
+        </div>
+        <div class="btn">
+            <button type="submit">
+      Sign up
+      </button>
+        </div>
+        <div class="has-account">
+            <a routerLink="/login" routerLinkActive="active">
+      Already have an account?
+    </a>
+        </div>
+    </div>
+</form>

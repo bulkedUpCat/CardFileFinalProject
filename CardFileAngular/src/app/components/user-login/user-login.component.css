@@ -1,0 +1,84 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    row-gap: 1em;
+    background-color: rgb(16, 214, 232);
+    margin-top: 11%;
+}
+
+.login {
+    grid-column: 4 / 8;
+    text-align: center;
+    font-weight: bold;
+    font-size: 5vh;
+    color: rgb(40, 10, 232);
+}
+
+[class*="input"] {
+    grid-column: 3 / 9;
+}
+
+.no-account {
+    grid-column: 3 / 9;
+    text-align: center;
+}
+
+.no-account>a {
+    text-decoration: none;
+    color: rgb(40, 10, 232);
+}
+
+.no-account>a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    margin: 0;
+    padding: 0;
+    grid-column: 5 / 7;
+}
+
+.error {
+    color: rgb(40, 10, 232);
+}
+
+input[class*="input-item"] {
+    width: 100%;
+    height: 7vh;
+    padding-left: 3%;
+    border-radius: 15px;
+    border: none;
+}
+
+.btn>button {
+    width: 100%;
+    height: 5vh;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(40, 10, 232);
+    color: #FFF;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 601px) {
+    .grid-container {
+        grid-template-columns: repeat(8, 1fr);
+    }
+    .login {
+        grid-column: 3 / 7;
+    }
+    [class*="input"] {
+        grid-column: 3 / 7;
+    }
+    .no-account {
+        grid-column: 2 / 8;
+    }
+    .forgot-password {
+        grid-column: 2 / 8;
+        text-align: center;
+    }
+    .btn {
+        grid-column: 4 / 6;
+    }
+}
