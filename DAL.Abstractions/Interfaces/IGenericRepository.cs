@@ -11,7 +11,7 @@ namespace DAL.Abstractions.Interfaces
         Task<IEnumerable<TEntity>> GetAsync();
         Task<TEntity> GetByIdAsync(int id);
         Task CreateAsync(TEntity entity);
-        Task DeleteEntity(TEntity entity);
+        void DeleteEntity(TEntity entity);
         void Update(TEntity entity);
     }
 }

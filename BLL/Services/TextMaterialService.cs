@@ -113,9 +113,30 @@ namespace BLL.Services
 
                 textMaterial.Title = textMaterialDTO.Title;
                 textMaterial.Content = textMaterialDTO.Content;
+                textMaterial.ApprovalStatus = ApprovalStatus.Pending;
                 textMaterial.DateLastChanged = DateTime.Now;
 
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new CardFileException(ex.Message);
+            }
+        }
+
+        public async Task DeleteTextMaterial(int id)
+        {
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(id);
+
+            if (textMaterial == null)
+            {
+                throw new CardFileException($"Failed to find a text material with id {id}");
+            }
+
+            try
+            {
+                _unitOfWork.TextMaterialRepository.DeleteEntity(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
             }
             catch (Exception ex)

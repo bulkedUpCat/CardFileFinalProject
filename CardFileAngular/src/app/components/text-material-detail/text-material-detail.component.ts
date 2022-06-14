@@ -1,9 +1,7 @@
-import { ThisReceiver } from '@angular/compiler';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HtmlEditorService } from '@syncfusion/ej2-angular-richtexteditor';
-import { EmailParams } from 'src/app/models/parameters/EmailParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
@@ -20,7 +18,6 @@ export class TextMaterialDetailComponent implements OnInit {
   isManager: boolean = false;
   loadedStatus: boolean = false;
   isLoggedIn: boolean;
-  //userId: string;
   isAuthor: boolean;
   authorId: string;
 
@@ -28,7 +25,8 @@ export class TextMaterialDetailComponent implements OnInit {
     private textMaterialService: TextMaterialService,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private location: Location) { }
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -36,6 +34,7 @@ export class TextMaterialDetailComponent implements OnInit {
     this.textMaterialService.getTextMaterialById(id).subscribe( tm => {
       this.loadedStatus = true;
       this.textMaterial = tm;
+      this.checkIsUserIsAuthor();
     });
 
     this.checkIfUserIsLoggedIn();
@@ -45,8 +44,6 @@ export class TextMaterialDetailComponent implements OnInit {
         this.isManager = c.includes('Manager');
       }
     });
-
-    this.checkIsUserIsAuthor();
   }
 
   checkIsUserIsAuthor(){
@@ -116,5 +113,9 @@ export class TextMaterialDetailComponent implements OnInit {
     };
 
     this.dialog.open(UpdateTextMaterialComponent, dialogConfig);
+  }
+
+  goBack(){
+    this.location.back();
   }
 }

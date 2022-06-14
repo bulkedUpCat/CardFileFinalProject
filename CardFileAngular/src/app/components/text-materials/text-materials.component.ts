@@ -5,6 +5,7 @@ import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/param
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
 import { MaterialCategoryService } from 'src/app/services/material-category.service';
+import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -18,13 +19,12 @@ export class TextMaterialsComponent implements OnInit {
   isManager: boolean;
   isAdmin: boolean;
 
-  //@Input() userId: string;
-
   constructor(private textMaterialService: TextMaterialService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private sharedParams: SharedParamsService) { }
 
   ngOnInit(): void {
-    //this.textMaterialParams.userId = this.userId;
+    this.configureTextMaterialParams();
 
     this.authService.claims.subscribe( c => {
       if (c){
@@ -33,6 +33,18 @@ export class TextMaterialsComponent implements OnInit {
     })
 
     this.getTextMaterials();
+  }
+
+  configureTextMaterialParams(){
+    this.textMaterialParams.orderBy = this.sharedParams.orderBy;
+    this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
+    this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
+    this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
+    this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
+    this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
+    this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
+    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
   }
 
   getTextMaterials(){
@@ -57,11 +69,6 @@ export class TextMaterialsComponent implements OnInit {
 
   onFilter(parameters: TextMaterialParameters){
     this.textMaterialService.getTextMaterials(parameters).subscribe( tm => {
-
-      // if (this.userId){
-      //   this.textMaterials = tm;
-      //   return;
-      // }
 
       if (!this.isManager){
         this.textMaterials = tm.filter(x => x.approvalStatusId == 1);

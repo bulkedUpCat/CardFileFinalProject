@@ -85,14 +85,14 @@ namespace DAL.Repositories
             return await _context.TextMaterials.Where(tm => tm.TextMaterialCategory == category).ToListAsync();
         }
 
-        public Task DeleteEntity(TextMaterial entity)
+        public void DeleteEntity(TextMaterial entity)
         {
-            throw new NotImplementedException();
+            _context.TextMaterials.Remove(entity);
         }
 
         public void Update(TextMaterial entity)
         {
-            _context.Update(entity);
+            _context.TextMaterials.Update(entity);
         }
     }
 }

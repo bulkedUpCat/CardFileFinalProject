@@ -25,6 +25,7 @@ import { MaterialModule } from './modules/material/material.module';
 import { MatIconModule } from '@angular/material/icon';
 import { EmailPdfComponent } from './components/dialogs/email-pdf/email-pdf.component';
 import { UpdateTextMaterialComponent } from './components/dialogs/update-text-material/update-text-material.component';
+import { NotifierComponent } from './components/dialog/notifier/notifier.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { UpdateTextMaterialComponent } from './components/dialogs/update-text-ma
     HomePageComponent,
     EmailPdfComponent,
     UpdateTextMaterialComponent,
+    NotifierComponent,
   ],
   imports: [
     BrowserModule,

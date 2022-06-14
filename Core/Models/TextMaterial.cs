@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,10 +21,12 @@ namespace Core.Models
         public int TextMaterialCategoryId { get; set; }
 
         public User Author { get; set; }
-        public string AuthorId { get; set; }
+        public string? AuthorId;
 
         public DateTime DatePublished { get; set; } = DateTime.Now;
         public DateTime DateLastChanged { get; set; } = DateTime.Now;
         public DateTime DateApproved { get; set; }
+
+        public ICollection<User> UsersWhoSaved { get; set; }
     }
 }

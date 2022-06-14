@@ -13,7 +13,23 @@ namespace DAL.Contexts
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.TextMaterials)
+                .WithOne(tm => tm.Author)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.SavedTextMaterials)
+                .WithMany(tm => tm.UsersWhoSaved)
+                .UsingEntity(t => t.ToTable("SavedTextMaterials"));
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<TextMaterial> TextMaterials { get; set; }
         public DbSet<TextMaterialCategory> TextMaterialCategory { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

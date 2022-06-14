@@ -46,5 +46,11 @@ namespace CardFileApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("{id}/textMaterials/saved")]
+        public async Task<IActionResult> AddToSaved(string id, [FromBody] SavedUserTextMaterialDTO savedDTO)
+        {
+
+        }
     }
 }

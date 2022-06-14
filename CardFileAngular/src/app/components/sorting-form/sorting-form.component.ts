@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { AuthService } from 'src/app/services/auth.service';
+import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 
@@ -23,12 +24,13 @@ export class SortingFormComponent implements OnInit {
   @Output() filter : EventEmitter<TextMaterialParameters> = new EventEmitter<TextMaterialParameters>();
 
   constructor(private fb: FormBuilder,
-    private textMaterialService: TextMaterialService,
     private authService: AuthService,
+    private sharedParams: SharedParamsService,
     private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.createForm();
+    this.configureTextMaterialParams();
 
     this.authService.claims.subscribe( c => {
       if (c){
@@ -37,19 +39,31 @@ export class SortingFormComponent implements OnInit {
     });
   }
 
+  configureTextMaterialParams(){
+    this.textMaterialParams.orderBy = this.sharedParams.orderBy;
+    this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
+    this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
+    this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
+    this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
+    this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
+    this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
+    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
+  }
+
   createForm(){
     this.sortingParamsForm = this.fb.group({
       sortByTitle: [null],
       sortByCategory: [null],
       sortByDatePublished: [null],
-      filterFromDate: [null],
-      filterToDate: [null],
-      pending: [false],
-      approved: [false],
-      rejected: [false],
-      searchTitle: [null],
-      searchCategory: [null],
-      searchAuthor: [null],
+      filterFromDate: [this.sharedParams.filterFromDate],
+      filterToDate: [this.sharedParams.filterToDate],
+      pending: [this.sharedParams.approvalStatus.includes(0)],
+      approved: [this.sharedParams.approvalStatus.includes(1)],
+      rejected: [this.sharedParams.approvalStatus.includes(2)],
+      searchTitle: [this.sharedParams.searchTitle],
+      searchCategory: [this.sharedParams.searchCategory],
+      searchAuthor: [this.sharedParams.searchAuthor],
     });
   }
 
@@ -77,11 +91,13 @@ export class SortingFormComponent implements OnInit {
   }
 
   onSubmit(){
-    //this.textMaterialParams.userId = this.userId;
     this.textMaterialParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
-    this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
-    this.textMaterialParams.approvalStatus = [];
+    this.sharedParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
 
+    this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
+    this.sharedParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
+
+    this.textMaterialParams.approvalStatus = [];
 
     if (this.sortingParamsForm.get('pending').value){
       this.textMaterialParams.approvalStatus.push(0);
@@ -94,6 +110,8 @@ export class SortingFormComponent implements OnInit {
     if (this.sortingParamsForm.get('rejected').value){
       this.textMaterialParams.approvalStatus.push(2);
     }
+
+    this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
 
     this.textMaterialParams.orderBy = '';
     if (this.sortingParamsForm.get('sortByTitle').value != null){
@@ -115,8 +133,13 @@ export class SortingFormComponent implements OnInit {
     }
 
     this.textMaterialParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
+    this.sharedParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
+
     this.textMaterialParams.searchCategory = this.sortingParamsForm.get('searchCategory').value;
+    this.sharedParams.searchCategory = this.sortingParamsForm.get('searchCategory').value;
+
     this.textMaterialParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
+    this.sharedParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
 
     this.filter.emit(this.textMaterialParams);
   }

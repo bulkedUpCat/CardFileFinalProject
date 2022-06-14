@@ -9,5 +9,7 @@ namespace Core.Models
 {
     public class User : IdentityUser
     {
+        public ICollection<TextMaterial> TextMaterials { get; set; }
+        public ICollection<TextMaterial> SavedTextMaterials { get; set; } = new List<TextMaterial>();
     }
 }

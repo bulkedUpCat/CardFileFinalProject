@@ -14,8 +14,7 @@ namespace BLL.Validation.Validators
         {
             RuleFor(tm => tm.Title)
                .NotEmpty().WithMessage("{PropertyName} must not be empty")
-               .Length(5, 100).WithMessage("{PropertyName} must be 5 to 100 characters long")
-               .Must(IsValidTitle).WithMessage("{PropertyName} must be all letters");
+               .Length(5, 100).WithMessage("{PropertyName} must be 5 to 100 characters long");
 
             RuleFor(tm => tm.Content)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
@@ -23,16 +22,8 @@ namespace BLL.Validation.Validators
             RuleFor(tm => tm.CategoryTitle)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
 
-           /* RuleFor(tm => tm.ApprovalStatusId)
-                .InclusiveBetween(0, 2).WithMessage("{PropertyName} must be valid");*/
-
             RuleFor(tm => tm.AuthorId)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
-        }
-
-        private bool IsValidTitle(string title)
-        {
-            return title.All(Char.IsLetter);
         }
     }
 }

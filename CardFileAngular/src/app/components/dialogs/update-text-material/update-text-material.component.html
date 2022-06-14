@@ -5,13 +5,28 @@
         </div>
         <div class="input">
             <input class="input-item" type="text" placeholder="Enter a title" formControlName="title">
+            <div class="error" *ngIf="submitted && title.errors">
+                <div class="error" *ngIf="title.errors['required']">
+                    This field is required
+                </div>
+            </div>
         </div>
         <div class="input">
             <input class="input-item" type="text" placeholder="Enter a category" formControlName="categoryTitle">
+            <div class="error" *ngIf="submitted && category.errors">
+                <div class="error" *ngIf="category.errors['required']">
+                    This field is required
+                </div>
+            </div>
         </div>
         <div class="input">
             <ejs-richtexteditor [innerHtml]="data.textMaterial?.content" [toolbarSettings]="tools" formControlName="content">
             </ejs-richtexteditor>
+            <div class="error" *ngIf="submitted && content.errors">
+                <div class="error" *ngIf="content.errors['required']">
+                    This field is required
+                </div>
+            </div>
         </div>
         <div class="btn">
             <button type="submit">Submit</button>

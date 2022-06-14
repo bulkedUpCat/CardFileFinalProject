@@ -90,7 +90,7 @@ namespace BLL.Services
 
             if (emailParams.Author != null)
             {
-                document.Add(new Paragraph($"AUTHOR: {textMaterial.Author.UserName}"));
+               // document.Add(new Paragraph($"AUTHOR: {textMaterial.Author.UserName}"));
             }
 
             if (emailParams.DatePublished != null)

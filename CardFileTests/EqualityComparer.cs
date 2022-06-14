@@ -24,7 +24,7 @@ namespace CardFileTests
 
             return x.Id == y.Id &&
                 x.Title == y.Title &&
-                x.AuthorId == y.AuthorId &&
+                //x.AuthorId == y.AuthorId &&
                 x.TextMaterialCategoryId == y.TextMaterialCategoryId &&
                 x.Content == y.Content;
         }

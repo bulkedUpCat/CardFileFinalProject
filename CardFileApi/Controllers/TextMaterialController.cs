@@ -141,5 +141,20 @@ namespace CardFileApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _textMaterialService.DeleteTextMaterial(id);
+
+                return NoContent();
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

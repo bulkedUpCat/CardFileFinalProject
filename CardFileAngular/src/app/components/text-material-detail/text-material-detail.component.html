@@ -1,10 +1,11 @@
 <div class="grid-container">
+    <button class="back-btn" (click)="goBack()">Back</button>
     <div class="prop top">
         <div>Category: <strong>{{textMaterial?.categoryTitle}}</strong></div>
         <div *ngIf="isLoggedIn" class="buttons">
             <button (click)="sendTextMaterialAsPdf()"><mat-icon>print</mat-icon>
             </button>
-            <button (click)="updateTextMaterial()"><mat-icon>edit</mat-icon></button>
+            <button *ngIf="isAuthor" (click)="updateTextMaterial()"><mat-icon>edit</mat-icon></button>
         </div>
     </div>
     <div class="prop title">

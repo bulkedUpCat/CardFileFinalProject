@@ -19,6 +19,7 @@ namespace BLL.Profiles
                 .ForMember(tm => tm.Content, src => src.MapFrom(x => x.Content))
                 .ForMember(tm => tm.DatePublished, src => src.MapFrom(x => x.DatePublished))
                 .ForMember(tm => tm.CategoryTitle, src => src.MapFrom(x => x.TextMaterialCategory.Title))
+                .ForMember(tm => tm.AuthorId, src => src.MapFrom(x => x.Author.Id))
                 .ForMember(tm => tm.UserName, src => src.MapFrom(x => x.Author.UserName))
                 .ForMember(tm => tm.ApprovalStatusId, src => src.MapFrom(x => (int)x.ApprovalStatus));
 

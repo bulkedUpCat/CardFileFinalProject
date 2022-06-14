@@ -4,6 +4,7 @@ using DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220614115400_addedAuthorToTextMaterial")]
+    partial class addedAuthorToTextMaterial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("TextMaterialCategoryId");
 
-                    b.ToTable("TextMaterials", (string)null);
+                    b.ToTable("TextMaterials");
                 });
 
             modelBuilder.Entity("Core.Models.TextMaterialCategory", b =>
@@ -84,7 +86,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TextMaterialCategory", (string)null);
+                    b.ToTable("TextMaterialCategory");
                 });
 
             modelBuilder.Entity("Core.Models.User", b =>
@@ -285,21 +287,6 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TextMaterialUser", b =>
-                {
-                    b.Property<int>("SavedTextMaterialsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersWhoSavedId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("SavedTextMaterialsId", "UsersWhoSavedId");
-
-                    b.HasIndex("UsersWhoSavedId");
-
-                    b.ToTable("SavedTextMaterials", (string)null);
-                });
-
             modelBuilder.Entity("Core.Models.TextMaterial", b =>
                 {
                     b.HasOne("Core.Models.User", "Author")
@@ -366,21 +353,6 @@ namespace DAL.Migrations
                     b.HasOne("Core.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TextMaterialUser", b =>
-                {
-                    b.HasOne("Core.Models.TextMaterial", null)
-                        .WithMany()
-                        .HasForeignKey("SavedTextMaterialsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersWhoSavedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

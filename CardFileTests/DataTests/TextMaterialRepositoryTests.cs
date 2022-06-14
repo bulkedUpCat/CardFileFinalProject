@@ -45,12 +45,12 @@ namespace CardFileTests.DataTests
             Assert.That(expected, Is.EqualTo(textMaterial).Using(new TextMaterialEqualityComparer()), message: "GetByIdAsync works incorrectly");
         }
 
-        private static IEnumerable<TextMaterial> ExpectedTextMaterials =>
-            new[]
+        private static IEnumerable<TextMaterial> ExpectedTextMaterials;
+            /*new[]
             {
-                new TextMaterial { Id = 1, AuthorId = "1", Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 2, AuthorId = "2", Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 3, AuthorId = "2", Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 }
-            };
+                //new TextMaterial { Id = 1, AuthorId = "1", Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
+                //new TextMaterial { Id = 2, AuthorId = "2", Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
+                //new TextMaterial { Id = 3, AuthorId = "2", Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 }
+            };*/
     }
 }

@@ -39,7 +39,7 @@ namespace DAL.Repositories
             await _context.TextMaterialCategory.AddAsync(entity);
         }
 
-        public Task DeleteEntity(TextMaterialCategory entity)
+        public void DeleteEntity(TextMaterialCategory entity)
         {
             throw new NotImplementedException();
         }

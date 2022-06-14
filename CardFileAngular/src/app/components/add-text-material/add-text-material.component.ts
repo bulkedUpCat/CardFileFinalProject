@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HtmlEditorService, ImageService, LinkService, ToolbarService } from '@syncfusion/ej2-angular-richtexteditor';
 import { AuthService } from 'src/app/services/auth.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
@@ -13,6 +14,7 @@ import { TextMaterialService } from 'src/app/services/text-material.service';
 export class AddTextMaterialComponent implements OnInit {
   textMaterialForm: FormGroup;
   userId: string;
+  submitted: boolean;
   public tools: object = {
     items: [
       'Undo','Redo','Bold','Italic','FontSize'
@@ -21,14 +23,15 @@ export class AddTextMaterialComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private textMaterialService: TextMaterialService) { }
+    private textMaterialService: TextMaterialService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.createTextMaterial();
 
     this.authService.getUserInfo().subscribe(u => {
       if (u){
-        this.userId = u.jti;
+        this.userId = u.sub;
       }
     })
   }
@@ -54,12 +57,18 @@ export class AddTextMaterialComponent implements OnInit {
   }
 
   onSubmit(){
+    this.submitted = true;
+    if (!this.textMaterialForm.valid){
+      return;
+    }
+
     const textMaterial = this.textMaterialForm.value;
     textMaterial.authorId = this.userId;
 
     this.textMaterialService.createTextMaterial(textMaterial).subscribe( tm => {
       console.log('created');
       console.log(tm);
+      this.router.navigateByUrl('/home-page');
     }, err => {
       console.log(err);
     });
