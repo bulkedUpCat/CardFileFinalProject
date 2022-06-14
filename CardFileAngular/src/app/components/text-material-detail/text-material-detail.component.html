@@ -1,7 +1,11 @@
 <div class="grid-container">
     <div class="prop top">
-        <span>Category: <strong>{{textMaterial?.categoryTitle}}</strong></span>
-        <span *ngIf="isLoggedIn"><button class="print-icon" (click)="sendTextMaterialAsPdf()"><mat-icon>print</mat-icon></button></span>
+        <div>Category: <strong>{{textMaterial?.categoryTitle}}</strong></div>
+        <div *ngIf="isLoggedIn" class="buttons">
+            <button (click)="sendTextMaterialAsPdf()"><mat-icon>print</mat-icon>
+            </button>
+            <button (click)="updateTextMaterial()"><mat-icon>edit</mat-icon></button>
+        </div>
     </div>
     <div class="prop title">
         <span>Title: <strong>{{textMaterial?.title}}</strong></span>

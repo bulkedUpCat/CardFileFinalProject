@@ -2,11 +2,13 @@ import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HtmlEditorService } from '@syncfusion/ej2-angular-richtexteditor';
 import { EmailParams } from 'src/app/models/parameters/EmailParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 import { EmailPdfComponent } from '../dialogs/email-pdf/email-pdf.component';
+import { UpdateTextMaterialComponent } from '../dialogs/update-text-material/update-text-material.component';
 
 @Component({
   selector: 'app-text-material-detail',
@@ -18,6 +20,9 @@ export class TextMaterialDetailComponent implements OnInit {
   isManager: boolean = false;
   loadedStatus: boolean = false;
   isLoggedIn: boolean;
+  //userId: string;
+  isAuthor: boolean;
+  authorId: string;
 
   constructor(private route: ActivatedRoute,
     private textMaterialService: TextMaterialService,
@@ -39,6 +44,19 @@ export class TextMaterialDetailComponent implements OnInit {
       if (c){
         this.isManager = c.includes('Manager');
       }
+    });
+
+    this.checkIsUserIsAuthor();
+  }
+
+  checkIsUserIsAuthor(){
+    this.authService.getUserInfo().subscribe(u => {
+      if (u){
+        this.authorId = u.sub;
+        this.isAuthor = u.sub == this.textMaterial?.authorId;
+      }
+    }, err => {
+      console.log(err);
     });
   }
 
@@ -82,9 +100,21 @@ export class TextMaterialDetailComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data  = {
-      textMaterialId: this.textMaterial.id
-    }
+      textMaterialId: this.textMaterial.id,
+      authorId: this.authorId
+    };
 
     this.dialog.open(EmailPdfComponent,dialogConfig);
+  }
+
+  updateTextMaterial(){
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      textMaterial: this.textMaterial,
+      textMaterialId: this.textMaterial.id
+    };
+
+    this.dialog.open(UpdateTextMaterialComponent, dialogConfig);
   }
 }

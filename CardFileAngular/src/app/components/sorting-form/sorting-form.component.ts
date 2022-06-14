@@ -17,7 +17,8 @@ export class SortingFormComponent implements OnInit {
   isManager: boolean;
   isAdmin: boolean;
 
-  @Input() userId: string;
+  //@Input() userId: string;
+  @Input() isHomePage: boolean;
 
   @Output() filter : EventEmitter<TextMaterialParameters> = new EventEmitter<TextMaterialParameters>();
 
@@ -76,7 +77,7 @@ export class SortingFormComponent implements OnInit {
   }
 
   onSubmit(){
-    this.textMaterialParams.userId = this.userId;
+    //this.textMaterialParams.userId = this.userId;
     this.textMaterialParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
     this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
     this.textMaterialParams.approvalStatus = [];

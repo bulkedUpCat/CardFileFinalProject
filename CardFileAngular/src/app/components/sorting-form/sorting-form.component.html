@@ -34,13 +34,13 @@
                     <label for="toDate">To:</label>
                     <input id="toDate" type="date" formControlName="filterToDate" (change)="validateToDate()">
                 </div>
-                <div *ngIf="isManager || userId">
+                <div *ngIf="isManager || isHomePage">
                     <label for="pending">Pending:</label>
                     <input id="pending" type="checkbox" formControlName="pending">
                     <label for="approved">Approved: </label>
                     <input id="approved" type="checkbox" formControlName="approved">
-                    <label *ngIf="isAdmin || userId" for="rejected">Rejected: </label>
-                    <input *ngIf="isAdmin || userId" id="rejected" type="checkbox" formControlName="rejected">
+                    <label *ngIf="isAdmin || isHomePage" for="rejected">Rejected: </label>
+                    <input *ngIf="isAdmin || isHomePage" id="rejected" type="checkbox" formControlName="rejected">
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
                     <label for="category">Category:</label>
                     <input id="category" type="text" formControlName="searchCategory" placeholder="Enter a category">
                 </div>
-                <div *ngIf="!userId">
+                <div *ngIf="!isHomePage">
                     <label for="author">Author:</label>
                     <input id="author" type="text" formControlName="searchAuthor" placeholder="Enter an author">
                 </div>

@@ -18,13 +18,13 @@ export class TextMaterialsComponent implements OnInit {
   isManager: boolean;
   isAdmin: boolean;
 
-  @Input() userId: string;
+  //@Input() userId: string;
 
   constructor(private textMaterialService: TextMaterialService,
     private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.textMaterialParams.userId = this.userId;
+    //this.textMaterialParams.userId = this.userId;
 
     this.authService.claims.subscribe( c => {
       if (c){
@@ -48,20 +48,20 @@ export class TextMaterialsComponent implements OnInit {
         return;
       }
 
-      if (!this.userId && !this.isManager){
+      //if (!this.userId && !this.isManager){
         this.textMaterials = this.textMaterials.filter(x => x.approvalStatusId == 1);
         return;
-      }
+      //}
     });
   }
 
   onFilter(parameters: TextMaterialParameters){
     this.textMaterialService.getTextMaterials(parameters).subscribe( tm => {
 
-      if (this.userId){
-        this.textMaterials = tm;
-        return;
-      }
+      // if (this.userId){
+      //   this.textMaterials = tm;
+      //   return;
+      // }
 
       if (!this.isManager){
         this.textMaterials = tm.filter(x => x.approvalStatusId == 1);

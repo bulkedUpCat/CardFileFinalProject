@@ -23,8 +23,8 @@ namespace BLL.Validation.Validators
             RuleFor(tm => tm.CategoryTitle)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
 
-            RuleFor(tm => tm.ApprovalStatusId)
-                .InclusiveBetween(0, 2).WithMessage("{PropertyName} must be valid");
+           /* RuleFor(tm => tm.ApprovalStatusId)
+                .InclusiveBetween(0, 2).WithMessage("{PropertyName} must be valid");*/
 
             RuleFor(tm => tm.AuthorId)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");

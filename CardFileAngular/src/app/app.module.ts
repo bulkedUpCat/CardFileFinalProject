@@ -24,6 +24,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material/material.module';
 import { MatIconModule } from '@angular/material/icon';
 import { EmailPdfComponent } from './components/dialogs/email-pdf/email-pdf.component';
+import { UpdateTextMaterialComponent } from './components/dialogs/update-text-material/update-text-material.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { EmailPdfComponent } from './components/dialogs/email-pdf/email-pdf.comp
     TextMaterialDetailComponent,
     HomePageComponent,
     EmailPdfComponent,
+    UpdateTextMaterialComponent,
   ],
   imports: [
     BrowserModule,

@@ -71,7 +71,7 @@ namespace DAL.Extensions
             return textMaterials.Where(tm => tm.Author.UserName.ToLower().Contains(lowerCaseTerm));
         }
 
-        public static IQueryable<TextMaterial> SearchByUserId(this IQueryable<TextMaterial> textMaterials, string userId)
+        /*public static IQueryable<TextMaterial> SearchByUserId(this IQueryable<TextMaterial> textMaterials, string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -80,7 +80,7 @@ namespace DAL.Extensions
 
             var lowerCaseTerm = userId.Trim().ToLower();
             return textMaterials.Where(tm => tm.AuthorId == lowerCaseTerm);
-        }
+        }*/
 
         public static IQueryable<TextMaterial> FilterByApprovalStatus(this IQueryable<TextMaterial> textMaterials, List<int> approvalStatus)
         {

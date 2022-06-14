@@ -5,4 +5,9 @@
     <button (click)="getApprovedMaterials()">Approved</button>
     <button (click)="getRejectedMaterials()">Rejected</button>
 </div> -->
-<app-text-materials [userId]="userId"></app-text-materials>
+<!-- <app-text-materials></app-text-materials> -->
+<app-sorting-form [isHomePage]="true" (filter)="onFilter($event)"></app-sorting-form>
+<div class=" grid-container ">
+    <app-text-material *ngFor="let text of ownTextMaterials " [textMaterial]="text">
+    </app-text-material>
+</div>

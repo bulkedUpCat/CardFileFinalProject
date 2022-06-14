@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TextMaterialParameters } from 'src/app/models/parameters/TextMaterialParameters';
+import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
@@ -10,7 +10,7 @@ import { TextMaterialService } from 'src/app/services/text-material.service';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
-  allTextMaterials: TextMaterial[];
+  ownTextMaterials: TextMaterial[];
   showApproved: string;
 
   userId: string;
@@ -26,6 +26,8 @@ export class HomePageComponent implements OnInit {
         this.userName = u.name;
       }
     });
+
+    this.getOwnTextMaterials();
   }
 
   getAllTextMaterials(){
@@ -38,5 +40,21 @@ export class HomePageComponent implements OnInit {
 
   getRejectedMaterials(){
     this.textMaterialService.showApproved.next(false.toString());
+  }
+
+  getOwnTextMaterials(){
+    this.textMaterialService.getTextMaterialsByUserId(this.userId, new TextMaterialParams()).subscribe(tm => {
+      this.ownTextMaterials = tm;
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  onFilter(parameters: TextMaterialParameters){
+    this.textMaterialService.getTextMaterialsByUserId(this.userId, parameters).subscribe( tm => {
+      this.ownTextMaterials = tm;
+    }, err => {
+      console.log(err);
+    });
   }
 }

@@ -1,7 +1,7 @@
-<form [formGroup]="textMaterialForm" (ngSubmit)="onSubmit()">
-    <div class="grid-container">
+<form (ngSubmit)="onUpdate()" [formGroup]="textMaterialForm">
+    <mat-dialog-content class="grid-container">
         <div class="create-text-material">
-            Create a text material
+            Update a text material
         </div>
         <div class="input">
             <input class="input-item" type="text" placeholder="Enter a title" formControlName="title">
@@ -10,16 +10,11 @@
             <input class="input-item" type="text" placeholder="Enter a category" formControlName="categoryTitle">
         </div>
         <div class="input">
-            <ejs-richtexteditor [toolbarSettings]="tools" formControlName="content">
+            <ejs-richtexteditor [innerHtml]="data.textMaterial?.content" [toolbarSettings]="tools" formControlName="content">
             </ejs-richtexteditor>
-            <!-- <div class="text-editor-header">
-                <button class="text-editor" data-element="bold">
-                <i class="fa fa-bold"></i>
-              </button>
-            </div> -->
         </div>
         <div class="btn">
             <button type="submit">Submit</button>
         </div>
-    </div>
+    </mat-dialog-content>
 </form>

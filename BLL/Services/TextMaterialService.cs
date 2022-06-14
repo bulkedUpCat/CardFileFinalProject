@@ -38,7 +38,7 @@ namespace BLL.Services
             return PagedList<TextMaterialDTO>.ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
         }
         
-        public async Task<IEnumerable<TextMaterialDTO>> GetTextMaterialsOfUser(string id)
+        public async Task<IEnumerable<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
         {
             var user = await _userManager.FindByIdAsync(id);
 
@@ -47,7 +47,7 @@ namespace BLL.Services
                 throw new CardFileException($"Failed to find a user with id {id}");
             }
 
-            var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUser(user);
+            var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUser(user, textMaterialParams);
 
             if (textMaterials == null)
             {
@@ -103,6 +103,14 @@ namespace BLL.Services
 
             try
             {
+                var category = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(textMaterialDTO.CategoryTitle);
+
+                if (category != null &&
+                    category.Title != textMaterialDTO.CategoryTitle)
+                {
+                    textMaterial.TextMaterialCategory = category;
+                }
+
                 textMaterial.Title = textMaterialDTO.Title;
                 textMaterial.Content = textMaterialDTO.Content;
                 textMaterial.DateLastChanged = DateTime.Now;

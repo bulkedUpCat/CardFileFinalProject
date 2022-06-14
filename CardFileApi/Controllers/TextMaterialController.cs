@@ -126,6 +126,7 @@ namespace CardFileApi.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody]UpdateTextMaterialDTO textMaterialDTO)
         {

@@ -2,6 +2,7 @@
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
+using Core.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace CardFileApi.Controllers
 {
     [ApiController]
-    [Route("users")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly TextMaterialService _textMaterialService;
@@ -32,11 +33,11 @@ namespace CardFileApi.Controllers
         }
 
         [HttpGet("{id}/textMaterials", Name = "GetTextMaterialsByUserId")]
-        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get(string id)
+        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get(string id,[FromQuery]TextMaterialParameters textMaterialParams)
         {
             try
             {
-                var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id);
+                var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id,textMaterialParams);
 
                 return Ok(textMaterials);
             }

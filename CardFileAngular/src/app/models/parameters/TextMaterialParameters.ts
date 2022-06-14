@@ -6,7 +6,7 @@ export class TextMaterialParams implements TextMaterialParameters{
   searchTitle: string;
   searchCategory: string;
   searchAuthor: string;
-  userId: string;
+  //userId: string;
   approvalStatus: Array<number>;
   orderBy: string;
 }
@@ -19,7 +19,7 @@ export interface TextMaterialParameters{
   searchTitle: string;
   searchCategory: string;
   searchAuthor: string;
-  userId: string;
+  //userId: string;
   approvalStatus: Array<number>;
   orderBy: string;
 }

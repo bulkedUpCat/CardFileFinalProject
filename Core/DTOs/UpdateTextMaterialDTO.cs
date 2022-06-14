@@ -12,7 +12,6 @@ namespace Core.DTOs
         public string Title { get; set; }
         public string Content { get; set; }
         public string CategoryTitle { get; set; }
-        public int ApprovalStatusId { get; set; }
         public string AuthorId { get; set; }
     }
 }

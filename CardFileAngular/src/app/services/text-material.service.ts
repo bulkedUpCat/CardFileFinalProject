@@ -19,7 +19,7 @@ export class TextMaterialService {
 
   getTextMaterials(textParams: TextMaterialParameters) : Observable<any>{
     var parameters = {};
-    if (textParams.userId) parameters['userId'] = textParams.userId;
+    //if (textParams.userId) parameters['userId'] = textParams.userId;
     if (textParams.pageNumber) parameters['pageNumber'] = textParams.pageNumber;
     if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
     if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
@@ -31,14 +31,29 @@ export class TextMaterialService {
     if (textParams.approvalStatus){
       parameters['approvalStatus'] = textParams.approvalStatus;
     }
-    console.log(textParams);
+
     return this.http.get(environment.apiUrl + '/textMaterials', {
       params: parameters
     });
   }
 
-  getTextMaterialsByUserId(id: string) : Observable<TextMaterial[]>{
-    return this.http.get<TextMaterial[]>(`${environment.apiUrl}/users/${id}/textMaterials`);
+  getTextMaterialsByUserId(id: string, textParams: TextMaterialParameters) : Observable<TextMaterial[]>{
+    var parameters = {};
+
+    if (textParams.pageNumber) parameters['pageNumber'] = textParams.pageNumber;
+    if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
+    if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
+    if (textParams.filterToDate) parameters['endDate'] = textParams.filterToDate;
+    if (textParams.searchTitle) parameters['searchTitle'] = textParams.searchTitle;
+    if (textParams.searchCategory) parameters['searchCategory'] = textParams.searchCategory;
+    if (textParams.orderBy) parameters['orderBy'] = textParams.orderBy;
+    if (textParams.approvalStatus){
+      parameters['approvalStatus'] = textParams.approvalStatus;
+    }
+
+    return this.http.get<TextMaterial[]>(`${environment.apiUrl}/users/${id}/textMaterials`, {
+      params: parameters
+    });
   }
 
   getTextMaterialsByCategory(category: MaterialCategory) : Observable<TextMaterial[]>{
