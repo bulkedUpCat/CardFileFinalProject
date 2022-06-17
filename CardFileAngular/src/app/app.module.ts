@@ -22,10 +22,12 @@ import { DatePipe } from '@angular/common';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material/material.module';
-import { MatIconModule } from '@angular/material/icon';
 import { EmailPdfComponent } from './components/dialogs/email-pdf/email-pdf.component';
 import { UpdateTextMaterialComponent } from './components/dialogs/update-text-material/update-text-material.component';
-import { NotifierComponent } from './components/dialog/notifier/notifier.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { DeleteTextMaterialComponent } from './components/dialogs/delete-text-material/delete-text-material.component';
+import { ForgotPasswordComponent } from './components/dialogs/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,10 @@ import { NotifierComponent } from './components/dialog/notifier/notifier.compone
     HomePageComponent,
     EmailPdfComponent,
     UpdateTextMaterialComponent,
-    NotifierComponent,
+    PaginationComponent,
+    DeleteTextMaterialComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

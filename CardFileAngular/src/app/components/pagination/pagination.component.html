@@ -1,0 +1,9 @@
+<div class="page-buttons">
+    <button (click)="onPrevious()" [disabled]="this.currentPage <= 1">
+    <mat-icon>keyboard_double_arrow_left</mat-icon>
+  </button>
+    <p>{{currentPage}}</p>
+    <button (click)="onNext()" [disabled]="this.currentPage >= this.totalPages">
+    <mat-icon>keyboard_double_arrow_right</mat-icon>
+  </button>
+</div>

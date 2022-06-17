@@ -4,3 +4,4 @@
     <app-text-material *ngFor="let text of textMaterials " [textMaterial]="text ">
     </app-text-material>
 </div>
+<app-pagination [totalPages]="paginator?.TotalPages" (next)="onNextPage($event) " (previous)="onPreviousPage($event) "></app-pagination>

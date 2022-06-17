@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
+import { ForgotPasswordComponent } from '../dialogs/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-user-login',
@@ -14,10 +17,13 @@ export class UserLoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    private notifier: NotifierService,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.createLoginForm();
+    //this.notifier.showNotification("Testing it!","OK","SUCCESS")
   }
 
   createLoginForm(){
@@ -46,10 +52,18 @@ export class UserLoginComponent implements OnInit {
     const user = this.loginForm.value;
 
     this.authService.logIn(user).subscribe( u => {
+      this.notifier.showNotification("You've successfully logged in!","OK",'SUCCESS');
       this.router.navigateByUrl('/main');
     }, err => {
       console.log(err);
+      this.notifier.showNotification("Invalid email or password, try again!","OK",'ERROR');
       this.loginForm.reset();
+    });
+  }
+
+  onForgotPassword(){
+    this.dialog.open(ForgotPasswordComponent,{
+      width: '400px'
     });
   }
 }

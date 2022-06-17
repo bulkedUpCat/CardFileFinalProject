@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ForgotPasswordDTO } from '../models/user/ForgotPasswordDTO';
+import { ResetPasswordDTO } from '../models/user/ResetPasswordDTO';
 import { UserLogin } from '../models/user/UserLogin';
 import { UserSignUp } from '../models/user/UserSignup';
 
@@ -95,5 +97,25 @@ export class AuthService {
     localStorage.removeItem("TokenInfo");
     this.claims.next([]);
     this.router.navigate(['/login']);
+  }
+
+  forgotPassword(model: ForgotPasswordDTO){
+    const headers = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+
+    return this.http.post(`${environment.apiUrl}/auth/forgotPassword`, model, headers)
+  }
+
+  resetPassword(model: ResetPasswordDTO){
+    const headers = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+
+    return this.http.post(`${environment.apiUrl}/auth/passwordReset`, model, headers)
   }
 }

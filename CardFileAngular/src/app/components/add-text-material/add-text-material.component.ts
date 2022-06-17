@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HtmlEditorService, ImageService, LinkService, ToolbarService } from '@syncfusion/ej2-angular-richtexteditor';
+import { MaterialCategory } from 'src/app/models/MaterialCategory';
 import { AuthService } from 'src/app/services/auth.service';
+import { MaterialCategoryService } from 'src/app/services/material-category.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class AddTextMaterialComponent implements OnInit {
   textMaterialForm: FormGroup;
   userId: string;
   submitted: boolean;
+  categories: MaterialCategory[];
   public tools: object = {
     items: [
       'Undo','Redo','Bold','Italic','FontSize'
@@ -24,10 +27,12 @@ export class AddTextMaterialComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private textMaterialService: TextMaterialService,
+    private categoryService: MaterialCategoryService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.createTextMaterial();
+    this.createTextMaterialForm();
+    this.getCategories();
 
     this.authService.getUserInfo().subscribe(u => {
       if (u){
@@ -36,7 +41,15 @@ export class AddTextMaterialComponent implements OnInit {
     })
   }
 
-  createTextMaterial(){
+  getCategories(){
+    this.categoryService.getMaterialCategories().subscribe(c => {
+      this.categories = c;
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  createTextMaterialForm(){
     this.textMaterialForm = this.fb.group({
       title: [null, [Validators.required]],
       categoryTitle: [null,[Validators.required]],

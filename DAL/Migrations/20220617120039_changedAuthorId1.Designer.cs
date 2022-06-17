@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220608120601_changedPostCategoryToTextMaterialCategory")]
-    partial class changedPostCategoryToTextMaterialCategory
+    [Migration("20220617120039_changedAuthorId1")]
+    partial class changedAuthorId1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,12 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("AuthorId");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -49,13 +52,15 @@ namespace DAL.Migrations
                     b.Property<DateTime>("DatePublished")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("RejectCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("TextMaterialCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -108,10 +113,6 @@ namespace DAL.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -286,13 +287,27 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TextMaterialUser", b =>
+                {
+                    b.Property<int>("SavedTextMaterialsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersWhoSavedId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("SavedTextMaterialsId", "UsersWhoSavedId");
+
+                    b.HasIndex("UsersWhoSavedId");
+
+                    b.ToTable("SavedTextMaterials", (string)null);
+                });
+
             modelBuilder.Entity("Core.Models.TextMaterial", b =>
                 {
                     b.HasOne("Core.Models.User", "Author")
-                        .WithMany()
+                        .WithMany("TextMaterials")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Models.TextMaterialCategory", "TextMaterialCategory")
                         .WithMany()
@@ -354,6 +369,26 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TextMaterialUser", b =>
+                {
+                    b.HasOne("Core.Models.TextMaterial", null)
+                        .WithMany()
+                        .HasForeignKey("SavedTextMaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersWhoSavedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.User", b =>
+                {
+                    b.Navigation("TextMaterials");
                 });
 #pragma warning restore 612, 618
         }

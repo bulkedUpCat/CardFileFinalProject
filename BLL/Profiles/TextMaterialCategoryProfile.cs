@@ -15,6 +15,8 @@ namespace BLL.Profiles
         {
             CreateMap<TextMaterialCategory, TextMaterialCategoryDTO>()
                 .ReverseMap();
+
+            CreateMap<CreateTextMaterialCategoryDTO, TextMaterialCategory>();
         }
     }
 }

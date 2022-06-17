@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
@@ -38,15 +39,18 @@ namespace BLL.Services
 
         public async Task<TextMaterialCategoryDTO> CreateTextMaterialCategoryAsync(CreateTextMaterialCategoryDTO categoryDTO)
         {
-            //var category = _mapper.Map<TextMaterialCategory>(categoryDTO);
-            var category = new TextMaterialCategory()
-            {
-                Id = 0,
-                Title = categoryDTO.Title,
-            };
+            var category = _mapper.Map<TextMaterialCategory>(categoryDTO);
 
-            await _unitOfWork.TextMaterialCategoryRepository.CreateAsync(category);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                await _unitOfWork.TextMaterialCategoryRepository.CreateAsync(category);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+            
 
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }

@@ -10,7 +10,7 @@ namespace DAL.Abstractions.Interfaces
 {
     public interface ITextMaterialRepository : IGenericRepository<TextMaterial>
     {
-        Task<IEnumerable<TextMaterial>> GetByCategory(TextMaterialCategory category);
+        Task<IEnumerable<TextMaterial>> GetByCategoryId(int categoryId);
         Task<IEnumerable<TextMaterial>> GetWithDetailsAsync();
         Task<IEnumerable<TextMaterial>> GetWithDetailsAsync(TextMaterialParameters parameters);
         Task<IEnumerable<TextMaterial>> GetByUser(User user, TextMaterialParameters parameters);

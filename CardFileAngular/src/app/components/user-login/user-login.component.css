@@ -2,7 +2,6 @@
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     row-gap: 1em;
-    background-color: rgb(16, 214, 232);
     margin-top: 11%;
 }
 
@@ -29,6 +28,21 @@
 }
 
 .no-account>a:hover {
+    text-decoration: underline;
+}
+
+.forgot-password {
+    grid-column: 3 / 9;
+    text-align: center;
+}
+
+.forgot-password>a {
+    text-decoration: none;
+    color: rgb(40, 10, 232);
+    cursor: pointer;
+}
+
+.forgot-password>a:hover {
     text-decoration: underline;
 }
 

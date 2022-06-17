@@ -1,10 +1,8 @@
-import { ThisReceiver } from '@angular/compiler';
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
+import { Component, OnInit } from '@angular/core';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
-import { MaterialCategoryService } from 'src/app/services/material-category.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
@@ -14,32 +12,44 @@ import { TextMaterialService } from 'src/app/services/text-material.service';
   styleUrls: ['./text-materials.component.css']
 })
 export class TextMaterialsComponent implements OnInit {
-  textMaterials: TextMaterial[];
+  textMaterials: TextMaterial[] = [];
+  paginator: any;
   textMaterialParams: TextMaterialParameters = new TextMaterialParams();
   isManager: boolean;
   isAdmin: boolean;
 
   constructor(private textMaterialService: TextMaterialService,
     private authService: AuthService,
-    private sharedParams: SharedParamsService) { }
+    public sharedParams: SharedParamsService) { }
 
   ngOnInit(): void {
-    this.configureTextMaterialParams();
-
     this.authService.claims.subscribe( c => {
       if (c){
         this.isManager = c.includes('Manager');
       }
-    })
 
-    this.getTextMaterials();
+      this.configureTextMaterialParams();
+      this.getTextMaterials();
+    })
   }
 
   configureTextMaterialParams(){
     this.textMaterialParams.orderBy = this.sharedParams.orderBy;
     this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
     this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
-    this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
+
+    if (!this.isManager){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(1);
+    }
+    else if (!this.isAdmin && this.sharedParams.approvalStatus.length == 0){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(0,1);
+    }
+    else{
+      this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
+    }
+
     this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
     this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
     this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
@@ -49,38 +59,58 @@ export class TextMaterialsComponent implements OnInit {
 
   getTextMaterials(){
     return this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
-      this.textMaterials = tm;
-
-      if (this.isAdmin){
-        return;
-      }
-
-      if (this.isManager){
-        this.textMaterials = this.textMaterials.filter(x => x.approvalStatusId == 0 || x.approvalStatusId == 1);
-        return;
-      }
-
-      //if (!this.userId && !this.isManager){
-        this.textMaterials = this.textMaterials.filter(x => x.approvalStatusId == 1);
-        return;
-      //}
+      this.textMaterials = tm.body;
+      this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
     });
   }
 
   onFilter(parameters: TextMaterialParameters){
-    this.textMaterialService.getTextMaterials(parameters).subscribe( tm => {
+      this.textMaterialParams = parameters;
 
       if (!this.isManager){
-        this.textMaterials = tm.filter(x => x.approvalStatusId == 1);
-        return;
+        if (this.textMaterialParams.approvalStatus.includes(0)){
+          const index = this.textMaterialParams.approvalStatus.indexOf(0);
+          this.textMaterialParams.approvalStatus.splice(index,1);
+        }
+        this.textMaterialParams.approvalStatus.push(1);
+      }
+      else if(!this.isAdmin && this.textMaterialParams.approvalStatus.includes(2)){
+        const index = this.textMaterialParams.approvalStatus.indexOf(2);
+        this.textMaterialParams.approvalStatus.splice(index,1);
+      }
+      else if(!this.isAdmin && this.textMaterialParams.approvalStatus.length == 0){
+        this.textMaterialParams.approvalStatus.push(0,1);
       }
 
-      if (!this.isAdmin){
-        this.textMaterials = tm.filter(x => x.approvalStatusId != 2);
-        return;
-      }
+      this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
 
-      this.textMaterials = tm;
+      this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
+        this.textMaterials = tm.body;
+        this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+      }, err => {
+        console.log(err);
+      });
+  }
+
+  onNextPage(page: number){
+    this.textMaterialParams.pageNumber = page;
+    this.sharedParams.pageNumber = page;
+
+    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+      this.textMaterials = tm.body;
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  onPreviousPage(page: number){
+    this.textMaterialParams.pageNumber = page;
+    this.sharedParams.pageNumber = page;
+
+    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+      this.textMaterials = tm.body;
+    }, err => {
+      console.log(err);
     });
   }
 }

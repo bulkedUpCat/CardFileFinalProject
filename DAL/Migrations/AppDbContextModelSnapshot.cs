@@ -33,9 +33,9 @@ namespace DAL.Migrations
                     b.Property<int>("ApprovalStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("AuthorId1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("AuthorId");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -62,11 +62,11 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("TextMaterialCategoryId");
 
-                    b.ToTable("TextMaterials", (string)null);
+                    b.ToTable("TextMaterials");
                 });
 
             modelBuilder.Entity("Core.Models.TextMaterialCategory", b =>
@@ -84,7 +84,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TextMaterialCategory", (string)null);
+                    b.ToTable("TextMaterialCategory");
                 });
 
             modelBuilder.Entity("Core.Models.User", b =>
@@ -304,9 +304,8 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Core.Models.User", "Author")
                         .WithMany("TextMaterials")
-                        .HasForeignKey("AuthorId1")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Core.Models.TextMaterialCategory", "TextMaterialCategory")
                         .WithMany()

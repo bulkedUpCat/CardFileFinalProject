@@ -14,6 +14,7 @@ namespace DAL.Data
         private readonly AppDbContext _context;
         private ITextMaterialRepository _textMaterialRepository;
         private ITextMaterialCategoryRepository _textMaterialCategoryRepository;
+        private IUserRepository _userRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -43,6 +44,19 @@ namespace DAL.Data
                 }
 
                 return _textMaterialCategoryRepository;
+            }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_context);
+                }
+
+                return _userRepository;
             }
         }
 

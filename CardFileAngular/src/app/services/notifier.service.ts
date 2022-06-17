@@ -9,14 +9,14 @@ export class NotifierService {
 
   constructor(private snackBar: MatSnackBar) { }
 
-  showNotification(message: string, buttonMessage: string, messageType: 'error' | 'success'){
+  showNotification(message: string, buttonMessage: string, messageType: 'ERROR' | 'SUCCESS'){
     this.snackBar.openFromComponent(NotifierComponent,{
       data: {
         message: message,
         buttonMessage: buttonMessage,
         type: messageType
       },
-      duration: 5000,
+      duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
       panelClass: messageType

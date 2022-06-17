@@ -10,6 +10,7 @@ namespace DAL.Abstractions.Interfaces
     {
         ITextMaterialRepository TextMaterialRepository { get; }
         ITextMaterialCategoryRepository TextMaterialCategoryRepository { get; }
+        IUserRepository UserRepository { get; }
         Task SaveChangesAsync();
     }
 }

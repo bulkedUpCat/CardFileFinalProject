@@ -1,1 +1,11 @@
-<p>notifier works!</p>
+<div class="container">
+    <div class="data-type">
+        {{data.type}}
+    </div>
+    <div class="content">
+        {{data.message}}
+    </div>
+    <div class="btn">
+        <button mat-flat-button (click)="snackBarRef.dismiss()">{{data.buttonMessage}}</button>
+    </div>
+</div>

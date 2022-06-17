@@ -18,6 +18,7 @@ namespace DAL.Contexts
             modelBuilder.Entity<User>()
                 .HasMany(u => u.TextMaterials)
                 .WithOne(tm => tm.Author)
+                .HasForeignKey(u => u.AuthorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()

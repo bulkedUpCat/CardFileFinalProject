@@ -6,18 +6,21 @@
             <button (click)="sendTextMaterialAsPdf()"><mat-icon>print</mat-icon>
             </button>
             <button *ngIf="isAuthor" (click)="updateTextMaterial()"><mat-icon>edit</mat-icon></button>
+            <button *ngIf="isAuthor" (click)="deleteTextMaterial()"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="!isAuthor && !isSaved" (click)=" addToSaved() "><mat-icon>save</mat-icon></button>
+            <button *ngIf="!isAuthor && isSaved " (click)="removeFromSaved() "><mat-icon>remove</mat-icon></button>
         </div>
     </div>
-    <div class="prop title">
+    <div class="prop title ">
         <span>Title: <strong>{{textMaterial?.title}}</strong></span>
     </div>
-    <div class="prop content" [innerHTML]="textMaterial?.content"></div>
-    <div class="prop bottom">
-        <span class="author">Author: <strong>{{textMaterial?.userName}}</strong></span>
-        <span class="date"><strong>{{textMaterial?.datePublished | date: 'MMM, d, y'}}</strong></span>
+    <div class="prop content " [innerHTML]="textMaterial?.content "></div>
+    <div class="prop bottom ">
+        <span class="author ">Author: <strong>{{textMaterial?.userName}}</strong></span>
+        <span class="date "><strong>{{textMaterial?.datePublished | date: 'MMM, d, y'}}</strong></span>
     </div>
-    <div class="btn-approve" *ngIf="isManager && loadedStatus && textMaterial?.approvalStatusId == 0">
-        <button (click)="approveTextMaterial()">Approve this text material</button>
-        <button (click)="rejectTextMaterial()">Reject this text material</button>
+    <div class="btn-approve " *ngIf="isManager && loadedStatus && textMaterial?.approvalStatusId==0 ">
+        <button (click)="approveTextMaterial() ">Approve this text material</button>
+        <button (click)="rejectTextMaterial() ">Reject this text material</button>
     </div>
 </div>

@@ -31,6 +31,7 @@ namespace DAL.Repositories
             return await _context.TextMaterials
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
+                .Include(tm => tm.UsersWhoSaved)
                 .ToListAsync();
         }
 
@@ -39,6 +40,7 @@ namespace DAL.Repositories
             return await _context.TextMaterials
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
+                .Include(tm => tm.UsersWhoSaved)
                 .FilterByDatePublished(parameters.StartDate, parameters.EndDate)
                 .SearchByTitle(parameters.SearchTitle)
                 .SearchByCategory(parameters.SearchCategory)
@@ -53,6 +55,7 @@ namespace DAL.Repositories
             return await _context.TextMaterials
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
+                .Include(tm => tm.UsersWhoSaved)
                 .FilterByDatePublished(parameters.StartDate, parameters.EndDate)
                 .SearchByTitle(parameters.SearchTitle)
                 .SearchByCategory(parameters.SearchCategory)
@@ -72,6 +75,7 @@ namespace DAL.Repositories
             return await _context.TextMaterials
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
+                .Include(tm => tm.UsersWhoSaved)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -80,9 +84,9 @@ namespace DAL.Repositories
             await _context.TextMaterials.AddAsync(entity);
         }
 
-        public async Task<IEnumerable<TextMaterial>> GetByCategory(TextMaterialCategory category)
+        public async Task<IEnumerable<TextMaterial>> GetByCategoryId(int categoryId)
         {
-            return await _context.TextMaterials.Where(tm => tm.TextMaterialCategory == category).ToListAsync();
+            return await _context.TextMaterials.Where(tm => tm.TextMaterialCategoryId == categoryId).ToListAsync();
         }
 
         public void DeleteEntity(TextMaterial entity)

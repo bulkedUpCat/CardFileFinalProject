@@ -4,6 +4,7 @@ using CardFileApi.Extensions;
 using DAL.Dependencies;
 using FluentValidation.AspNetCore;
 using NLog;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,10 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 // Add services to the container.
 
 builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    })
     .AddFluentValidation(options =>
     {
         options.RegisterValidatorsFromAssemblyContaining(typeof(TextMaterialValidator));

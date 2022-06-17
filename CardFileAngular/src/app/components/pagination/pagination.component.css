@@ -1,0 +1,15 @@
+.page-buttons {
+    padding: 3%;
+    display: flex;
+}
+
+.page-buttons>button {
+    margin: 0 1%;
+    padding: 0 1%;
+    border-radius: 10px;
+}
+
+.page-buttons>p {
+    color: #FFF;
+    padding: 2%;
+}

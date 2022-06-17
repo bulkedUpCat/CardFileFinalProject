@@ -35,6 +35,18 @@ input[class*="input-item"] {
     border: none;
 }
 
+.categoryTitle-label {
+    font-size: 1.2em;
+    color: rgb(35, 22, 225);
+    font-weight: bold;
+    padding: 1%;
+}
+
+.categoryTitle {
+    padding: 1%;
+    font-size: 1.2em;
+}
+
 .btn {
     margin: 0;
     padding: 0;

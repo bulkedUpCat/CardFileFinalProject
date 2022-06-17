@@ -7,7 +7,6 @@ import { MaterialCategory } from '../models/MaterialCategory';
 import { TextMaterial } from '../models/TextMaterial';
 import { TextMaterialParameters } from '../models/parameters/TextMaterialParameters';
 import { UpdateTextMaterial } from '../models/UpdateTextMaterial';
-import { EmailParameters } from '../models/parameters/EmailParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ export class TextMaterialService {
 
   getTextMaterials(textParams: TextMaterialParameters) : Observable<any>{
     var parameters = {};
-    //if (textParams.userId) parameters['userId'] = textParams.userId;
+
     if (textParams.pageNumber) parameters['pageNumber'] = textParams.pageNumber;
     if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
     if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
@@ -32,12 +31,14 @@ export class TextMaterialService {
       parameters['approvalStatus'] = textParams.approvalStatus;
     }
 
-    return this.http.get(environment.apiUrl + '/textMaterials', {
+    return this.http.get<TextMaterial[]>(environment.apiUrl + '/textMaterials', {
+      responseType: 'json',
+      observe: 'response',
       params: parameters
     });
   }
 
-  getTextMaterialsByUserId(id: string, textParams: TextMaterialParameters) : Observable<TextMaterial[]>{
+  getTextMaterialsByUserId(id: string, textParams: TextMaterialParameters) : Observable<any>{
     var parameters = {};
 
     if (textParams.pageNumber) parameters['pageNumber'] = textParams.pageNumber;
@@ -52,6 +53,8 @@ export class TextMaterialService {
     }
 
     return this.http.get<TextMaterial[]>(`${environment.apiUrl}/users/${id}/textMaterials`, {
+      responseType: 'json',
+      observe: 'response',
       params: parameters
     });
   }
@@ -83,6 +86,10 @@ export class TextMaterialService {
     return this.http.put<number>(`${environment.apiUrl}/textMaterials`,textMaterial);
   }
 
+  deleteTextMaterial(id: number){
+    return this.http.delete(`${environment.apiUrl}/textMaterials/${id}`);
+  }
+
   approveTextMaterial(id: number){
     return this.http.post<number>(`${environment.apiUrl}/textMaterials/${id}/approve`,null)
   }
@@ -101,6 +108,26 @@ export class TextMaterialService {
 
     return this.http.get(`${environment.apiUrl}/textMaterials/${textMaterialId}/print`,{
       params: parameters
+    });
+  }
+
+  getSavedTextMaterials(userId: string): any{
+    return this.http.get(`${environment.apiUrl}/users/${userId}/textMaterials/saved`);
+  }
+
+  addTextMaterialToSaved(userId: string, textMaterialId: number){
+    const headers = {
+      headers: new HttpHeaders({
+        'Content-Type' : 'application/json'
+      })
+    };
+
+    return this.http.post(`${environment.apiUrl}/users/${userId}/textMaterials/saved`,textMaterialId,headers);
+  }
+
+  removeTextMaterialFromSaved(userId: string, textMaterialId: number){
+    return this.http.delete(`${environment.apiUrl}/users/${userId}/textMaterials/saved`, {
+      body: textMaterialId
     });
   }
 }

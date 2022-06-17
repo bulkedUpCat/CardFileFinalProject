@@ -7,6 +7,7 @@ using Core.RequestFeatures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,7 +33,6 @@ namespace CardFileApi.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get([FromQuery]TextMaterialParameters parameters)
-        
         {
             var textMaterials = await _textMaterialService.GetTextMaterials(parameters);
 
@@ -41,6 +41,19 @@ namespace CardFileApi.Controllers
                 _logger.LogInfo("No text materials were found");
                 return NotFound("No text materials were found");
             }
+
+            var metadata = new
+            {
+                textMaterials.TotalCount,
+                textMaterials.PageSize,
+                textMaterials.CurrentPage,
+                textMaterials.TotalPages,
+                textMaterials.HasNext,
+                textMaterials.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
             return Ok(textMaterials);
         }

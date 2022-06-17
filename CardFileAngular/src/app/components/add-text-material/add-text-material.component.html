@@ -12,12 +12,16 @@
             </div>
         </div>
         <div class="input">
-            <input class="input-item" type="text" placeholder="Enter a category" formControlName="categoryTitle">
-            <div class="error" *ngIf="submitted && category.errors">
-                <div class="error" *ngIf="category.errors['required']">
-                    This field is required
-                </div>
-            </div>
+            <label class="categoryTitle-label">
+            Choose category:
+            <select class="categoryTitle" formControlName="categoryTitle">
+            <option>Material category</option>
+            <option *ngFor="let category of categories">
+              {{category.title}}
+            </option>
+          </select>
+          </label>
+
         </div>
         <div class="input">
             <ejs-richtexteditor [toolbarSettings]="tools" formControlName="content">

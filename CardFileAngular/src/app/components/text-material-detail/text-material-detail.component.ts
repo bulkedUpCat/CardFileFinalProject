@@ -4,7 +4,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
+import { DeleteTextMaterialComponent } from '../dialogs/delete-text-material/delete-text-material.component';
 import { EmailPdfComponent } from '../dialogs/email-pdf/email-pdf.component';
 import { UpdateTextMaterialComponent } from '../dialogs/update-text-material/update-text-material.component';
 
@@ -15,18 +17,21 @@ import { UpdateTextMaterialComponent } from '../dialogs/update-text-material/upd
 })
 export class TextMaterialDetailComponent implements OnInit {
   textMaterial: TextMaterial;
+  savedTextMaterials: TextMaterial[];
+  isSaved: boolean;
   isManager: boolean = false;
   loadedStatus: boolean = false;
   isLoggedIn: boolean;
   isAuthor: boolean;
-  authorId: string;
+  userId: string;
 
   constructor(private route: ActivatedRoute,
     private textMaterialService: TextMaterialService,
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private location: Location) { }
+    private location: Location,
+    private notifier: NotifierService) { }
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -35,6 +40,7 @@ export class TextMaterialDetailComponent implements OnInit {
       this.loadedStatus = true;
       this.textMaterial = tm;
       this.checkIsUserIsAuthor();
+      this.getSavedTextMaterials();
     });
 
     this.checkIfUserIsLoggedIn();
@@ -49,7 +55,7 @@ export class TextMaterialDetailComponent implements OnInit {
   checkIsUserIsAuthor(){
     this.authService.getUserInfo().subscribe(u => {
       if (u){
-        this.authorId = u.sub;
+        this.userId = u.sub;
         this.isAuthor = u.sub == this.textMaterial?.authorId;
       }
     }, err => {
@@ -97,8 +103,7 @@ export class TextMaterialDetailComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data  = {
-      textMaterialId: this.textMaterial.id,
-      authorId: this.authorId
+      textMaterialId: this.textMaterial.id
     };
 
     this.dialog.open(EmailPdfComponent,dialogConfig);
@@ -113,6 +118,49 @@ export class TextMaterialDetailComponent implements OnInit {
     };
 
     this.dialog.open(UpdateTextMaterialComponent, dialogConfig);
+  }
+
+  deleteTextMaterial(){
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      textMaterialId: this.textMaterial.id
+    };
+
+    this.dialog.open(DeleteTextMaterialComponent, dialogConfig);
+  }
+
+  getSavedTextMaterials(){
+    this.textMaterialService.getSavedTextMaterials(this.userId).subscribe(res => {
+      this.savedTextMaterials = res;
+      console.log(this.savedTextMaterials);
+
+      if (this.savedTextMaterials.filter(tm => tm.id == this.textMaterial.id).length != 0){
+        this.isSaved = true;
+      }
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  addToSaved(){
+    this.textMaterialService.addTextMaterialToSaved(this.userId,this.textMaterial.id).subscribe(res => {
+      this.notifier.showNotification("Text material saved!","OK","SUCCESS");
+      this.isSaved = true;
+    }, err => {
+      console.log(err);
+      this.notifier.showNotification(err.error,"OK","ERROR");
+    });
+  }
+
+  removeFromSaved(){
+    this.textMaterialService.removeTextMaterialFromSaved(this.userId,this.textMaterial.id).subscribe(res => {
+      this.notifier.showNotification("Text material removed!","OK","SUCCESS");
+      this.isSaved = false;
+    }, err => {
+      console.log(err);
+      this.notifier.showNotification(err.error,"OK","ERROR");
+    });
   }
 
   goBack(){

@@ -17,16 +17,17 @@ namespace Core.Models
         public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
         public int RejectCount { get; set; }
 
-        public TextMaterialCategory TextMaterialCategory { get; set; }
+        public virtual TextMaterialCategory TextMaterialCategory { get; set; }
         public int TextMaterialCategoryId { get; set; }
 
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
+        [Column("AuthorId")]
         public string? AuthorId;
 
         public DateTime DatePublished { get; set; } = DateTime.Now;
         public DateTime DateLastChanged { get; set; } = DateTime.Now;
         public DateTime DateApproved { get; set; }
 
-        public ICollection<User> UsersWhoSaved { get; set; }
+        public virtual ICollection<User> UsersWhoSaved { get; set; } = new List<User>();
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CardFileApi.Controllers
 {
     [ApiController]
-    [Route("textMaterials/categories")]
+    [Route("api/textMaterials/categories")]
     public class TextMaterialCategoryController : ControllerBase
     {
         private readonly TextMaterialCategoryService _textMaterialCategoryService;

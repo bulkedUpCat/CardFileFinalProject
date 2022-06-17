@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-user-signup',
@@ -14,7 +15,8 @@ export class UserSignupComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    private notifier: NotifierService) { }
 
   ngOnInit(): void {
     this.createSignupForm();
@@ -55,21 +57,23 @@ export class UserSignupComponent implements OnInit {
     this.submitted = true;
 
     if(!this.signupForm.valid){
-      console.log('sign up form is not valid');
+      this.notifier.showNotification("Form is invalid","OK","ERROR");
       return;
     }
 
     if (this.password.value != this.confirmPassword.value){
-      console.log('passwords do not match');
+      this.notifier.showNotification("Passwords don't match","OK","ERROR");
       return;
     }
 
     const user = this.signupForm.value;
 
     this.authService.signUp(user).subscribe(u => {
+      this.notifier.showNotification("You've successfully logged in!","OK","SUCCESS");
       this.router.navigateByUrl('login');
     },
     err => {
+      this.notifier.showNotification(`${err.error}`,"OK","ERROR");
       console.log(err);
     });
   }

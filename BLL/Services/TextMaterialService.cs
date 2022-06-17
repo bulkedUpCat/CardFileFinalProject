@@ -31,14 +31,15 @@ namespace BLL.Services
             _emailService = emailService;
         }
 
-        public async Task<IEnumerable<TextMaterialDTO>> GetTextMaterials(TextMaterialParameters parameters)
+        public async Task<PagedList<TextMaterialDTO>> GetTextMaterials(TextMaterialParameters parameters)
         {
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(parameters);
 
-            return PagedList<TextMaterialDTO>.ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
+            return PagedList<TextMaterialDTO>
+                .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
         }
         
-        public async Task<IEnumerable<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
+        public async Task<PagedList<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
         {
             var user = await _userManager.FindByIdAsync(id);
 
@@ -54,7 +55,8 @@ namespace BLL.Services
                 throw new CardFileException($"No text materials of author with id {user.Id} were found");
             }
 
-            return _mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials);
+            return PagedList<TextMaterialDTO>
+                .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);
         }
 
         public async Task<TextMaterialDTO> GetTextMaterialById(int id)
@@ -228,6 +230,75 @@ namespace BLL.Services
             catch (Exception e)
             {
                 throw new CardFileException("Failed to send an email with pdf attached");
+            }
+        }
+
+        public async Task<IEnumerable<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId)
+        {
+            var savedTextMaterials = await _unitOfWork.UserRepository.GetSavedTextMaterialsByUserId(userId);
+            return _mapper.Map <IEnumerable<TextMaterialDTO>>(savedTextMaterials);
+        }
+
+        public async Task AddTextMaterialToSaved(string userId, int textMaterialId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {userId}");
+            }
+
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
+
+            if (textMaterial == null)
+            {
+                throw new CardFileException($"Failed to find a text material with id {textMaterialId}");
+            }
+
+            try
+            {
+                textMaterial.UsersWhoSaved.Add(user);
+
+                _unitOfWork.TextMaterialRepository.Update(textMaterial);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        public async Task RemoveTextMaterialFromSaved(string userId, int textMaterialId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {userId}");
+            }
+
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
+
+            if (textMaterial == null)
+            {
+                throw new CardFileException($"Failed to find a text material with id {textMaterialId}");
+            }
+
+            if (!textMaterial.UsersWhoSaved.Contains(user))
+            {
+                throw new CardFileException($"User with id {userId} doesn't have a text material with id {textMaterialId} in his saved");
+            }
+
+            try
+            {
+                textMaterial.UsersWhoSaved.Remove(user);
+
+                _unitOfWork.TextMaterialRepository.Update(textMaterial);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
             }
         }
     }

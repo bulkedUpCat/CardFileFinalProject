@@ -31,7 +31,12 @@
         <div class="no-account">
             <a routerLink="/signup" routerLinkActive="active">
       Don't have an account yet?
-    </a>
+            </a>
+        </div>
+        <div class="forgot-password">
+            <a (click)="onForgotPassword()" routerLinkActive="active">
+            Forgot your password?
+          </a>
         </div>
         <!-- <div class="forgot-password">
             <a (click)="onForgotPassword()" routerLink="/login">Forgot your password?</a>

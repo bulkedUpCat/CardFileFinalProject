@@ -43,12 +43,25 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.orderBy = this.sharedParams.orderBy;
     this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
     this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
+
+    if (!this.isManager){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(1);
+    }
+    else if (!this.isAdmin){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(0,1);
+    }
+    else{
+      this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
+    }
+
     this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
     this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
     this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
     this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
     this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
+    this.textMaterialParams.pageSize = 2;
   }
 
   createForm(){
@@ -140,6 +153,9 @@ export class SortingFormComponent implements OnInit {
 
     this.textMaterialParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
     this.sharedParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
+
+    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
 
     this.filter.emit(this.textMaterialParams);
   }

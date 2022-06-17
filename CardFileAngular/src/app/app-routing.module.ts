@@ -3,10 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AddTextMaterialComponent } from './components/add-text-material/add-text-material.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { TextMaterialDetailComponent } from './components/text-material-detail/text-material-detail.component';
 import { TextMaterialsComponent } from './components/text-materials/text-materials.component';
 import { UserLoginComponent } from './components/user-login/user-login.component';
 import { UserSignupComponent } from './components/user-signup/user-signup.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/main', pathMatch: 'full'},
@@ -14,8 +16,9 @@ const routes: Routes = [
   {path: 'main/:id', component: TextMaterialDetailComponent},
   {path: 'login', component: UserLoginComponent},
   {path: 'signup', component: UserSignupComponent},
-  {path: 'home-page', component: HomePageComponent},
-  {path: 'add-text-material', component: AddTextMaterialComponent},
+  {path: 'reset-password', component: ResetPasswordComponent},
+  {path: 'home-page', component: HomePageComponent, canActivate: [AuthGuard]},
+  {path: 'add-text-material', component: AddTextMaterialComponent, canActivate: [AuthGuard]},
   {path: '**', redirectTo: '/main'}
 ];
 
