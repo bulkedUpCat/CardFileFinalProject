@@ -1,0 +1,19 @@
+.container {
+    margin: 1% 0;
+    color: rgb(10, 10, 137);
+    font-weight: bold;
+}
+
+.header {
+    font-size: 1.4em;
+    text-align: center;
+}
+
+.info {
+    margin-top: 2%;
+}
+
+.text-material-list {
+    font-size: 1.4em;
+    text-align: center;
+}

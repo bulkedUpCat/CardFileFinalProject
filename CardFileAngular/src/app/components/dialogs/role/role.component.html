@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="header">User info</div>
+    <div class="info">
+        <span>Username: </span> {{user?.userName}}
+    </div>
+    <div class="header">Roles</div>
+    <div *ngIf="user.roles.length != 0">
+        <div>
+            <div *ngFor="let role of user?.roles">
+                <div class="role-item">
+                    <span>{{role}}</span>
+                    <button (click)="removeRole(role)"><mat-icon>delete</mat-icon></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="add-to-role">
+            <p>Add role</p>
+            <button (click)="addRole()">
+              <mat-icon *ngIf="!showAddRoleOptions">add</mat-icon>
+              <mat-icon *ngIf="showAddRoleOptions">remove</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="showAddRoleOptions" class="add-role-form">
+            <form (ngSubmit)="onSubmit()" [formGroup]="addUserToRoleForm">
+                <select formControlName="roleName">
+                  <option>Choose role</option>
+                  <option *ngFor="let role of roles">{{role}}
+                  </option>
+                </select>
+                <div *ngIf="submitted && roleName.errors">
+                    <div class="error">
+                        This field is required
+                    </div>
+                </div>
+                <div>
+                    <button type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

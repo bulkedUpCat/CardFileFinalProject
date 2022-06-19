@@ -131,16 +131,17 @@ export class TextMaterialDetailComponent implements OnInit {
   }
 
   getSavedTextMaterials(){
-    this.textMaterialService.getSavedTextMaterials(this.userId).subscribe(res => {
+    if (this.userId){
+      this.textMaterialService.getSavedTextMaterials(this.userId).subscribe(res => {
       this.savedTextMaterials = res;
-      console.log(this.savedTextMaterials);
 
       if (this.savedTextMaterials.filter(tm => tm.id == this.textMaterial.id).length != 0){
         this.isSaved = true;
       }
-    }, err => {
-      console.log(err);
-    });
+      }, err => {
+        console.log(err);
+      });
+    }
   }
 
   addToSaved(){

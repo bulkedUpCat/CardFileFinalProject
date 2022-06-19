@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class EmailService
+    public class EmailService: IEmailService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;

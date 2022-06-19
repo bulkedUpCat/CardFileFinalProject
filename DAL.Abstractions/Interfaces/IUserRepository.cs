@@ -9,6 +9,8 @@ namespace DAL.Abstractions.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<IEnumerable<User>> GetWithDetailsAsync();
         Task<IEnumerable<TextMaterial>> GetSavedTextMaterialsByUserId(string userId);
+        Task<User> GetByIdAsync(string id);
     }
 }

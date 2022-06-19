@@ -10,5 +10,6 @@ namespace DAL.Abstractions.Interfaces
     public interface ITextMaterialCategoryRepository : IGenericRepository<TextMaterialCategory>
     {
         Task<TextMaterialCategory> GetByTitleAsync(string title);
+        Task<TextMaterialCategory> GetByIdAsync(int id);
     }
 }

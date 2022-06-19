@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="header">
+        <p>This is a page of {{user?.userName}}</p>
+    </div>
+    <div class="info">
+        <div>
+            <p>Total count of text materials: {{totalCount}}</p>
+            <p>Total count of likes: </p>
+        </div>
+    </div>
+    <div>
+        <p class="text-material-list">List of all text materials</p>
+        <app-text-material *ngFor="let text of textMaterials" [textMaterial]="text">
+        </app-text-material>
+        <app-pagination [totalPages]="paginator?.TotalPages" (next)="onNextPage($event) " (previous)="onPreviousPage($event) " [isUserPage]="true"></app-pagination>
+    </div>
+</div>

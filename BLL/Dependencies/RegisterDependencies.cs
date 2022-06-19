@@ -19,7 +19,8 @@ namespace BLL.Dependencies
             services.AddScoped<AuthService>();
             services.AddScoped<RoleService>();
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<UserService>();
         }
     }
 }

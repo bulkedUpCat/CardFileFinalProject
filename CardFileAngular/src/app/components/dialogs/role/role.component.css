@@ -1,0 +1,43 @@
+.container {
+    font-size: 1.5em;
+}
+
+.header {
+    text-align: center;
+}
+
+.info {
+    margin-bottom: 5%;
+}
+
+.error {
+    font-size: 1em;
+    color: rgb(31, 31, 228);
+}
+
+.add-to-role {
+    display: flex;
+    justify-content: space-between;
+}
+
+.role-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1%;
+}
+
+.add-role-form {
+    text-align: center;
+    margin-top: 2%;
+}
+
+.add-role-form select {
+    padding: 1%;
+    font-size: 1em;
+    margin-bottom: 2%;
+}
+
+.add-role-form button {
+    font-size: 1em;
+    padding: 1%;
+}

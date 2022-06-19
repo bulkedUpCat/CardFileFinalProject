@@ -50,7 +50,7 @@ namespace DAL.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<TextMaterial>> GetByUser(User user, TextMaterialParameters parameters)
+        public async Task<IEnumerable<TextMaterial>> GetByUserId(string userId, TextMaterialParameters parameters)
         {
             return await _context.TextMaterials
                 .Include(tm => tm.Author)
@@ -61,7 +61,7 @@ namespace DAL.Repositories
                 .SearchByCategory(parameters.SearchCategory)
                 .FilterByApprovalStatus(parameters.ApprovalStatus)
                 .Sort(parameters.OrderBy)
-                .Where(tm => tm.Author == user)
+                .Where(tm => tm.AuthorId == userId)
                 .ToListAsync();
         }
 
@@ -89,9 +89,10 @@ namespace DAL.Repositories
             return await _context.TextMaterials.Where(tm => tm.TextMaterialCategoryId == categoryId).ToListAsync();
         }
 
-        public void DeleteEntity(TextMaterial entity)
+        public async Task DeleteById(int id)
         {
-            _context.TextMaterials.Remove(entity);
+            var textMaterial = await _context.TextMaterials.FirstOrDefaultAsync(tm => tm.Id == id);
+            _context.TextMaterials.Remove(textMaterial);
         }
 
         public void Update(TextMaterial entity)

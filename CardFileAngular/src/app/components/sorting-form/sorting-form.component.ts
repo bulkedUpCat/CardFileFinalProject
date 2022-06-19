@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { AuthService } from 'src/app/services/auth.service';
+import { SharedHomeParamsService } from 'src/app/services/shared-home-params.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
@@ -26,11 +27,23 @@ export class SortingFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private sharedParams: SharedParamsService,
+    private sharedHomeParams: SharedHomeParamsService,
     private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    this.createForm();
-    this.configureTextMaterialParams();
+    if (this.isHomePage){
+      this.createHomeForm();
+    }
+    else{
+      this.createForm();
+    }
+
+    if (this.isHomePage){
+      this.configureHomeTextMaterialParams();
+    }
+    else{
+      this.configureTextMaterialParams();
+    }
 
     this.authService.claims.subscribe( c => {
       if (c){
@@ -60,8 +73,33 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
     this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
     this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
-    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    this.textMaterialParams.pageSize = 2;
+    // this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+    // this.textMaterialParams.pageSize = 2;
+  }
+
+  configureHomeTextMaterialParams(){
+    this.textMaterialParams.orderBy = this.sharedHomeParams.orderBy;
+    this.textMaterialParams.filterFromDate = this.sharedHomeParams.filterFromDate;
+    this.textMaterialParams.filterToDate = this.sharedHomeParams.filterToDate;
+
+    if (!this.isManager){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(1);
+    }
+    else if (!this.isAdmin){
+      this.textMaterialParams.approvalStatus = [];
+      this.textMaterialParams.approvalStatus.push(0,1);
+    }
+    else{
+      this.textMaterialParams.approvalStatus = this.sharedHomeParams.approvalStatus;
+    }
+
+    this.textMaterialParams.approvalStatus = this.sharedHomeParams.approvalStatus;
+    this.textMaterialParams.searchTitle = this.sharedHomeParams.searchTitle;
+    this.textMaterialParams.searchCategory = this.sharedHomeParams.searchCategory;
+    this.textMaterialParams.searchAuthor = this.sharedHomeParams.searchAuthor;
+    // this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+    // this.textMaterialParams.pageSize = 2;
   }
 
   createForm(){
@@ -77,6 +115,22 @@ export class SortingFormComponent implements OnInit {
       searchTitle: [this.sharedParams.searchTitle],
       searchCategory: [this.sharedParams.searchCategory],
       searchAuthor: [this.sharedParams.searchAuthor],
+    });
+  }
+
+  createHomeForm(){
+    this.sortingParamsForm = this.fb.group({
+      sortByTitle: [null],
+      sortByCategory: [null],
+      sortByDatePublished: [null],
+      filterFromDate: [this.sharedHomeParams.filterFromDate],
+      filterToDate: [this.sharedHomeParams.filterToDate],
+      pending: [this.sharedHomeParams.approvalStatus.includes(0)],
+      approved: [this.sharedHomeParams.approvalStatus.includes(1)],
+      rejected: [this.sharedHomeParams.approvalStatus.includes(2)],
+      searchTitle: [this.sharedHomeParams.searchTitle],
+      searchCategory: [this.sharedHomeParams.searchCategory],
+      searchAuthor: [this.sharedHomeParams.searchAuthor],
     });
   }
 
@@ -105,10 +159,8 @@ export class SortingFormComponent implements OnInit {
 
   onSubmit(){
     this.textMaterialParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
-    this.sharedParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
 
     this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
-    this.sharedParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
 
     this.textMaterialParams.approvalStatus = [];
 
@@ -123,8 +175,6 @@ export class SortingFormComponent implements OnInit {
     if (this.sortingParamsForm.get('rejected').value){
       this.textMaterialParams.approvalStatus.push(2);
     }
-
-    this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
 
     this.textMaterialParams.orderBy = '';
     if (this.sortingParamsForm.get('sortByTitle').value != null){
@@ -146,16 +196,18 @@ export class SortingFormComponent implements OnInit {
     }
 
     this.textMaterialParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
-    this.sharedParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
 
     this.textMaterialParams.searchCategory = this.sortingParamsForm.get('searchCategory').value;
-    this.sharedParams.searchCategory = this.sortingParamsForm.get('searchCategory').value;
 
     this.textMaterialParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
-    this.sharedParams.searchAuthor = this.sortingParamsForm.get('searchAuthor').value;
 
-    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
+    if (this.isHomePage){
+      this.textMaterialParams.pageNumber = this.sharedHomeParams.pageNumber;
+      this.textMaterialParams.pageSize = this.sharedHomeParams.pageSize;
+    }else{
+      this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
+      this.textMaterialParams.pageSize = this.sharedParams.pageSize;
+    }
 
     this.filter.emit(this.textMaterialParams);
   }

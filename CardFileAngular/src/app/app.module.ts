@@ -28,6 +28,11 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { DeleteTextMaterialComponent } from './components/dialogs/delete-text-material/delete-text-material.component';
 import { ForgotPasswordComponent } from './components/dialogs/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PersonalInfoComponent } from './components/personal-info/personal-info.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { UserItemComponent } from './components/user-item/user-item.component';
+import { RoleComponent } from './components/dialogs/role/role.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +54,11 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     DeleteTextMaterialComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    PersonalInfoComponent,
+    UserPageComponent,
+    UserListComponent,
+    UserItemComponent,
+    RoleComponent,
   ],
   imports: [
     BrowserModule,

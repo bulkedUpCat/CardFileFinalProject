@@ -1,5 +1,6 @@
 ﻿using Core.DTOs;
 using Core.Models;
+using Core.RequestFeatures;
 using DAL.Contexts;
 using DAL.Repositories;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace CardFileTests.DataTests
             var actual = await repository.GetAsync();
 
             // Assert
-            Assert.That(actual, Is.EquivalentTo(expected).Using(new TextMaterialEqualityComparer()), message: "GetAsync works incorrectly");
+            Assert.That(actual, Is.EquivalentTo(expected).Using(new TextMaterialEqualityComparer()), message: "GetAsync method works incorrectly");
         }
 
         [TestCase(1)]
@@ -37,13 +38,32 @@ namespace CardFileTests.DataTests
             // Arrange
             using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
             var repository = new TextMaterialRepository(context);
-            var expected = ExpectedTextMaterials.FirstOrDefault(tm => tm.Id == id);
+            var expected = ExpectedTextMaterials
+                .FirstOrDefault(tm => tm.Id == id);
 
             // Act
             var textMaterial = await repository.GetByIdAsync(id);
 
             // Assert
-            Assert.That(expected, Is.EqualTo(textMaterial).Using(new TextMaterialEqualityComparer()), message: "GetByIdAsync works incorrectly");
+            Assert.That(expected, Is.EqualTo(textMaterial).Using(new TextMaterialEqualityComparer()), message: "GetByIdAsync method works incorrectly");
+        }
+
+        [TestCase("1")]
+        [TestCase("2")]
+        public async Task TextMaterialRepository_GetByUserId_ReturnsTextMaterialsOfUser(string userId)
+        {
+            // Arrange
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            var repository = new TextMaterialRepository(context);
+            var expected = ExpectedTextMaterials
+                .Where(tm => tm.AuthorId == userId)
+                .ToList();
+
+            // Act
+            var actual = await repository.GetByUserId(userId, new TextMaterialParameters());
+
+            // Assert
+            Assert.That(expected, Is.EqualTo(actual).Using(new TextMaterialEqualityComparer()), message: "GetByUserId method works incorrectly");
         }
 
         [TestCase(1)]
@@ -84,19 +104,18 @@ namespace CardFileTests.DataTests
         }
 
         [Test]
-        public async Task TextMaterialRepository_DeleteEntity_DeletesTextMaterial()
+        public async Task TextMaterialRepository_DeleteById_DeletesTextMaterial()
         {
             // Arrange
             using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
             var repository = new TextMaterialRepository(context);
-            var textMaterialToDelete = ExpectedTextMaterials.FirstOrDefault(tm => tm.Id == 1);
 
             // Act
-            repository.DeleteEntity(textMaterialToDelete);
+            await repository.DeleteById(1);
             await context.SaveChangesAsync();
 
             // Assert
-            Assert.That(context.TextMaterials.Count(), Is.EqualTo(2), message: "DeleteEntity method works incorrectly");
+            Assert.That(context.TextMaterials.Count(), Is.EqualTo(2), message: "DeleteById method works incorrectly");
         }
 
         [Test]
@@ -132,9 +151,9 @@ namespace CardFileTests.DataTests
         private static IEnumerable<TextMaterial> ExpectedTextMaterials =
             new[]
             {
-                new TextMaterial { Id = 1, AuthorId = "1", Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 2, AuthorId = "2", Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 3, AuthorId = "2", Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 }
+                new TextMaterial { Id = 1, AuthorId = "1", ApprovalStatus = ApprovalStatus.Pending, Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
+                new TextMaterial { Id = 2, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
+                new TextMaterial { Id = 3, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 }
             };
 
         private static IEnumerable<TextMaterialCategory> ExpectedTextMaterialCategories =

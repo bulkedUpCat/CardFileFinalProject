@@ -16,7 +16,12 @@
     </div>
     <div class="prop content " [innerHTML]="textMaterial?.content "></div>
     <div class="prop bottom ">
-        <span class="author ">Author: <strong>{{textMaterial?.userName}}</strong></span>
+        <span class="author ">
+          Author:
+          <a routerLink="/user/{{textMaterial?.authorId}}">
+            <strong>{{textMaterial?.userName}}</strong>
+          </a>
+        </span>
         <span class="date "><strong>{{textMaterial?.datePublished | date: 'MMM, d, y'}}</strong></span>
     </div>
     <div class="btn-approve " *ngIf="isManager && loadedStatus && textMaterial?.approvalStatusId==0 ">

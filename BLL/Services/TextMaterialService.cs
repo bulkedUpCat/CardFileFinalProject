@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.cs.Interfaces;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -17,17 +18,17 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        private readonly EmailService _emailService;
+        //private readonly UserManager<User> _userManager;
+        private readonly IEmailService _emailService;
 
         public TextMaterialService(IUnitOfWork unitOfWork, 
             IMapper mapper,
-            UserManager<User> userManager,
-            EmailService emailService)
+            //UserManager<User> userManager,
+            IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _userManager = userManager;
+            //_userManager = userManager;
             _emailService = emailService;
         }
 
@@ -41,14 +42,15 @@ namespace BLL.Services
         
         public async Task<PagedList<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
         {
-            var user = await _userManager.FindByIdAsync(id);
-
+            //var user = await _userManager.FindByIdAsync(id);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+           
             if (user == null)
             {
                 throw new CardFileException($"Failed to find a user with id {id}");
             }
 
-            var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUser(user, textMaterialParams);
+            var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUserId(user.Id, textMaterialParams);
 
             if (textMaterials == null)
             {
@@ -76,7 +78,19 @@ namespace BLL.Services
             var textMaterial = _mapper.Map<TextMaterial>(textMaterialDTO);
 
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(textMaterialDTO.CategoryTitle);
-            var author = await _userManager.FindByIdAsync(textMaterialDTO.AuthorId);
+            //var author = await _userManager.FindByIdAsync(textMaterialDTO.AuthorId);
+
+            if (category == null)
+            {
+                throw new CardFileException($"Failed to find a category with title {textMaterialDTO.CategoryTitle}");
+            }
+
+            var author = await _unitOfWork.UserRepository.GetByIdAsync(textMaterialDTO.AuthorId);
+
+            if (author == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {textMaterialDTO.AuthorId}");
+            }
 
             textMaterial.TextMaterialCategory = category;
             textMaterial.Author = author;
@@ -138,7 +152,7 @@ namespace BLL.Services
 
             try
             {
-                _unitOfWork.TextMaterialRepository.DeleteEntity(textMaterial);
+                await _unitOfWork.TextMaterialRepository.DeleteById(id);
                 await _unitOfWork.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -209,7 +223,8 @@ namespace BLL.Services
                 throw new CardFileException("User id was not provided");
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
+            //var user = await _userManager.FindByIdAsync(userId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
             {
@@ -235,13 +250,22 @@ namespace BLL.Services
 
         public async Task<IEnumerable<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId)
         {
+            //var user = await _userManager.FindByIdAsync(userId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"User with id {userId} doens't exist");
+            }
+
             var savedTextMaterials = await _unitOfWork.UserRepository.GetSavedTextMaterialsByUserId(userId);
             return _mapper.Map <IEnumerable<TextMaterialDTO>>(savedTextMaterials);
         }
 
         public async Task AddTextMaterialToSaved(string userId, int textMaterialId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            //var user = await _userManager.FindByIdAsync(userId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
             {
@@ -270,7 +294,8 @@ namespace BLL.Services
 
         public async Task RemoveTextMaterialFromSaved(string userId, int textMaterialId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            //var user = await _userManager.FindByIdAsync(userId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
             {

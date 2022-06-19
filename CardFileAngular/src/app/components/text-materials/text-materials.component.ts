@@ -67,6 +67,13 @@ export class TextMaterialsComponent implements OnInit {
   onFilter(parameters: TextMaterialParameters){
       this.textMaterialParams = parameters;
 
+      this.sharedParams.filterFromDate = parameters.filterFromDate;
+      this.sharedParams.filterToDate = parameters.filterToDate;
+      this.sharedParams.approvalStatus = parameters.approvalStatus;
+      this.sharedParams.searchTitle = parameters.searchTitle;
+      this.sharedParams.searchCategory = parameters.searchCategory;
+      this.sharedParams.searchAuthor = parameters.searchAuthor;
+
       if (!this.isManager){
         if (this.textMaterialParams.approvalStatus.includes(0)){
           const index = this.textMaterialParams.approvalStatus.indexOf(0);

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
-import { SharedParamsService } from 'src/app/services/shared-params.service';
+import { SharedHomeParamsService } from 'src/app/services/shared-home-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class HomePageComponent implements OnInit {
 
   constructor(private authService: AuthService,
     private textMaterialService: TextMaterialService,
-    private sharedParams: SharedParamsService) { }
+    private sharedHomeParams: SharedHomeParamsService) { }
 
   ngOnInit(): void {
     this.authService.getUserInfo().subscribe( u => {
@@ -36,28 +36,16 @@ export class HomePageComponent implements OnInit {
   }
 
   configureTextMaterialParams(){
-    this.textMaterialParams.orderBy = this.sharedParams.orderBy;
-    this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
-    this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
-    this.textMaterialParams.approvalStatus = this.sharedParams.approvalStatus;
-    this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
-    this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
-    this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
-    this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    this.textMaterialParams.pageSize = this.sharedParams.pageSize;
+    this.textMaterialParams.orderBy = this.sharedHomeParams.orderBy;
+    this.textMaterialParams.filterFromDate = this.sharedHomeParams.filterFromDate;
+    this.textMaterialParams.filterToDate = this.sharedHomeParams.filterToDate;
+    this.textMaterialParams.approvalStatus = this.sharedHomeParams.approvalStatus;
+    this.textMaterialParams.searchTitle = this.sharedHomeParams.searchTitle;
+    this.textMaterialParams.searchCategory = this.sharedHomeParams.searchCategory;
+    this.textMaterialParams.searchAuthor = this.sharedHomeParams.searchAuthor;
+    this.textMaterialParams.pageNumber = this.sharedHomeParams.pageNumber;
+    this.textMaterialParams.pageSize = this.sharedHomeParams.pageSize;
   }
-
-  // getAllTextMaterials(){
-  //   this.textMaterialService.showApproved.next(null);
-  // }
-
-  // getApprovedMaterials(){
-  //   this.textMaterialService.showApproved.next(true.toString());
-  // }
-
-  // getRejectedMaterials(){
-  //   this.textMaterialService.showApproved.next(false.toString());
-  // }
 
   getOwnTextMaterials(){
     this.textMaterialService.getTextMaterialsByUserId(this.userId, this.textMaterialParams).subscribe(tm => {
@@ -70,6 +58,14 @@ export class HomePageComponent implements OnInit {
 
   onFilter(parameters: TextMaterialParameters){
     this.textMaterialParams = parameters;
+
+    this.sharedHomeParams.filterFromDate = parameters.filterFromDate;
+    this.sharedHomeParams.filterToDate = parameters.filterToDate;
+    this.sharedHomeParams.approvalStatus = parameters.approvalStatus;
+    this.sharedHomeParams.searchTitle = parameters.searchTitle;
+    this.sharedHomeParams.searchCategory = parameters.searchCategory;
+    this.sharedHomeParams.searchAuthor = parameters.searchAuthor;
+
     this.textMaterialService.getTextMaterialsByUserId(this.userId, parameters).subscribe( tm => {
       this.ownTextMaterials = tm.body;
       this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
@@ -80,9 +76,9 @@ export class HomePageComponent implements OnInit {
 
   onNextPage(page: number){
     this.textMaterialParams.pageNumber = page;
-    this.sharedParams.pageNumber = page;
+    this.sharedHomeParams.pageNumber = page;
 
-    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+    this.textMaterialService.getTextMaterialsByUserId(this.userId, this.textMaterialParams).subscribe(tm => {
       this.ownTextMaterials = tm.body;
     }, err => {
       console.log(err);
@@ -91,9 +87,9 @@ export class HomePageComponent implements OnInit {
 
   onPreviousPage(page: number){
     this.textMaterialParams.pageNumber = page;
-    this.sharedParams.pageNumber = page;
+    this.sharedHomeParams.pageNumber = page;
 
-    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+    this.textMaterialService.getTextMaterialsByUserId(this.userId, this.textMaterialParams).subscribe(tm => {
       this.ownTextMaterials = tm.body;
     }, err => {
       console.log(err);

@@ -20,35 +20,44 @@ namespace DAL.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<User>> GetAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetWithDetailsAsync()
+        {
+            return await _context.Users
+                .Include(u => u.TextMaterials)
+                .ToListAsync();
+        }
+
+        public async Task<User> GetByIdAsync(string id)
+        {
+            return await _context.Users
+                .Include(u => u.TextMaterials)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<IEnumerable<TextMaterial>> GetSavedTextMaterialsByUserId(string userId)
         {
             return (await _context.Users.Include(u => u.SavedTextMaterials)
                 .FirstOrDefaultAsync(u => u.Id == userId)).SavedTextMaterials;
         }
 
-        public Task CreateAsync(User entity)
+        public async Task CreateAsync(User entity)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(entity);
         }
 
         public void DeleteEntity(User entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<User>> GetAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
+            _context.Users.Remove(entity);
         }
 
         public void Update(User entity)
         {
-            throw new NotImplementedException();
+            _context.Users.Update(entity);
         }
     }
 }

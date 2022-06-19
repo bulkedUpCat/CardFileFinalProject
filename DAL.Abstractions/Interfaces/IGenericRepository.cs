@@ -9,9 +9,7 @@ namespace DAL.Abstractions.Interfaces
     public interface IGenericRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAsync();
-        Task<TEntity> GetByIdAsync(int id);
         Task CreateAsync(TEntity entity);
-        void DeleteEntity(TEntity entity);
         void Update(TEntity entity);
     }
 }

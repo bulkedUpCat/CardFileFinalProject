@@ -51,6 +51,7 @@ namespace CardFileApi.Extensions
             {
                 c.AddProfile<TextMaterialProfile>();
                 c.AddProfile<TextMaterialCategoryProfile>();
+                c.AddProfile<UserProfile>();
             })));
         }
 

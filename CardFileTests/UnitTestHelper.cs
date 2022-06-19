@@ -31,9 +31,14 @@ namespace CardFileTests
         public static IMapper CreateMapperProfile()
         {
             var textMaterialProfile = new TextMaterialProfile();
+            var textMaterialCategoryProfile = new TextMaterialCategoryProfile();
+            var userProfile = new UserProfile();
+
             var configuration = new MapperConfiguration(cfg =>
             {
-
+                cfg.AddProfile(textMaterialProfile);
+                cfg.AddProfile(textMaterialCategoryProfile);
+                cfg.AddProfile(userProfile);
             });
 
             return new Mapper(configuration);
@@ -42,9 +47,18 @@ namespace CardFileTests
         public static void SeedData(AppDbContext context)
         {
             context.TextMaterials.AddRange(
-                new TextMaterial { Id = 1, AuthorId = "1", Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 2, AuthorId = "2", Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 3, AuthorId = "2", Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 });
+                new TextMaterial { Id = 1, AuthorId = "1", ApprovalStatus = ApprovalStatus.Pending, Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
+                new TextMaterial { Id = 2, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
+                new TextMaterial { Id = 3, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 });
+
+            context.TextMaterialCategory.AddRange(
+                new TextMaterialCategory { Id = 1, Title = "First one" },
+                new TextMaterialCategory { Id = 2, Title = "Second one" });
+
+            context.Users.AddRange(
+                new User { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com" },
+                new User { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com" },
+                new User { Id = "3", UserName = "Bobby", Email = "bobby@gmail.com" });
 
             context.SaveChanges();
         }

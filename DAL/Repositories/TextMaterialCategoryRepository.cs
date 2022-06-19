@@ -21,17 +21,20 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<TextMaterialCategory>> GetAsync()
         {
-            return await _context.TextMaterialCategory.ToListAsync();
+            return await _context.TextMaterialCategory
+                .ToListAsync();
         }
 
         public async Task<TextMaterialCategory> GetByIdAsync(int id)
         {
-            return await _context.TextMaterialCategory.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.TextMaterialCategory
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<TextMaterialCategory> GetByTitleAsync(string title)
         {
-            return await _context.TextMaterialCategory.FirstOrDefaultAsync(x => x.Title == title);
+            return await _context.TextMaterialCategory
+                .FirstOrDefaultAsync(x => x.Title == title);
         }
 
         public async Task CreateAsync(TextMaterialCategory entity)

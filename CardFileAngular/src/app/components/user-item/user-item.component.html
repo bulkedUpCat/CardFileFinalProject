@@ -1,0 +1,14 @@
+<div class="item" (mouseover)="onShow()" (mouseout)="onHide()">
+    <div class="header">
+        <span routerLink="/user/{{user.id}}">{{user?.email}}</span>
+        <span><button class="btn" (click)="assign()"><mat-icon>cached</mat-icon></button></span>
+    </div>
+    <div *ngIf="showInfo" class="info">
+        <div>
+            <span class="prop">Username: </span> {{user?.userName}}
+        </div>
+        <div>
+            <span class="prop">Total count of text materials: </span> {{user?.textMaterials.length}}
+        </div>
+    </div>
+</div>

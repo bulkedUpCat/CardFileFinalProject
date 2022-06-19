@@ -14,23 +14,42 @@ namespace CardFileApi.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
+        private readonly UserService _userService;
         private readonly TextMaterialService _textMaterialService;
 
-        public UserController(TextMaterialService textMaterialService)
+        public UserController(UserService userService,
+            TextMaterialService textMaterialService)
         {
+            _userService = userService;
             _textMaterialService = textMaterialService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
-            return Ok();
+            var users = await _userService.GetAll();
+
+            if (users == null)
+            {
+                return NotFound("No users were found");
+            }
+
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetById(string id)
+        public async Task<ActionResult<UserDTO>> GetById(string id)
         {
-            return Ok();
+            try
+            {
+                var user = await _userService.GetUserById(id);
+
+                return Ok(user);
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("{id}/textMaterials", Name = "GetTextMaterialsByUserId")]
