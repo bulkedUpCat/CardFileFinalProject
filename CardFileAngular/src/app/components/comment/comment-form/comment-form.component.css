@@ -1,0 +1,46 @@
+textarea {
+    resize: none;
+}
+
+.comment-form-textarea {
+    width: 100%;
+    height: 20vh;
+    margin: 2% 0;
+    border: 1px solid rgb(11, 14, 1);
+    font-size: 1.2em;
+    padding: 1%;
+}
+
+.comment-form-button {
+    font-size: 1.2em;
+    padding: 8px 16px;
+    background: rgb(59, 130, 246);
+    border-radius: 8px;
+    color: #FFF;
+}
+
+.comment-form-button:hover:enabled {
+    cursor: pointer;
+    background: rgb(37, 99, 235);
+}
+
+.comment-form-button:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.comment-form-cancel-button {
+    margin-left: 2%;
+}
+
+.text-editor-header {
+    padding: .2%;
+}
+
+.text-editor-header>.btn {
+    border: none;
+    outline: none;
+    margin-right: 1%;
+    cursor: pointer;
+    padding: 1%;
+}

@@ -15,6 +15,7 @@ namespace DAL.Data
         private ITextMaterialRepository _textMaterialRepository;
         private ITextMaterialCategoryRepository _textMaterialCategoryRepository;
         private IUserRepository _userRepository;
+        private ICommentRepository _commentRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -57,6 +58,19 @@ namespace DAL.Data
                 }
 
                 return _userRepository;
+            }
+        }
+
+        public ICommentRepository CommentRepository
+        {
+            get
+            {
+                if (_commentRepository == null)
+                {
+                    _commentRepository = new CommentRepository(_context);
+                }
+
+                return _commentRepository;
             }
         }
 

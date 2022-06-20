@@ -33,6 +33,9 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserItemComponent } from './components/user-item/user-item.component';
 import { RoleComponent } from './components/dialogs/role/role.component';
+import { CommentComponent } from './components/comment/comment/comment.component';
+import { CommentListComponent } from './components/comment/comment-list/comment-list.component';
+import { CommentFormComponent } from './components/comment/comment-form/comment-form.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import { RoleComponent } from './components/dialogs/role/role.component';
     UserListComponent,
     UserItemComponent,
     RoleComponent,
+    CommentComponent,
+    CommentListComponent,
+    CommentFormComponent,
   ],
   imports: [
     BrowserModule,

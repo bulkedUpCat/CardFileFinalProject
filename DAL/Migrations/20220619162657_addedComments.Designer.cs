@@ -4,6 +4,7 @@ using DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619162657_addedComments")]
+    partial class addedComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +35,6 @@ namespace DAL.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("ParentCommentId")
                         .HasColumnType("int");
@@ -343,7 +342,7 @@ namespace DAL.Migrations
                         .HasForeignKey("ParentCommentId");
 
                     b.HasOne("Core.Models.TextMaterial", "TextMaterial")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("TextMaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -443,11 +442,6 @@ namespace DAL.Migrations
                         .HasForeignKey("UsersWhoSavedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Core.Models.TextMaterial", b =>
-                {
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Core.Models.User", b =>

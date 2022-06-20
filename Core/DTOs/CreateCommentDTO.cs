@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Models
+namespace Core.DTOs
 {
-    public class SavedUserTextMaterialDTO
+    public class CreateCommentDTO
     {
+        public int? ParentCommentId { get; set; }
         public string UserId { get; set; }
         public int TextMaterialId { get; set; }
+        public string Content { get; set; }
     }
 }

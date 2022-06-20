@@ -29,5 +29,6 @@ namespace Core.Models
         public DateTime DateApproved { get; set; }
 
         public virtual ICollection<User> UsersWhoSaved { get; set; } = new List<User>();
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

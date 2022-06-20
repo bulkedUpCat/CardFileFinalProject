@@ -12,8 +12,8 @@ namespace BLL.Validation.Validators
     {
         public TextMaterialValidator()
         {
-            RuleFor(tm => tm.Title).Length(5, 100);
-            RuleFor(tm => tm.Content).NotEmpty();
+            RuleFor(tm => tm.Title).Length(5, 100).WithMessage("{PropertyName} must be 5 to 100 characters long");
+            RuleFor(tm => tm.Content).NotEmpty().WithMessage("{PropertyName} must not be empty");
         }
     }
 }

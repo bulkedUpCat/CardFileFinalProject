@@ -28,4 +28,7 @@
         <button (click)="approveTextMaterial() ">Approve this text material</button>
         <button (click)="rejectTextMaterial() ">Reject this text material</button>
     </div>
+    <div *ngIf="textMaterial" class="comments">
+        <app-comment-list [textMaterialId]="textMaterial?.id" [currentUserId]="userId"></app-comment-list>
+    </div>
 </div>

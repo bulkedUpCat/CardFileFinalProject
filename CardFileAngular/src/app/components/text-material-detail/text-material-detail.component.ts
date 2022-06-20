@@ -156,7 +156,7 @@ export class TextMaterialDetailComponent implements OnInit {
 
   removeFromSaved(){
     this.textMaterialService.removeTextMaterialFromSaved(this.userId,this.textMaterial.id).subscribe(res => {
-      this.notifier.showNotification("Text material removed!","OK","SUCCESS");
+      this.notifier.showNotification("Text material removed from saved!","OK","SUCCESS");
       this.isSaved = false;
     }, err => {
       console.log(err);

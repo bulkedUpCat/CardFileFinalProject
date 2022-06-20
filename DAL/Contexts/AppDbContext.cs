@@ -32,5 +32,6 @@ namespace DAL.Contexts
         public DbSet<TextMaterial> TextMaterials { get; set; }
         public DbSet<TextMaterialCategory> TextMaterialCategory { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }
