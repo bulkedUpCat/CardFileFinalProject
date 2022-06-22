@@ -36,7 +36,7 @@ namespace BLL.Services
             {
                 var foundUser = await _userManager.FindByIdAsync(user.Id);
                 var roles = await _userManager.GetRolesAsync(foundUser);
-                user.Roles = roles.ToList();
+                user.Roles = roles?.ToList();
             }
 
             return userDTOs;
@@ -58,7 +58,7 @@ namespace BLL.Services
 
             var roles = await _userManager.GetRolesAsync(user);
             var userDTO = _mapper.Map<UserDTO>(user);
-            userDTO.Roles = roles.ToList();
+            userDTO.Roles = roles?.ToList();
 
             return userDTO;
         }

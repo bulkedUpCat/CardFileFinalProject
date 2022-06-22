@@ -59,6 +59,8 @@ export class HomePageComponent implements OnInit {
   onFilter(parameters: TextMaterialParameters){
     this.textMaterialParams = parameters;
 
+    this.sharedHomeParams.orderBy = parameters.orderBy;
+
     this.sharedHomeParams.filterFromDate = parameters.filterFromDate;
     this.sharedHomeParams.filterToDate = parameters.filterToDate;
     this.sharedHomeParams.approvalStatus = parameters.approvalStatus;

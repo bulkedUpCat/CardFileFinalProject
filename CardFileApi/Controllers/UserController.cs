@@ -81,15 +81,32 @@ namespace CardFileApi.Controllers
         }
 
         [HttpGet("{id}/textMaterials/saved")]
-        public async Task<IActionResult> GetSavedTextMaterials(string id)
+        public async Task<IActionResult> GetSavedTextMaterials(string id, [FromQuery]TextMaterialParameters textMaterialParams)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            try
             {
-                return BadRequest("User id cannot be null");
-            }
+                var savedTextMaterials = await _textMaterialService.GetSavedTextMaterialsOfUser(id, textMaterialParams);
 
-            var savedTextMaterials = await _textMaterialService.GetSavedTextMaterialsOfUser(id);
-            return Ok(savedTextMaterials);
+                var metadata = new
+                {
+                    savedTextMaterials.TotalCount,
+                    savedTextMaterials.PageSize,
+                    savedTextMaterials.CurrentPage,
+                    savedTextMaterials.TotalPages,
+                    savedTextMaterials.HasNext,
+                    savedTextMaterials.HasPrevious
+                };
+
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
+
+                return Ok(savedTextMaterials);
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+           
         }
 
         [HttpPost("{id}/textMaterials/saved")]

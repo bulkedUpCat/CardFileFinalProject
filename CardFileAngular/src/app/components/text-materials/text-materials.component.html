@@ -1,3 +1,7 @@
+<div *ngIf="userId" class="show-saved">
+    <button *ngIf="!showSaved" (click)="onShowSaved()">Show saved</button>
+    <button *ngIf="showSaved" (click)="onShowAll()">Show all</button>
+</div>
 <app-sorting-form (filter)="onFilter($event)">
 </app-sorting-form>
 <div class=" grid-container ">

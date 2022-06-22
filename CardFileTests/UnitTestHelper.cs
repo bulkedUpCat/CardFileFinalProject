@@ -33,12 +33,14 @@ namespace CardFileTests
             var textMaterialProfile = new TextMaterialProfile();
             var textMaterialCategoryProfile = new TextMaterialCategoryProfile();
             var userProfile = new UserProfile();
+            var commentProfile = new CommentProfile();
 
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(textMaterialProfile);
                 cfg.AddProfile(textMaterialCategoryProfile);
                 cfg.AddProfile(userProfile);
+                cfg.AddProfile(commentProfile);
             });
 
             return new Mapper(configuration);
@@ -59,6 +61,11 @@ namespace CardFileTests
                 new User { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com" },
                 new User { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com" },
                 new User { Id = "3", UserName = "Bobby", Email = "bobby@gmail.com" });
+
+            context.Comments.AddRange(
+                new Comment { Id = 1, Content = "first comment", UserId = "1", TextMaterialId = 1, CreatedAt = new DateTime(2007, 11, 12) },
+                new Comment { Id = 2, Content = "second comment", UserId = "1", TextMaterialId = 1, CreatedAt = new DateTime(2001, 1, 23) },
+                new Comment { Id = 3, Content = "third comment", UserId = "2", TextMaterialId = 3, CreatedAt = new DateTime(2000,12,1) });
 
             context.SaveChanges();
         }

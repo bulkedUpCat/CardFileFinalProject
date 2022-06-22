@@ -38,6 +38,28 @@ export class TextMaterialService {
     });
   }
 
+  getSavedTextMaterials(userId: string, textParams: TextMaterialParameters): Observable<any>{
+    var parameters = {};
+
+    if (textParams.pageNumber) parameters['pageNumber'] = textParams.pageNumber;
+    if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
+    if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
+    if (textParams.filterToDate) parameters['endDate'] = textParams.filterToDate;
+    if (textParams.searchTitle) parameters['searchTitle'] = textParams.searchTitle;
+    if (textParams.searchCategory) parameters['searchCategory'] = textParams.searchCategory;
+    if (textParams.searchAuthor) parameters['searchAuthor'] = textParams.searchAuthor;
+    if (textParams.orderBy) parameters['orderBy'] = textParams.orderBy;
+    if (textParams.approvalStatus){
+      parameters['approvalStatus'] = textParams.approvalStatus;
+    }
+
+    return this.http.get<TextMaterial[]>(`${environment.apiUrl}/users/${userId}/textMaterials/saved`, {
+      responseType: 'json',
+      observe: 'response',
+      params: parameters
+    });
+  }
+
   getTextMaterialsByUserId(id: string, textParams: TextMaterialParameters) : Observable<any>{
     var parameters = {};
 
@@ -111,9 +133,9 @@ export class TextMaterialService {
     });
   }
 
-  getSavedTextMaterials(userId: string): any{
-    return this.http.get(`${environment.apiUrl}/users/${userId}/textMaterials/saved`);
-  }
+  // getSavedTextMaterials(userId: string): any{
+  //   return this.http.get(`${environment.apiUrl}/users/${userId}/textMaterials/saved`);
+  // }
 
   addTextMaterialToSaved(userId: string, textMaterialId: number){
     const headers = {

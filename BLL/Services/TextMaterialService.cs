@@ -18,17 +18,14 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        //private readonly UserManager<User> _userManager;
         private readonly IEmailService _emailService;
 
         public TextMaterialService(IUnitOfWork unitOfWork, 
             IMapper mapper,
-            //UserManager<User> userManager,
             IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            //_userManager = userManager;
             _emailService = emailService;
         }
 
@@ -42,7 +39,6 @@ namespace BLL.Services
         
         public async Task<PagedList<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
         {
-            //var user = await _userManager.FindByIdAsync(id);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
            
             if (user == null)
@@ -78,7 +74,6 @@ namespace BLL.Services
             var textMaterial = _mapper.Map<TextMaterial>(textMaterialDTO);
 
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(textMaterialDTO.CategoryTitle);
-            //var author = await _userManager.FindByIdAsync(textMaterialDTO.AuthorId);
 
             if (category == null)
             {
@@ -99,6 +94,8 @@ namespace BLL.Services
             {
                 await _unitOfWork.TextMaterialRepository.CreateAsync(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
+
+                _emailService.NotifyThatTextMaterialWasCreated(author, textMaterial);
             }
             catch (Exception ex)
             {
@@ -143,7 +140,7 @@ namespace BLL.Services
 
         public async Task DeleteTextMaterial(int id)
         {
-            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(id);
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(id);
 
             if (textMaterial == null)
             {
@@ -154,6 +151,8 @@ namespace BLL.Services
             {
                 await _unitOfWork.TextMaterialRepository.DeleteById(id);
                 await _unitOfWork.SaveChangesAsync();
+
+                _emailService.NotifyThatTextMaterialWasDeleted(textMaterial.Author, textMaterial);
             }
             catch (Exception ex)
             {
@@ -163,7 +162,7 @@ namespace BLL.Services
 
         public async Task ApproveTextMaterial(int textMaterialId)
         {
-            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(textMaterialId);
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
 
             if (textMaterial == null)
             {
@@ -175,12 +174,19 @@ namespace BLL.Services
                 throw new CardFileException($"Text material with id {textMaterialId} is already approved");
             }
 
+            if (textMaterial.ApprovalStatus == ApprovalStatus.Rejected)
+            {
+                throw new CardFileException($"Text material with id {textMaterialId} is already rejected");
+            }
+
             textMaterial.ApprovalStatus = ApprovalStatus.Approved;
 
             try
             {
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
+
+                _emailService.NotifyThatTextMaterialWasApproved(textMaterial.Author, textMaterial);
             }
             catch (Exception e)
             {
@@ -190,7 +196,7 @@ namespace BLL.Services
 
         public async Task RejectTextMaterial(int textMaterialId)
         {
-            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(textMaterialId);
+            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
 
             if (textMaterial == null)
             {
@@ -202,6 +208,11 @@ namespace BLL.Services
                 throw new CardFileException($"Text material with id {textMaterialId} is already rejected");
             }
 
+            if (textMaterial.ApprovalStatus == ApprovalStatus.Approved)
+            {
+                throw new CardFileException($"Text material with id {textMaterialId} is already approved");
+            }
+
             textMaterial.ApprovalStatus= ApprovalStatus.Rejected;
             textMaterial.RejectCount++;
 
@@ -209,6 +220,8 @@ namespace BLL.Services
             {
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
+
+                _emailService.NotifyThatTextMaterialWasRejected(textMaterial.Author, textMaterial);
             }
             catch (Exception e)
             {
@@ -223,7 +236,6 @@ namespace BLL.Services
                 throw new CardFileException("User id was not provided");
             }
 
-            //var user = await _userManager.FindByIdAsync(userId);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
@@ -240,7 +252,7 @@ namespace BLL.Services
 
             try
             {
-                await _emailService.SendTextMaterialAsPdf(user, textMaterial, emailParams);
+                _emailService.SendTextMaterialAsPdf(user, textMaterial, emailParams);
             }
             catch (Exception e)
             {
@@ -248,9 +260,8 @@ namespace BLL.Services
             }
         }
 
-        public async Task<IEnumerable<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId)
+        public async Task<PagedList<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId, TextMaterialParameters textMaterialParams)
         {
-            //var user = await _userManager.FindByIdAsync(userId);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
@@ -258,13 +269,15 @@ namespace BLL.Services
                 throw new CardFileException($"User with id {userId} doens't exist");
             }
 
-            var savedTextMaterials = await _unitOfWork.UserRepository.GetSavedTextMaterialsByUserId(userId);
-            return _mapper.Map <IEnumerable<TextMaterialDTO>>(savedTextMaterials);
+            var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(textMaterialParams);
+            var savedTextMaterials = textMaterials.Where(tm => user.SavedTextMaterials.Contains(tm));
+
+            return PagedList<TextMaterialDTO>
+                .ToPagedList(_mapper.Map <IEnumerable<TextMaterialDTO>>(savedTextMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);
         }
 
         public async Task AddTextMaterialToSaved(string userId, int textMaterialId)
         {
-            //var user = await _userManager.FindByIdAsync(userId);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)
@@ -294,7 +307,6 @@ namespace BLL.Services
 
         public async Task RemoveTextMaterialFromSaved(string userId, int textMaterialId)
         {
-            //var user = await _userManager.FindByIdAsync(userId);
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
 
             if (user == null)

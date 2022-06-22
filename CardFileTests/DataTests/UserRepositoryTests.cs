@@ -64,6 +64,62 @@ namespace CardFileTests.DataTests
             // Assert
             Assert.That(context.Users.Count(), Is.EqualTo(4), message: "CreateAsync method works incorrecly");
         }
+/*
+        [Test]
+        public async Task UserRepository_Delete_RemovesUserFromDatabase()
+        {
+            // Arrange
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            var repository = new UserRepository(context);
+            var userToDelete = ExpectedUsers.FirstOrDefault(u => u.Id == "1");
+
+            // Act
+            repository.DeleteEntity(userToDelete);
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            // Assert
+            Assert.That(context.Users.Count(), Is.EqualTo(2), message: "Delete method works incorrecly");
+        }*/
+
+       /* [Test]
+        public async Task UserRepository_Update_UpdatesModelInDatabase()
+        {
+            // Arrange
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            var repository = new UserRepository(context);
+            var user = new User
+            {
+                Id = "1",
+                UserName = "UpdatedTommy",
+                Email = "tommy@gmail.com"
+            };
+
+            // Act
+            repository.Update(user);
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            // Assert
+            Assert.That(user, Is.EqualTo(new User
+            {
+                Id = "1",
+                UserName = "UpdateTommy",
+                Email = "updateTommy@gmail.com"
+            }).Using(new UserRepositoryEqualityComparer()));
+        }*/
 
         private static IEnumerable<User> ExpectedUsers =>
             new[]

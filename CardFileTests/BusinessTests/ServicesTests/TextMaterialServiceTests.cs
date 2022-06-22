@@ -40,6 +40,30 @@ namespace CardFileTests.BusinessTests.ServicesTests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [TestCase("1")]
+        [TestCase("2")]
+        public async Task TextMaterialService_GetTextMaterialsOfUser_ReturnsTextMaterialOfUser(string userId)
+        {
+            // Arrange
+            var expected = GetTextMaterialDTOs.Where(tm => tm.AuthorId == userId);
+            var textMaterialParams = new TextMaterialParameters();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByUserId(userId, textMaterialParams))
+                .ReturnsAsync(GetTextMaterialEntities.Where(tm => tm.AuthorId == userId));
+            var textMaterialService = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            var actual = await textMaterialService.GetTextMaterialsOfUser(userId, textMaterialParams);
+
+            // Assert
+            actual.Should().BeEquivalentTo(expected);
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -170,7 +194,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork
                 .Setup(x => x.TextMaterialRepository.DeleteById(It.IsAny<int>()));
             mockUnitOfWork
-                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(id))
                 .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
             var textMaterialService = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
@@ -204,36 +228,206 @@ namespace CardFileTests.BusinessTests.ServicesTests
             await act.Should().ThrowAsync<CardFileException>();
         }
 
+        [Test]
+        public async Task TextMaterialService_ApproveTextMaterial_SetsApprovalStatusToApproved()
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(1))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == 1));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+            var textMaterial = GetTextMaterialEntities.First();
+
+            // Act
+            await textMaterialServie.ApproveTextMaterial(1);
+
+            // Assert
+
+            mockUnitOfWork.Verify(x => x.TextMaterialRepository.Update(It.Is<TextMaterial>(tm => tm.ApprovalStatus == ApprovalStatus.Approved)));
+            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [TestCase(-100)]
+        [TestCase(0)]
+        public async Task TextMaterialService_ApproveTextMaterial_ThrowsExceptionIfIdIsInvalid(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.ApproveTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        public async Task TextMaterialService_ApproveTextMaterail_ThrowsExceptionIfAlreadyApproved(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.ApproveTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase(4)]
+        public async Task TextMaterialService_ApproveTextMaterial_ThrowsExceptionIfAlreadyRejected(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.ApproveTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase(1)]
+        public async Task TextMaterialService_RejectTextMaterial_SetsApprovalStatusToRejected(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            await textMaterialServie.RejectTextMaterial(id);
+
+            // Assert
+            mockUnitOfWork.Verify(x => x.TextMaterialRepository.Update(It.Is<TextMaterial>(tm => tm.ApprovalStatus == ApprovalStatus.Rejected)));
+            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [TestCase(0)]
+        [TestCase(-12)]
+        public async Task TextMaterialServie_RejectTextMaterial_ThrowsExceptionIfIdInvalid(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.RejectTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase(4)]
+        public async Task TextMaterialService_RejectTextMaterial_ThrowsExceptionIfAlreadyRejected(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.RejectTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        public async Task TextMaterialService_RejectTextMaterial_ThrowsExceptionIfAlreadyApproved(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.RejectTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
         #region TestData
 
-        public static List<User> GetUserEntities =
+        public List<User> GetUserEntities =>
             new List<User>()
             {
                 new User { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com" },
                 new User { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com" }
             };
 
-        private static List<TextMaterialCategory> GetTextMaterialCategoryEntities =
-            new List<TextMaterialCategory>
+        public List<TextMaterialCategory> GetTextMaterialCategoryEntities =>
+            new List<TextMaterialCategory>()
             {
                 new TextMaterialCategory { Id = 1, Title = "First one" },
                 new TextMaterialCategory { Id = 2, Title = "Second one" }
             };
 
-        public List<TextMaterial> GetTextMaterialEntities =
-            new List<TextMaterial>()
+        public List<TextMaterial> GetTextMaterialEntities =>
+            new List<TextMaterial>
             {
                 new TextMaterial { Id = 1, Author = GetUserEntities[0], AuthorId = "1", TextMaterialCategory = GetTextMaterialCategoryEntities[0], ApprovalStatus = ApprovalStatus.Pending, Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1, DatePublished = new DateTime(2000,11,23) },
                 new TextMaterial { Id = 2, Author = GetUserEntities[1], AuthorId = "2", TextMaterialCategory = GetTextMaterialCategoryEntities[0], ApprovalStatus = ApprovalStatus.Approved, Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1, DatePublished = new DateTime(2010,8,17) },
-                new TextMaterial { Id = 3, Author = GetUserEntities[1], AuthorId = "2", TextMaterialCategory = GetTextMaterialCategoryEntities[1], ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2, DatePublished = new DateTime(2013,1,18) }
+                new TextMaterial { Id = 3, Author = GetUserEntities[1], AuthorId = "2", TextMaterialCategory = GetTextMaterialCategoryEntities[1], ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2, DatePublished = new DateTime(2013,1,18) },
+                new TextMaterial { Id = 4, Author = GetUserEntities[1], AuthorId = "2", TextMaterialCategory = GetTextMaterialCategoryEntities[1], ApprovalStatus = ApprovalStatus.Rejected, Content = "fourthContent", Title = "fourthArticle", TextMaterialCategoryId = 2, DatePublished = new DateTime(2014, 2,18) }
             };
 
-        private List<TextMaterialDTO> GetTextMaterialDTOs =
+        private List<TextMaterialDTO> GetTextMaterialDTOs =>
             new List<TextMaterialDTO>
             {
                 new TextMaterialDTO { Id = 1, AuthorId = "1", UserName = "Tommy", ApprovalStatusId = 0, Content = "firstContent", Title = "firstArticle", CategoryTitle = "First one", DatePublished = new DateTime(2000,11,23) },
                 new TextMaterialDTO { Id = 2, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, Content = "secondContent", Title = "secondArticle", CategoryTitle = "First one", DatePublished = new DateTime(2010,8,17) },
-                new TextMaterialDTO { Id = 3, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, Content = "thirdContent", Title = "thirdArticle", CategoryTitle = "Second one", DatePublished = new DateTime(2013,1,18) }
+                new TextMaterialDTO { Id = 3, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, Content = "thirdContent", Title = "thirdArticle", CategoryTitle = "Second one", DatePublished = new DateTime(2013,1,18) },
+                new TextMaterialDTO { Id = 4, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 2, Content = "fourthContent", Title = "fourthArticle", CategoryTitle = "Second one", DatePublished = new DateTime(2014, 2,18) }
             };
 
         #endregion

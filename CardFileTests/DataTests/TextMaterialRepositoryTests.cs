@@ -19,7 +19,7 @@ namespace CardFileTests.DataTests
         public async Task TextMaterialRepository_GetAsync_ReturnsAllValues()
         {
             // Arrange
-            var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
             var repository = new TextMaterialRepository(context);
             var expected = ExpectedTextMaterials.ToList();
 

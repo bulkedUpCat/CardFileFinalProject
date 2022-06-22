@@ -1,12 +1,13 @@
 <div class="grid-container">
     <button class="back-btn" (click)="goBack()">Back</button>
+    <div *ngIf="isAdmin">Reject count: <strong>{{textMaterial?.rejectCount}}</strong></div>
     <div class="prop top">
         <div>Category: <strong>{{textMaterial?.categoryTitle}}</strong></div>
         <div *ngIf="isLoggedIn" class="buttons">
             <button (click)="sendTextMaterialAsPdf()"><mat-icon>print</mat-icon>
             </button>
             <button *ngIf="isAuthor" (click)="updateTextMaterial()"><mat-icon>edit</mat-icon></button>
-            <button *ngIf="isAuthor" (click)="deleteTextMaterial()"><mat-icon>delete</mat-icon></button>
+            <button *ngIf="isAuthor || isAdmin" (click)="deleteTextMaterial()"><mat-icon>delete</mat-icon></button>
             <button *ngIf="!isAuthor && !isSaved" (click)=" addToSaved() "><mat-icon>save</mat-icon></button>
             <button *ngIf="!isAuthor && isSaved " (click)="removeFromSaved() "><mat-icon>remove</mat-icon></button>
         </div>
@@ -24,7 +25,7 @@
         </span>
         <span class="date "><strong>{{textMaterial?.datePublished | date: 'MMM, d, y'}}</strong></span>
     </div>
-    <div class="btn-approve " *ngIf="isManager && loadedStatus && textMaterial?.approvalStatusId==0 ">
+    <div class="btn-approve " *ngIf="isManager && !isAuthor && loadedStatus && textMaterial?.approvalStatusId==0 ">
         <button (click)="approveTextMaterial() ">Approve this text material</button>
         <button (click)="rejectTextMaterial() ">Reject this text material</button>
     </div>

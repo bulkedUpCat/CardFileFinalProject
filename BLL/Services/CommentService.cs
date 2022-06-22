@@ -44,7 +44,7 @@ namespace BLL.Services
                 throw new CardFileException("Model is invalid");
             }
 
-            if (string.IsNullOrEmpty(createCommentDTO.Content))
+            if (string.IsNullOrWhiteSpace(createCommentDTO.Content))
             {
                 throw new CardFileException("Content of a comment must not be empty");
             }

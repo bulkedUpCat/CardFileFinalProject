@@ -34,16 +34,11 @@ namespace CardFileApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateCommentDTO commentDTO)
         {
-            if (commentDTO == null)
-            {
-                return BadRequest("Model is null");
-            }
-
             try
             {
                 var comment = await _commentService.CreateComment(commentDTO);
 
-                return NoContent();
+                return Ok(comment);
             }
             catch (CardFileException e)
             {
@@ -54,11 +49,6 @@ namespace CardFileApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateCommentDTO commentDTO)
         {
-            if (commentDTO == null)
-            {
-                return BadRequest("Model is null");
-            }
-
             try
             {
                 var comment = await _commentService.UpdateComment(commentDTO);

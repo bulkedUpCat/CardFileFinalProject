@@ -34,11 +34,23 @@ namespace BLL.Services
         {
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);
 
+            if (category == null)
+            {
+                throw new CardFileException($"Failed to find a category with id {id}");
+            }
+
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }
 
         public async Task<TextMaterialCategoryDTO> CreateTextMaterialCategoryAsync(CreateTextMaterialCategoryDTO categoryDTO)
         {
+            var existingCategory = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(categoryDTO.Title);
+
+            if (existingCategory != null)
+            {
+                throw new CardFileException($"Text material category with title {categoryDTO.Title} already exists");
+            }
+
             var category = _mapper.Map<TextMaterialCategory>(categoryDTO);
 
             try

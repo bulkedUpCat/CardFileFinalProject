@@ -13,6 +13,7 @@ export class SharedParamsService {
   searchAuthor: string = null;
   approvalStatus: Array<number> = new Array<number>();
   orderBy: string = null;
+  showSaved: boolean;
 
   constructor() { }
 }

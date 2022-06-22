@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotifierService } from 'src/app/services/notifier.service';
@@ -20,6 +21,7 @@ export class TextMaterialDetailComponent implements OnInit {
   savedTextMaterials: TextMaterial[];
   isSaved: boolean;
   isManager: boolean = false;
+  isAdmin: boolean = false;
   loadedStatus: boolean = false;
   isLoggedIn: boolean;
   isAuthor: boolean;
@@ -48,6 +50,7 @@ export class TextMaterialDetailComponent implements OnInit {
     this.authService.claims.subscribe(c => {
       if (c){
         this.isManager = c.includes('Manager');
+        this.isAdmin = c.includes('Admin');
       }
     });
   }
@@ -132,11 +135,13 @@ export class TextMaterialDetailComponent implements OnInit {
 
   getSavedTextMaterials(){
     if (this.userId){
-      this.textMaterialService.getSavedTextMaterials(this.userId).subscribe(res => {
-      this.savedTextMaterials = res;
+      this.textMaterialService.getSavedTextMaterials(this.userId, new TextMaterialParams()).subscribe(res => {
+      this.savedTextMaterials = res.body;
 
-      if (this.savedTextMaterials.filter(tm => tm.id == this.textMaterial.id).length != 0){
+      if (res){
+        if (this.savedTextMaterials.filter(tm => tm.id == this.textMaterial.id).length != 0){
         this.isSaved = true;
+        }
       }
       }, err => {
         console.log(err);

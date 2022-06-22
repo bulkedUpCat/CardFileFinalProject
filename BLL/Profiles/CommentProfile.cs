@@ -14,7 +14,8 @@ namespace BLL.Profiles
         public CommentProfile()
         {
             CreateMap<Comment, CommentDTO>()
-                .ForMember(c => c.UserName, src => src.MapFrom(x => x.User.UserName));
+                .ForMember(c => c.UserName, src => src.MapFrom(x => x.User.UserName))
+                .ForMember(c => c.UserId, src => src.MapFrom(x => x.User.Id));
 
             CreateMap<CreateCommentDTO, Comment>();
         }

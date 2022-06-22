@@ -84,4 +84,30 @@ namespace CardFileTests
             return obj.GetHashCode();
         }
     }
+
+    internal class CommentRepositoryEqualityComparer : IEqualityComparer<Comment>
+    {
+        public bool Equals(Comment? x, Comment? y)
+        {
+            if (x == null && y == null)
+            {
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            return x.Id == y.Id &&
+                x.Content == y.Content &&
+                x.UserId == y.UserId &&
+                x.TextMaterialId == y.TextMaterialId;
+        }
+
+        public int GetHashCode([DisallowNull] Comment obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
 }

@@ -34,7 +34,7 @@ namespace BLL.Services
             _emailSender = emailSender;
         }
 
-        public async Task SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams)
+        public void SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams)
         {
             var stream = new MemoryStream();
             var writer = new PdfWriter(stream);
@@ -90,7 +90,7 @@ namespace BLL.Services
 
             if (emailParams.Author != null)
             {
-               // document.Add(new Paragraph($"AUTHOR: {textMaterial.Author.UserName}"));
+               document.Add(new Paragraph($"AUTHOR: {textMaterial.Author.UserName}"));
             }
 
             if (emailParams.DatePublished != null)
@@ -99,6 +99,91 @@ namespace BLL.Services
             }
 
             return document;
+        }
+
+        public void NotifyThatTextMaterialWasCreated(User user, TextMaterial textMaterial)
+        {
+            var body = $"Hello {user.UserName}." +
+                $"You have just created a new text material with title '{textMaterial.Title}'." +
+                "Currently its approval status is PENDING. We will let you know when it's approved or rejected.";
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Text material created",
+                    Body = body,
+                    Attachment = null
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        public void NotifyThatTextMaterialWasDeleted(User user, TextMaterial textMaterial)
+        {
+            var body = $"Hello {user.UserName}." +
+                $"Your text material '{textMaterial.Title}' was deleted.";
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Text material deleted",
+                    Body = body,
+                    Attachment = null
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        public void NotifyThatTextMaterialWasApproved(User user, TextMaterial textMaterial)
+        {
+            var body = $"Hello {user.UserName}." +
+                $"Your text material '{textMaterial.Title}' was approved.";
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Text material approved",
+                    Body = body,
+                    Attachment = null
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        public void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial)
+        {
+            var body = $"Hello {user.UserName}." +
+                $"Your text material '{textMaterial.Title}' was rejected.";
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Text material rejected",
+                    Body = body,
+                    Attachment = null
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
         }
     }
 }

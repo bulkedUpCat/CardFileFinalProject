@@ -17,20 +17,29 @@ export class TextMaterialsComponent implements OnInit {
   textMaterialParams: TextMaterialParameters = new TextMaterialParams();
   isManager: boolean;
   isAdmin: boolean;
+  showSaved: boolean = this.sharedParams.showSaved;
+  userId: string;
 
   constructor(private textMaterialService: TextMaterialService,
     private authService: AuthService,
     public sharedParams: SharedParamsService) { }
 
   ngOnInit(): void {
+    this.authService.getUserInfo().subscribe(u => {
+      if (u){
+        this.userId = u.sub;
+      }
+    });
+
     this.authService.claims.subscribe( c => {
       if (c){
         this.isManager = c.includes('Manager');
+        this.isAdmin = c.includes('Admin');
       }
 
       this.configureTextMaterialParams();
       this.getTextMaterials();
-    })
+    });
   }
 
   configureTextMaterialParams(){
@@ -58,7 +67,35 @@ export class TextMaterialsComponent implements OnInit {
   }
 
   getTextMaterials(){
-    return this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
+    if (!this.showSaved){
+      this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
+        this.textMaterials = tm.body;
+        this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+      });
+    }
+    else{
+      this.textMaterialService.getSavedTextMaterials(this.userId,this.textMaterialParams).subscribe( tm => {
+        this.textMaterials = tm.body;
+        this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+      });
+    }
+  }
+
+  onShowSaved(){
+    this.showSaved = true;
+    this.sharedParams.showSaved = true;
+
+    this.textMaterialService.getSavedTextMaterials(this.userId,this.textMaterialParams).subscribe( tm => {
+      this.textMaterials = tm.body;
+      this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+    });
+  }
+
+  onShowAll(){
+    this.showSaved = false;
+    this.sharedParams.showSaved = false;
+
+    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
       this.textMaterials = tm.body;
       this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
     });
@@ -66,6 +103,8 @@ export class TextMaterialsComponent implements OnInit {
 
   onFilter(parameters: TextMaterialParameters){
       this.textMaterialParams = parameters;
+
+      this.sharedParams.orderBy = parameters.orderBy;
 
       this.sharedParams.filterFromDate = parameters.filterFromDate;
       this.sharedParams.filterToDate = parameters.filterToDate;
@@ -80,44 +119,79 @@ export class TextMaterialsComponent implements OnInit {
           this.textMaterialParams.approvalStatus.splice(index,1);
         }
         this.textMaterialParams.approvalStatus.push(1);
+        this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
       }
       else if(!this.isAdmin && this.textMaterialParams.approvalStatus.includes(2)){
         const index = this.textMaterialParams.approvalStatus.indexOf(2);
         this.textMaterialParams.approvalStatus.splice(index,1);
+        this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
       }
       else if(!this.isAdmin && this.textMaterialParams.approvalStatus.length == 0){
         this.textMaterialParams.approvalStatus.push(0,1);
+        this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
+      }
+      else{
+        this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
       }
 
-      this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
+      //this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
+      console.log(this.sharedParams.approvalStatus);
+      if (!this.sharedParams.showSaved){
+        this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
+          this.textMaterials = tm.body;
+          this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+        }, err => {
+            console.log(err);
+        });
+      }
+      else{
+        this.textMaterialService.getSavedTextMaterials(this.userId,this.textMaterialParams).subscribe( tm => {
+          this.textMaterials = tm.body;
+          this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
+        }, err => {
+            console.log(err);
+        });
+      }
 
-      this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
-        this.textMaterials = tm.body;
-        this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
-      }, err => {
-        console.log(err);
-      });
   }
 
   onNextPage(page: number){
     this.textMaterialParams.pageNumber = page;
     this.sharedParams.pageNumber = page;
 
-    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+    if (!this.showSaved){
+      this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
       this.textMaterials = tm.body;
-    }, err => {
-      console.log(err);
-    });
+      }, err => {
+        console.log(err);
+      });
+    }
+    else{
+      this.textMaterialService.getSavedTextMaterials(this.userId,this.textMaterialParams).subscribe( tm => {
+        this.textMaterials = tm.body;
+      }, err => {
+          console.log(err);
+      });
+    }
   }
 
   onPreviousPage(page: number){
     this.textMaterialParams.pageNumber = page;
     this.sharedParams.pageNumber = page;
 
-    this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
+    if (!this.showSaved){
+      this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe(tm => {
       this.textMaterials = tm.body;
-    }, err => {
-      console.log(err);
-    });
+      }, err => {
+        console.log(err);
+      });
+    }
+    else{
+      this.textMaterialService.getSavedTextMaterials(this.userId,this.textMaterialParams).subscribe( tm => {
+        this.textMaterials = tm.body;
+      }, err => {
+          console.log(err);
+      });
+    }
   }
 }

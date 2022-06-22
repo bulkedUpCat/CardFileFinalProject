@@ -31,6 +31,7 @@ export class SortingFormComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit(): void {
+
     if (this.isHomePage){
       this.createHomeForm();
     }
@@ -48,6 +49,7 @@ export class SortingFormComponent implements OnInit {
     this.authService.claims.subscribe( c => {
       if (c){
         this.isManager = c.includes('Manager');
+        this.isAdmin = c.includes('Admin');
       }
     });
   }
@@ -73,8 +75,6 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.searchTitle = this.sharedParams.searchTitle;
     this.textMaterialParams.searchCategory = this.sharedParams.searchCategory;
     this.textMaterialParams.searchAuthor = this.sharedParams.searchAuthor;
-    // this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    // this.textMaterialParams.pageSize = 2;
   }
 
   configureHomeTextMaterialParams(){
@@ -98,15 +98,13 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.searchTitle = this.sharedHomeParams.searchTitle;
     this.textMaterialParams.searchCategory = this.sharedHomeParams.searchCategory;
     this.textMaterialParams.searchAuthor = this.sharedHomeParams.searchAuthor;
-    // this.textMaterialParams.pageNumber = this.sharedParams.pageNumber;
-    // this.textMaterialParams.pageSize = 2;
   }
 
   createForm(){
     this.sortingParamsForm = this.fb.group({
-      sortByTitle: [null],
-      sortByCategory: [null],
-      sortByDatePublished: [null],
+      sortByTitle: [this.configureSortByTitle()],
+      sortByDatePublished: [this.configureSortByDatePublished()],
+      sortByRejectCount: [this.configureSortByRejectCount()],
       filterFromDate: [this.sharedParams.filterFromDate],
       filterToDate: [this.sharedParams.filterToDate],
       pending: [this.sharedParams.approvalStatus.includes(0)],
@@ -120,9 +118,8 @@ export class SortingFormComponent implements OnInit {
 
   createHomeForm(){
     this.sortingParamsForm = this.fb.group({
-      sortByTitle: [null],
-      sortByCategory: [null],
-      sortByDatePublished: [null],
+      sortByTitle: [this.configureSortByTitleHomePage()],
+      sortByDatePublished: [this.configureSortByDatePublishedHome()],
       filterFromDate: [this.sharedHomeParams.filterFromDate],
       filterToDate: [this.sharedHomeParams.filterToDate],
       pending: [this.sharedHomeParams.approvalStatus.includes(0)],
@@ -132,6 +129,91 @@ export class SortingFormComponent implements OnInit {
       searchCategory: [this.sharedHomeParams.searchCategory],
       searchAuthor: [this.sharedHomeParams.searchAuthor],
     });
+  }
+
+  configureSortByRejectCount(){
+    var orderBy = this.sharedParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for(let i = 0; i < parts.length; i++){
+        if (parts[i] == 'rejectCount asc'){
+          return true;
+        }
+        else if (parts[i] == 'rejectCount desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  configureSortByTitle(){
+    var orderBy = this.sharedParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for(let i = 0; i < parts.length; i++){
+        if (parts[i] == 'title asc'){
+          return true;
+        }
+        else if (parts[i] == 'title desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  configureSortByTitleHomePage(){
+    var orderBy = this.sharedHomeParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for(let i = 0; i < parts.length; i++){
+        if (parts[i] == 'title asc'){
+          return true;
+        }
+        else if (parts[i] == 'title desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  configureSortByDatePublished(){
+    var orderBy = this.sharedParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for (let i = 0; i < parts.length; i++){
+        if (parts[i] == 'datePublished asc'){
+          return true;
+        }
+        else if (parts[i] == 'datePublished desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  configureSortByDatePublishedHome(){
+    var orderBy = this.sharedHomeParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for (let i = 0; i < parts.length; i++){
+        if (parts[i] == 'datePublished asc'){
+          return true;
+        }
+        else if (parts[i] == 'datePublished desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
   }
 
   validateFromDate(){
@@ -177,6 +259,19 @@ export class SortingFormComponent implements OnInit {
     }
 
     this.textMaterialParams.orderBy = '';
+
+    if (!this.isHomePage && this.isAdmin){
+      if (this.sortingParamsForm.get('sortByRejectCount').value != null){
+      if (this.sortingParamsForm.get('sortByRejectCount').value){
+        this.textMaterialParams.orderBy += 'rejectCount asc,';
+      }
+      else{
+        this.textMaterialParams.orderBy += 'rejectCount desc,';
+      }
+    }
+    }
+
+
     if (this.sortingParamsForm.get('sortByTitle').value != null){
       if (this.sortingParamsForm.get('sortByTitle').value){
         this.textMaterialParams.orderBy += 'title asc,';
@@ -186,12 +281,12 @@ export class SortingFormComponent implements OnInit {
       }
     }
 
-    if (this.sortingParamsForm.get('sortByCategory').value != null){
-      if (this.sortingParamsForm.get('sortByCategory').value){
-        this.textMaterialParams.orderBy += 'category asc';
+    if (this.sortingParamsForm.get('sortByDatePublished').value != null){
+      if (this.sortingParamsForm.get('sortByDatePublished').value){
+        this.textMaterialParams.orderBy += 'datePublished asc';
       }
-      else{
-        this.textMaterialParams.orderBy += 'category desc';
+      else {
+        this.textMaterialParams.orderBy += 'datePublished desc';
       }
     }
 

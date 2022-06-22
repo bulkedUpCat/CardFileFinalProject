@@ -5,6 +5,7 @@ import { HtmlEditorService, ImageService, LinkService, ToolbarService } from '@s
 import { MaterialCategory } from 'src/app/models/MaterialCategory';
 import { AuthService } from 'src/app/services/auth.service';
 import { MaterialCategoryService } from 'src/app/services/material-category.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -28,7 +29,8 @@ export class AddTextMaterialComponent implements OnInit {
     private authService: AuthService,
     private textMaterialService: TextMaterialService,
     private categoryService: MaterialCategoryService,
-    private router: Router) { }
+    private router: Router,
+    private notifier: NotifierService) { }
 
   ngOnInit(): void {
     this.createTextMaterialForm();
@@ -51,7 +53,7 @@ export class AddTextMaterialComponent implements OnInit {
 
   createTextMaterialForm(){
     this.textMaterialForm = this.fb.group({
-      title: [null, [Validators.required]],
+      title: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       categoryTitle: [null,[Validators.required]],
       content: [null,[Validators.required]]
     });
@@ -79,11 +81,10 @@ export class AddTextMaterialComponent implements OnInit {
     textMaterial.authorId = this.userId;
 
     this.textMaterialService.createTextMaterial(textMaterial).subscribe( tm => {
-      console.log('created');
-      console.log(tm);
+      this.notifier.showNotification('You have created a text material!', 'OK', 'SUCCESS');
       this.router.navigateByUrl('/home-page');
     }, err => {
-      console.log(err);
+      this.notifier.showNotification(err.error, 'OK', 'ERROR');
     });
   }
 }

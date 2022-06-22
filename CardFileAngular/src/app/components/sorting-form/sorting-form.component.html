@@ -13,13 +13,22 @@
                 </label>
                 </div>
                 <div>
-                    <span>Category:&nbsp;&nbsp;&nbsp;</span>
+                    <span>Publishment Date:&nbsp;&nbsp;</span>
                     <label>Asc:
-                <input id="categoryAsc" [value]="true" type="radio" formControlName="sortByCategory">
-              </label>&nbsp;&nbsp;
+                    <input id="datePublishedAsc" [value]="true" type="radio" formControlName="sortByDatePublished">
+                  </label>&nbsp;
                     <label>Desc:
-                <input id="categoryDesc" [value]="false" type="radio" formControlName="sortByCategory">
-              </label>
+                    <input id="datePublishedDesc" [value]="false" type="radio" formControlName="sortByDatePublished">
+                  </label>
+                </div>
+                <div *ngIf="!isHomePage && isAdmin">
+                    <span>Reject count:&nbsp;&nbsp;&nbsp;</span>
+                    <label>Asc:
+                    <input id="rejectCountAsc" [value]="true" type="radio" formControlName="sortByRejectCount">
+                  </label>&nbsp;
+                    <label>Desc:
+                    <input id="rejectCountDesc" [value]="false" type="radio" formControlName="sortByRejectCount">
+                  </label>
                 </div>
             </div>
         </div>

@@ -7,4 +7,5 @@ export interface TextMaterial{
   authorId: string;
   userName: string;
   datePublished: Date;
+  rejectCount: number;
 }

@@ -12,6 +12,10 @@ namespace BLL.Abstractions.cs.Interfaces
 {
     public interface IEmailService
     {
-        Task SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams);
+        void SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams);
+        void NotifyThatTextMaterialWasCreated(User user, TextMaterial textMaterial);
+        void NotifyThatTextMaterialWasDeleted(User user, TextMaterial textMaterial);
+        void NotifyThatTextMaterialWasApproved(User user, TextMaterial textMaterial);
+        void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial);
     }
 }
