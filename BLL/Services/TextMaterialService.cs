@@ -5,11 +5,9 @@ using Core.DTOs;
 using Core.Models;
 using Core.RequestFeatures;
 using DAL.Abstractions.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -94,8 +92,11 @@ namespace BLL.Services
             {
                 await _unitOfWork.TextMaterialRepository.CreateAsync(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
-
-                _emailService.NotifyThatTextMaterialWasCreated(author, textMaterial);
+                
+                if (author.ReceiveNotifications)
+                {
+                    _emailService.NotifyThatTextMaterialWasCreated(author, textMaterial);
+                }    
             }
             catch (Exception ex)
             {
@@ -152,7 +153,10 @@ namespace BLL.Services
                 await _unitOfWork.TextMaterialRepository.DeleteById(id);
                 await _unitOfWork.SaveChangesAsync();
 
-                _emailService.NotifyThatTextMaterialWasDeleted(textMaterial.Author, textMaterial);
+                if (textMaterial.Author.ReceiveNotifications)
+                {
+                    _emailService.NotifyThatTextMaterialWasDeleted(textMaterial.Author, textMaterial);
+                }
             }
             catch (Exception ex)
             {
@@ -185,8 +189,11 @@ namespace BLL.Services
             {
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
-
-                _emailService.NotifyThatTextMaterialWasApproved(textMaterial.Author, textMaterial);
+                
+                if (textMaterial.Author.ReceiveNotifications)
+                {
+                    _emailService.NotifyThatTextMaterialWasApproved(textMaterial.Author, textMaterial);
+                }
             }
             catch (Exception e)
             {
@@ -221,7 +228,10 @@ namespace BLL.Services
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
 
-                _emailService.NotifyThatTextMaterialWasRejected(textMaterial.Author, textMaterial);
+                if (textMaterial.Author.ReceiveNotifications)
+                {
+                    _emailService.NotifyThatTextMaterialWasRejected(textMaterial.Author, textMaterial);
+                }
             }
             catch (Exception e)
             {

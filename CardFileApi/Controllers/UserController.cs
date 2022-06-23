@@ -148,5 +148,20 @@ namespace CardFileApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPut("{id}/notifications")]
+        public async Task<IActionResult> ToggleReceiveNotifications(string id, [FromBody] bool receiveNotifications)
+        {
+            try
+            {
+                var user = await _userService.ToggleReceiveNotifications(id, receiveNotifications);
+
+                return Ok(user);
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

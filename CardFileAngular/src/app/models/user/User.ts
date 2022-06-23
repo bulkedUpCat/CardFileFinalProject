@@ -7,4 +7,5 @@ export interface User{
   password: string;
   textMaterials: Array<TextMaterial>;
   roles: Array<string>;
+  receiveNotifications: boolean;
 }

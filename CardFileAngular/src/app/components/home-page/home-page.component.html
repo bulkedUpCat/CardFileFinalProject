@@ -1,11 +1,13 @@
-<p>
-    Welcome, {{userName}}</p>
-<!-- <div class="buttons">
-    <button (click)="getAllTextMaterials()">Show All</button>
-    <button (click)="getApprovedMaterials()">Approved</button>
-    <button (click)="getRejectedMaterials()">Rejected</button>
-</div> -->
-<!-- <app-text-materials></app-text-materials> -->
+<div>
+    <p>
+        Welcome, {{userName}}
+    </p>
+    <div class="notifications">
+        <label>
+        Receive email notifications when a text material is created, deleted, approved or rejected <input type="checkbox" [checked]="user?.receiveNotifications" (change)="toggleReceiveNotifications()">
+        </label>
+    </div>
+</div>
 <app-sorting-form [isHomePage]="true" (filter)="onFilter($event)"></app-sorting-form>
 <div class=" grid-container ">
     <app-text-material *ngFor="let text of ownTextMaterials " [textMaterial]="text">

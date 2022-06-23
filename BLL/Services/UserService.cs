@@ -62,5 +62,28 @@ namespace BLL.Services
 
             return userDTO;
         }
+
+        public async Task<UserDTO> ToggleReceiveNotifications(string userId, bool receiveNotifications)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {userId}");
+            }
+
+            try
+            {
+                user.ReceiveNotifications = receiveNotifications;
+                _unitOfWork.UserRepository.Update(user);
+                await _unitOfWork.SaveChangesAsync();
+
+                return _mapper.Map<UserDTO>(user);
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
     }
 }

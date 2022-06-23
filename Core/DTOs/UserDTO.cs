@@ -12,6 +12,7 @@ namespace Core.DTOs
         public string Id { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
+        public bool ReceiveNotifications { get; set; }
         public List<string> Roles { get; set; } = new List<string>();
         public List<TextMaterialDTO> TextMaterials { get; set; }
     }

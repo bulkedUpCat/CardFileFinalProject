@@ -130,9 +130,9 @@ namespace CardFileApi.Controllers
         [HttpPost("passwordReset")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
         {
-            if (!ModelState.IsValid || model.Password != model.ConfirmPassword)
+            if (model.Password != model.ConfirmPassword)
             {
-                return BadRequest("Model state not valid");
+                return BadRequest("Passwords don't match");
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);

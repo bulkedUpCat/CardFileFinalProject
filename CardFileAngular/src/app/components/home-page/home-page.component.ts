@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
+import { User } from 'src/app/models/user/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { SharedHomeParamsService } from 'src/app/services/shared-home-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-home-page',
@@ -18,8 +20,10 @@ export class HomePageComponent implements OnInit {
 
   userId: string;
   userName: string;
+  user: User;
 
   constructor(private authService: AuthService,
+    private userService: UserService,
     private textMaterialService: TextMaterialService,
     private sharedHomeParams: SharedHomeParamsService) { }
 
@@ -28,6 +32,12 @@ export class HomePageComponent implements OnInit {
       if (u){
         this.userId = u.sub;
         this.userName = u.name;
+      }
+    });
+    this.userService.getUserById(this.userId).subscribe(u => {
+      if (u){
+        this.user = u;
+        console.log(this.user);
       }
     });
 
@@ -96,5 +106,13 @@ export class HomePageComponent implements OnInit {
     }, err => {
       console.log(err);
     });
+  }
+
+  toggleReceiveNotifications(){
+    this.user.receiveNotifications = !this.user.receiveNotifications;
+
+    this.userService.toggleReceiveNotifications(this.userId, this.user.receiveNotifications).subscribe(res => {
+      console.log('done');
+    }, err => console.log(err));
   }
 }

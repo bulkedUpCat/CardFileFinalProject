@@ -19,4 +19,8 @@ export class UserService {
   getUserById(id: string): Observable<User>{
     return this.http.get<User>(`${environment.apiUrl}/users/` + id);
   }
+
+  toggleReceiveNotifications(id: string, receiveNotifications: boolean){
+    return this.http.put(`${environment.apiUrl}/users/${id}/notifications`,receiveNotifications);
+  }
 }
