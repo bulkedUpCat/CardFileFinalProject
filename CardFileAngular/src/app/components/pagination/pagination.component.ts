@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { SharedHomeParamsService } from 'src/app/services/shared-home-params.service';
 import { SharedParamsService } from 'src/app/services/shared-params.service';
+import { SharedUserListParamsService } from 'src/app/services/shared-user-list-params.service';
 import { SharedUserPageParamsService } from 'src/app/services/shared-user-page-params.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class PaginationComponent implements OnInit {
 
   @Input() isHomePage: boolean;
   @Input() isUserPage: boolean;
+  @Input() isUserListPage: boolean;
   @Input() totalPages: number;
 
   @Output() goTo: EventEmitter<number> = new EventEmitter<number>();
@@ -21,7 +23,8 @@ export class PaginationComponent implements OnInit {
 
   constructor(private sharedParams: SharedParamsService,
     private sharedHomeParams: SharedHomeParamsService,
-    private sharedUserPageParams: SharedUserPageParamsService) { }
+    private sharedUserPageParams: SharedUserPageParamsService,
+    private sharedUserListParams: SharedUserListParamsService) { }
 
   ngOnInit(): void {
     if (this.isHomePage){
@@ -29,6 +32,9 @@ export class PaginationComponent implements OnInit {
     }
     else if(this.isUserPage){
       this.currentPage = this.sharedUserPageParams.pageNumber;
+    }
+    else if(this.isUserListPage){
+      this.currentPage = this.sharedUserListParams.pageNumber;
     }
     else{
       this.currentPage = this.sharedParams.pageNumber;

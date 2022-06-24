@@ -117,14 +117,6 @@ namespace BLL.Services
 
             try
             {
-                var category = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(textMaterialDTO.CategoryTitle);
-
-                if (category != null &&
-                    category.Title != textMaterialDTO.CategoryTitle)
-                {
-                    textMaterial.TextMaterialCategory = category;
-                }
-
                 textMaterial.Title = textMaterialDTO.Title;
                 textMaterial.Content = textMaterialDTO.Content;
                 textMaterial.ApprovalStatus = ApprovalStatus.Pending;
@@ -201,7 +193,7 @@ namespace BLL.Services
             }
         }
 
-        public async Task RejectTextMaterial(int textMaterialId)
+        public async Task RejectTextMaterial(int textMaterialId, string? rejectMessage = null)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
 
@@ -222,6 +214,7 @@ namespace BLL.Services
 
             textMaterial.ApprovalStatus= ApprovalStatus.Rejected;
             textMaterial.RejectCount++;
+            textMaterial.RejectMessage = rejectMessage;
 
             try
             {
@@ -230,7 +223,7 @@ namespace BLL.Services
 
                 if (textMaterial.Author.ReceiveNotifications)
                 {
-                    _emailService.NotifyThatTextMaterialWasRejected(textMaterial.Author, textMaterial);
+                    _emailService.NotifyThatTextMaterialWasRejected(textMaterial.Author, textMaterial, rejectMessage);
                 }
             }
             catch (Exception e)
@@ -267,85 +260,6 @@ namespace BLL.Services
             catch (Exception e)
             {
                 throw new CardFileException("Failed to send an email with pdf attached");
-            }
-        }
-
-        public async Task<PagedList<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId, TextMaterialParameters textMaterialParams)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new CardFileException($"User with id {userId} doens't exist");
-            }
-
-            var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(textMaterialParams);
-            var savedTextMaterials = textMaterials.Where(tm => user.SavedTextMaterials.Contains(tm));
-
-            return PagedList<TextMaterialDTO>
-                .ToPagedList(_mapper.Map <IEnumerable<TextMaterialDTO>>(savedTextMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);
-        }
-
-        public async Task AddTextMaterialToSaved(string userId, int textMaterialId)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new CardFileException($"Failed to find a user with id {userId}");
-            }
-
-            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
-
-            if (textMaterial == null)
-            {
-                throw new CardFileException($"Failed to find a text material with id {textMaterialId}");
-            }
-
-            try
-            {
-                textMaterial.UsersWhoSaved.Add(user);
-
-                _unitOfWork.TextMaterialRepository.Update(textMaterial);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                throw new CardFileException(e.Message);
-            }
-        }
-
-        public async Task RemoveTextMaterialFromSaved(string userId, int textMaterialId)
-        {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
-
-            if (user == null)
-            {
-                throw new CardFileException($"Failed to find a user with id {userId}");
-            }
-
-            var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
-
-            if (textMaterial == null)
-            {
-                throw new CardFileException($"Failed to find a text material with id {textMaterialId}");
-            }
-
-            if (!textMaterial.UsersWhoSaved.Contains(user))
-            {
-                throw new CardFileException($"User with id {userId} doesn't have a text material with id {textMaterialId} in his saved");
-            }
-
-            try
-            {
-                textMaterial.UsersWhoSaved.Remove(user);
-
-                _unitOfWork.TextMaterialRepository.Update(textMaterial);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                throw new CardFileException(e.Message);
             }
         }
     }

@@ -36,6 +36,7 @@ namespace DAL.Repositories
         {
             return await _context.Users
                 .Include(u => u.TextMaterials)
+                .Include(u => u.LikedTextMaterials)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

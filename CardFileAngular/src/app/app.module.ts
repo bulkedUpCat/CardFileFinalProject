@@ -36,6 +36,11 @@ import { RoleComponent } from './components/dialogs/role/role.component';
 import { CommentComponent } from './components/comment/comment/comment.component';
 import { CommentListComponent } from './components/comment/comment-list/comment-list.component';
 import { CommentFormComponent } from './components/comment/comment-form/comment-form.component';
+import { AddCategoryComponent } from './components/dialogs/add-category/add-category.component';
+import { DeleteCategoryComponent } from './components/dialogs/delete-category/delete-category.component';
+import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
+import { RejectTextMaterialComponent } from './components/dialogs/reject-text-material/reject-text-material.component';
+import { UserListPaginationComponent } from './components/user-list-pagination/user-list-pagination.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +70,11 @@ import { CommentFormComponent } from './components/comment/comment-form/comment-
     CommentComponent,
     CommentListComponent,
     CommentFormComponent,
+    AddCategoryComponent,
+    DeleteCategoryComponent,
+    SanitizeHtmlPipe,
+    RejectTextMaterialComponent,
+    UserListPaginationComponent,
   ],
   imports: [
     BrowserModule,

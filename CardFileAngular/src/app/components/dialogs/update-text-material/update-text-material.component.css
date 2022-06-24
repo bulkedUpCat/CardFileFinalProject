@@ -19,7 +19,7 @@
     text-align: center;
     font-weight: bold;
     font-size: 5vh;
-    color: rgb(40, 10, 232);
+    color: #02314D;
 }
 
 [class*="input"] {
@@ -40,7 +40,7 @@ input[class*="input-item"] {
 }
 
 .error {
-    color: rgb(40, 10, 232);
+    color: #02314D;
 }
 
 .btn>button {
@@ -49,7 +49,19 @@ input[class*="input-item"] {
     font-weight: bold;
     border: none;
     border-radius: 15px;
-    background-color: rgb(40, 10, 232);
+    background-color: #02314D;
     color: #FFF;
     cursor: pointer;
+}
+
+.categoryTitle-label {
+    font-size: 1.2em;
+    color: #02314D;
+    font-weight: bold;
+    padding: 1%;
+}
+
+.categoryTitle {
+    padding: 1%;
+    font-size: 1.2em;
 }

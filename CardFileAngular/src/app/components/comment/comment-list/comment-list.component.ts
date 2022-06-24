@@ -19,6 +19,7 @@ export class CommentListComponent implements OnInit {
 
   @Input() currentUserId: string;
   @Input() textMaterialId: number;
+  @Input() isAdmin: boolean;
 
   constructor(private commentService: CommentService,
     private notifier: NotifierService) { }

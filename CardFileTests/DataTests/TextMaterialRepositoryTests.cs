@@ -57,6 +57,7 @@ namespace CardFileTests.DataTests
             var repository = new TextMaterialRepository(context);
             var expected = ExpectedTextMaterials
                 .Where(tm => tm.AuthorId == userId)
+                .OrderByDescending(tm => tm.DatePublished)
                 .ToList();
 
             // Act

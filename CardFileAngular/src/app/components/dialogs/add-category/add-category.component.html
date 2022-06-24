@@ -1,0 +1,12 @@
+<p class="header">Enter a title</p>
+<form [formGroup]="addCategoryForm" (ngSubmit)="onSubmit()">
+    <div class="input">
+        <input type="text" formControlName="title">
+        <div class="error" *ngIf="submitted && title.errors">
+            <div class="error" *ngIf="title.errors['required']">
+                This field is required
+            </div>
+        </div>
+    </div>
+    <div class="btn"><button type="submit">Add</button></div>
+</form>

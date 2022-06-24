@@ -8,4 +8,6 @@ export interface TextMaterial{
   userName: string;
   datePublished: Date;
   rejectCount: number;
+  rejectMessage: string;
+  likesCount: number;
 }

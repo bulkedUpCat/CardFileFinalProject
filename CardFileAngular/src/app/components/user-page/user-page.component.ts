@@ -19,6 +19,7 @@ export class UserPageComponent implements OnInit {
   paginator: any;
   userId: string;
   user: User;
+  totalLikeCount: number = 0;
 
   constructor(private route: ActivatedRoute,
     private userService: UserService,
@@ -53,9 +54,17 @@ export class UserPageComponent implements OnInit {
       this.textMaterials = tm.body;
       this.paginator = JSON.parse(tm.headers.get('X-Pagination'));
       this.totalCount = this.paginator.TotalCount;
+      this.getTotalLikeCount();
     }, err => {
       console.log(err);
     });
+  }
+
+  getTotalLikeCount(){
+    console.log(this.textMaterials);
+    for (let i = 0; i < this.textMaterials.length; i++){
+      this.totalLikeCount += this.textMaterials[i].likesCount;
+    }
   }
 
   onNextPage(page: number){

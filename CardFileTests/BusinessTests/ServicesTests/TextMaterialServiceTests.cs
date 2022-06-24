@@ -421,7 +421,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new TextMaterial { Id = 4, Author = GetUserEntities[1], AuthorId = "2", TextMaterialCategory = GetTextMaterialCategoryEntities[1], ApprovalStatus = ApprovalStatus.Rejected, Content = "fourthContent", Title = "fourthArticle", TextMaterialCategoryId = 2, DatePublished = new DateTime(2014, 2,18) }
             };
 
-        private List<TextMaterialDTO> GetTextMaterialDTOs =>
+        public List<TextMaterialDTO> GetTextMaterialDTOs =>
             new List<TextMaterialDTO>
             {
                 new TextMaterialDTO { Id = 1, AuthorId = "1", UserName = "Tommy", ApprovalStatusId = 0, Content = "firstContent", Title = "firstArticle", CategoryTitle = "First one", DatePublished = new DateTime(2000,11,23) },

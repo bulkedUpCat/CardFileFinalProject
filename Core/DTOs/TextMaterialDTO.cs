@@ -14,8 +14,10 @@ namespace Core.DTOs
         public string CategoryTitle { get; set; }
         public int ApprovalStatusId { get; set; }
         public int RejectCount { get; set; }
+        public string? RejectMessage { get; set; }
         public string AuthorId { get; set; }
         public string UserName { get; set; }
+        public int LikesCount { get; set; }
         public DateTime DatePublished { get; set; }
     }
 }

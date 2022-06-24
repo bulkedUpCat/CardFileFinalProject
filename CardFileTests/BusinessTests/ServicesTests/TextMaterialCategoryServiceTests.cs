@@ -127,6 +127,49 @@ namespace CardFileTests.BusinessTests.ServicesTests
             await act.Should().ThrowAsync<CardFileException>();
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public async Task TextMaterialCategoryService_DeleteTextMaterialCategoryAsync_RemovesEntityFromDatabase(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialCategoryRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialCategoryEntities.FirstOrDefault(tmc => tmc.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialCategoryRepository.Delete(id));
+
+            var textMaterialCategoryService = new TextMaterialCategoryService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            // Act
+            await textMaterialCategoryService.DeleteTextMaterialCategoryAsync(id);
+
+            // Assert
+            mockUnitOfWork.Verify(x => x.TextMaterialCategoryRepository.Delete(id), Times.Once());
+            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public async Task TextMaterialCategoryService_DeleteTextMaterialCategoryAsync_ThrowsExceptionIfIdInvalid(int id)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialCategoryRepository.GetByIdAsync(id))
+                .ReturnsAsync(GetTextMaterialCategoryEntities.FirstOrDefault(tmc => tmc.Id == id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialCategoryRepository.Delete(id));
+
+            var textMaterialCategoryService = new TextMaterialCategoryService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            // Act
+            Func<Task> act = async () => await textMaterialCategoryService.DeleteTextMaterialCategoryAsync(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
 
         public List<TextMaterialCategory> GetTextMaterialCategoryEntities =>
             new List<TextMaterialCategory>()

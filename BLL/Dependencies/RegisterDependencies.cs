@@ -22,6 +22,8 @@ namespace BLL.Dependencies
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<CommentService>();
             services.AddScoped<UserService>();
+            services.AddScoped<SavedTextMaterialsService>();
+            services.AddScoped<LikedTextMaterialService>();
         }
     }
 }

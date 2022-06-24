@@ -1,7 +1,8 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    background-color: rgb(8, 161, 243);
+    /* background-color: rgb(8, 161, 243); */
+    background-color: #045C94;
     color: #FFF;
     padding: 1%;
     row-gap: 1em;
@@ -64,16 +65,22 @@
 .btn-apply {
     padding: 2%;
     width: 100%;
-    background-color: rgb(22, 22, 230);
+    /* background-color: rgb(22, 22, 230); */
+    background-color: #02314D;
     color: #FFF;
     font-weight: bold;
     border: none;
     cursor: pointer;
 }
 
-.btn-apply:hover {
+
+/* .btn-apply:hover {
     background-color: rgb(184, 184, 223);
     color: #000;
+} */
+
+.image {
+    width: 20px;
 }
 
 @media screen and (min-width: 601px) {

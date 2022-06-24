@@ -13,7 +13,6 @@ namespace BLL.Validation.Validators
         public CreateTextMaterialDTOValidator()
         {
             RuleFor(tm => tm.Title)
-                .NotEmpty().WithMessage("{PropertyName} must not be empty")
                 .Length(5, 100).WithMessage("{PropertyName} must be 5 to 100 characters long");
 
             RuleFor(tm => tm.Content)

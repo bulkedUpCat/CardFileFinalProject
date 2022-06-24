@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HtmlEditorService, ImageService, LinkService, ToolbarService } from '@syncfusion/ej2-angular-richtexteditor';
+import { MaterialCategory } from 'src/app/models/MaterialCategory';
 import { TextMaterial } from 'src/app/models/TextMaterial';
+import { MaterialCategoryService } from 'src/app/services/material-category.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -15,10 +17,12 @@ import { TextMaterialService } from 'src/app/services/text-material.service';
 export class UpdateTextMaterialComponent implements OnInit {
   textMaterialForm: FormGroup;
   textMaterial: TextMaterial;
+  categories: MaterialCategory[];
   submitted: boolean;
+
   public tools: object = {
     items: [
-      'Undo','Redo','Bold','Italic','FontSize'
+      'Undo','Redo','Bold','Italic', 'Underline', 'FontSize', 'Indent', 'Outdent', 'Alignments'
     ]
   };
 
@@ -26,18 +30,20 @@ export class UpdateTextMaterialComponent implements OnInit {
     private dialogRef: MatDialogRef<UpdateTextMaterialComponent>,
     private fb: FormBuilder,
     private textMaterialService: TextMaterialService,
+    private categoryService: MaterialCategoryService,
     private router: Router) { }
 
   ngOnInit(): void {
     this.textMaterial = this.data.textMaterial;
+
     this.createTextMaterialForm();
+    //this.getCategories();
   }
 
   createTextMaterialForm(){
     this.textMaterialForm = this.fb.group({
       id: [this.data.textMaterialId],
       title: [this.data.textMaterial?.title, [Validators.required,Validators.minLength(5),Validators.maxLength(100)]],
-      categoryTitle: [this.data.textMaterial?.categoryTitle,[Validators.required]],
       content: [this.data.textMaterial?.content,[Validators.required]],
       authorId: [this.data.textMaterial.authorId]
     });
@@ -47,13 +53,17 @@ export class UpdateTextMaterialComponent implements OnInit {
     return this.textMaterialForm.get('title');
   }
 
-  get category(){
-    return this.textMaterialForm.get('categoryTitle');
-  }
-
   get content(){
     return this.textMaterialForm.get('content');
   }
+
+  // getCategories(){
+  //   this.categoryService.getMaterialCategories().subscribe(c => {
+  //     this.categories = c;
+  //   }, err => {
+  //     console.log(err);
+  //   });
+  // }
 
   onUpdate(){
     this.submitted = true;

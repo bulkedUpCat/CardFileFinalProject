@@ -66,5 +66,21 @@ namespace CardFileApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            try
+            {
+                await _textMaterialCategoryService.DeleteTextMaterialCategoryAsync(id);
+
+                return Ok();
+            }
+            catch (CardFileException e)
+            {
+                _logger.LogInfo($"Failed to delete a category: {e.Message}");
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

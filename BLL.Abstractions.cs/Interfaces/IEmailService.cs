@@ -16,6 +16,6 @@ namespace BLL.Abstractions.cs.Interfaces
         void NotifyThatTextMaterialWasCreated(User user, TextMaterial textMaterial);
         void NotifyThatTextMaterialWasDeleted(User user, TextMaterial textMaterial);
         void NotifyThatTextMaterialWasApproved(User user, TextMaterial textMaterial);
-        void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial);
+        void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial, string? rejectMessage = null);
     }
 }

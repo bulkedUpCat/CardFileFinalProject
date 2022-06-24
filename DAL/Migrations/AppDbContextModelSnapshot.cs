@@ -89,6 +89,9 @@ namespace DAL.Migrations
                     b.Property<int>("RejectCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("RejectMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TextMaterialCategoryId")
                         .HasColumnType("int");
 
@@ -339,6 +342,21 @@ namespace DAL.Migrations
                     b.ToTable("SavedTextMaterials", (string)null);
                 });
 
+            modelBuilder.Entity("TextMaterialUser1", b =>
+                {
+                    b.Property<int>("LikedTextMaterialsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersWhoLikedId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LikedTextMaterialsId", "UsersWhoLikedId");
+
+                    b.HasIndex("UsersWhoLikedId");
+
+                    b.ToTable("LikedTextMaterials", (string)null);
+                });
+
             modelBuilder.Entity("Core.Models.Comment", b =>
                 {
                     b.HasOne("Core.Models.Comment", "ParentComment")
@@ -444,6 +462,21 @@ namespace DAL.Migrations
                     b.HasOne("Core.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UsersWhoSavedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TextMaterialUser1", b =>
+                {
+                    b.HasOne("Core.Models.TextMaterial", null)
+                        .WithMany()
+                        .HasForeignKey("LikedTextMaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersWhoLikedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

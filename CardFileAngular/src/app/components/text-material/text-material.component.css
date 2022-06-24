@@ -7,8 +7,9 @@
     border-bottom: 1px solid #000;
     margin-top: .5%;
     cursor: pointer;
-    background-color: rgb(141, 25, 243);
-    color: #FFF;
+    /* background-color: rgb(141, 25, 243); */
+    background-color: #FFBB1C;
+    color: #000;
     font-weight: bold;
 }
 

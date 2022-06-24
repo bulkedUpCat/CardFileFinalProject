@@ -16,6 +16,7 @@ namespace Core.Models
 
         public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
         public int RejectCount { get; set; }
+        public string? RejectMessage { get; set; }
 
         public virtual TextMaterialCategory TextMaterialCategory { get; set; }
         public int TextMaterialCategoryId { get; set; }
@@ -29,6 +30,7 @@ namespace Core.Models
         public DateTime DateApproved { get; set; }
 
         public virtual ICollection<User> UsersWhoSaved { get; set; } = new List<User>();
+        public virtual ICollection<User> UsersWhoLiked { get; set; } = new List<User>();
         public virtual ICollection<Comment> Comments { get; set; }
     }
 }

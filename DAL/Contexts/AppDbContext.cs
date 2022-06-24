@@ -26,6 +26,11 @@ namespace DAL.Contexts
                 .WithMany(tm => tm.UsersWhoSaved)
                 .UsingEntity(t => t.ToTable("SavedTextMaterials"));
 
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.LikedTextMaterials)
+                .WithMany(tm => tm.UsersWhoLiked)
+                .UsingEntity(t => t.ToTable("LikedTextMaterials"));
+
             base.OnModelCreating(modelBuilder);
         }
 

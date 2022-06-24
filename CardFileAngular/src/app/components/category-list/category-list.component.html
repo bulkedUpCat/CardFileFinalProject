@@ -1,4 +1,7 @@
 <div class="container">
-    <app-material-category class="item" *ngFor="let category of categories" [category]="category">
+    <div class="add-category">
+        <button (click)="addCategory()">+</button>
+    </div>
+    <app-material-category class="item" *ngFor="let category of categories" [category]="category" (deleted)="refresh()">
     </app-material-category>
 </div>

@@ -7,10 +7,6 @@
     font-family: sans-serif;
 }
 
-body {
-    background-color: rgb(16, 214, 232);
-}
-
 html,
 body {
     height: 100%;
@@ -19,6 +15,8 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: rgb(40, 169, 241);
+    background: linear-gradient(90deg, rgba(40, 169, 241, 1) 7%, rgba(52, 108, 184, 1) 84%);
 }
 
 .SUCCESS {

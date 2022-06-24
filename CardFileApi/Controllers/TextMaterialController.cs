@@ -108,7 +108,7 @@ namespace CardFileApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-        [HttpPost("{id}/approve")]
+        [HttpPut("{id}/approve")]
         public async Task<IActionResult> Approve(int id)
         {
             try
@@ -124,12 +124,12 @@ namespace CardFileApi.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
-        [HttpPost("{id}/reject")]
-        public async Task<IActionResult> Reject(int id)
+        [HttpPut("{id}/reject")]
+        public async Task<IActionResult> Reject(int id,[FromBody] RejectMessageDTO rejectMessage)
         {
             try
             {
-                await _textMaterialService.RejectTextMaterial(id);
+                await _textMaterialService.RejectTextMaterial(id, rejectMessage.RejectMessage);
 
                 return NoContent();
             }

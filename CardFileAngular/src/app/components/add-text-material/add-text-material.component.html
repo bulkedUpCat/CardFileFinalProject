@@ -9,7 +9,7 @@
                 <div class="error" *ngIf="title.errors['required']">
                     This field is required
                 </div>
-                <div class="error" *ngIf="title.errors['minLength']">
+                <div class="error" *ngIf="title.errors['minlength'] || title.errors['maxlength']">
                     Title must be 5 to 100 characters long
                 </div>
             </div>

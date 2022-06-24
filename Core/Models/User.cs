@@ -12,5 +12,6 @@ namespace Core.Models
         public bool ReceiveNotifications { get; set; }
         public virtual ICollection<TextMaterial> TextMaterials { get; set; }
         public virtual ICollection<TextMaterial> SavedTextMaterials { get; set; } = new List<TextMaterial>();
+        public virtual ICollection<TextMaterial> LikedTextMaterials { get; set; } = new List<TextMaterial>();
     }
 }

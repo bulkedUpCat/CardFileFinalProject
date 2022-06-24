@@ -1,0 +1,29 @@
+.error {
+    color: #02314D;
+}
+
+.header {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 2%;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 1%;
+    font-size: 1.2em;
+}
+
+.btn {
+    text-align: center;
+}
+
+.btn>button {
+    font-size: 1.2em;
+    padding: 1%;
+    margin-top: 2%;
+    background-color: rgb(12, 1, 83);
+    color: #FFF;
+    cursor: pointer;
+}

@@ -7,9 +7,16 @@
     margin: 0 1%;
     padding: 0 1%;
     border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
 }
 
 .page-buttons>p {
     color: #FFF;
     padding: 2%;
+    font-size: 1.2em;
+}
+
+.arrow {
+    width: 30px;
 }

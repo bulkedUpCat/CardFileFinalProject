@@ -66,5 +66,25 @@ namespace BLL.Services
 
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }
+
+        public async Task DeleteTextMaterialCategoryAsync(int id)
+        {
+            var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                throw new CardFileException($"Text material category with id {id} doesn't exist");
+            }
+
+            try
+            {
+                _unitOfWork.TextMaterialCategoryRepository.Delete(id);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
     }
 }

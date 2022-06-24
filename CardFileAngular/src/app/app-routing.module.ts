@@ -26,6 +26,7 @@ const routes: Routes = [
   {path: 'add-text-material', component: AddTextMaterialComponent, canActivate: [AuthGuard]},
   {path: 'user/:id', component: UserPageComponent},
   {path: 'users', component: UserListComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'categories', component: CategoryListComponent, canActivate: [AuthGuard, AdminGuard]},
   {path: '**', redirectTo: '/main'}
 ];
 

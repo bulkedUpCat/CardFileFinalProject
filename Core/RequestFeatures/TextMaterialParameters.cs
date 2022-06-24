@@ -10,7 +10,7 @@ namespace Core.RequestFeatures
     {
         public TextMaterialParameters()
         {
-            OrderBy = "datePublished";
+            OrderBy = "datePublished desc";
         }
 
         public string? StartDate { get; set; }
@@ -18,12 +18,6 @@ namespace Core.RequestFeatures
         public string? SearchTitle { get; set; }
         public string? SearchCategory { get; set; }
         public string? SearchAuthor { get; set; }
-        //public string? UserId { get; set; }
         public List<int>? ApprovalStatus { get; set; }
-
-        public bool ValidDateRange()
-        {
-            return DateTime.Compare(DateTime.Parse(StartDate), DateTime.Parse(EndDate)) <= 0;
-        }
     }
 }

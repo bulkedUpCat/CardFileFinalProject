@@ -1,0 +1,12 @@
+<p class="header">Enter the reason you want to reject this text material</p>
+<form [formGroup]="rejectForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="rejectMessage">
+    <div class="error" *ngIf="submitted && rejectMessage.errors">
+        <div *ngIf="rejectMessage.errors['required']">
+            Specify the reason
+        </div>
+    </div>
+    <div class="btn">
+        <button type="submit">Reject</button>
+    </div>
+</form>

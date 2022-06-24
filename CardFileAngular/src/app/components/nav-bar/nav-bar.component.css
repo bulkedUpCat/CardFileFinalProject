@@ -1,8 +1,7 @@
 .container {
     display: flex;
-    background-color: rgb(40, 10, 232);
-    /* display: grid;
-    grid-template-columns: 22% 48% 15% 15%; */
+    /* background-color: rgb(40, 10, 232); */
+    background-color: #02314D;
     justify-content: space-between;
 }
 
@@ -27,22 +26,11 @@
     text-decoration: underline;
 }
 
-.link>a:active {
-    color: rgb(7, 7, 112);
-}
-
-.log-in {
-    /* grid-column: 3/4; */
-}
-
-.log-out {
-    /* grid-column: 4/5; */
+.link>a.active {
+    text-decoration: underline;
 }
 
 @media screen and (min-width: 601px) {
-    .container {
-        /* grid-template-columns: 10% 80% 5% 5%; */
-    }
     .link>a {
         font-size: 1.2em;
     }

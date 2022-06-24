@@ -24,7 +24,7 @@ export class DeleteTextMaterialComponent implements OnInit {
   deleteTextMaterial(){
     this.textMaterialService.deleteTextMaterial(this.data.textMaterialId).subscribe(tm => {
       this.dialogRef.close();
-      this.notifier.showNotification(`You've just delete a text material with id ${this.data.textMaterialId}`,
+      this.notifier.showNotification(`You've just delete a text material with title ${this.data.textMaterial.title}`,
                                      "OK","SUCCESS");
       this.router.navigateByUrl('/main');
     }, err => {

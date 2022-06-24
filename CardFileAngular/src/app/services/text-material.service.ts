@@ -113,11 +113,14 @@ export class TextMaterialService {
   }
 
   approveTextMaterial(id: number){
-    return this.http.post<number>(`${environment.apiUrl}/textMaterials/${id}/approve`,null)
+    return this.http.put<number>(`${environment.apiUrl}/textMaterials/${id}/approve`,null)
   }
 
-  rejectTextMaterial(id: number){
-    return this.http.post<number>(`${environment.apiUrl}/textMaterials/${id}/reject`,null);
+  rejectTextMaterial(id: number, rejectMessage: string){
+    let obj = {
+      rejectMessage: rejectMessage
+    };
+    return this.http.put<number>(`${environment.apiUrl}/textMaterials/${id}/reject`, obj);
   }
 
   sendTextMaterialAsPdf(textMaterialId: number, emailParams: any){
@@ -132,10 +135,6 @@ export class TextMaterialService {
       params: parameters
     });
   }
-
-  // getSavedTextMaterials(userId: string): any{
-  //   return this.http.get(`${environment.apiUrl}/users/${userId}/textMaterials/saved`);
-  // }
 
   addTextMaterialToSaved(userId: string, textMaterialId: number){
     const headers = {

@@ -1,4 +1,4 @@
-.item {
+/* .item {
     cursor: pointer;
 }
 
@@ -28,4 +28,10 @@
         font-weight: bold;
         font-size: 1.2em;
     }
+} */
+
+.delete-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }

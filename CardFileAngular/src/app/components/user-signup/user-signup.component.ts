@@ -57,7 +57,6 @@ export class UserSignupComponent implements OnInit {
     this.submitted = true;
 
     if(!this.signupForm.valid){
-      this.notifier.showNotification("Form is invalid","OK","ERROR");
       return;
     }
 
@@ -69,7 +68,7 @@ export class UserSignupComponent implements OnInit {
     const user = this.signupForm.value;
 
     this.authService.signUp(user).subscribe(u => {
-      this.notifier.showNotification("You've successfully logged in!","OK","SUCCESS");
+      this.notifier.showNotification("You've successfully signed up!","OK","SUCCESS");
       this.router.navigateByUrl('login');
     },
     err => {

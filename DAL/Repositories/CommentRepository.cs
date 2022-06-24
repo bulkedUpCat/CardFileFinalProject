@@ -29,6 +29,7 @@ namespace DAL.Repositories
             return await _context.Comments
                 .Include(c => c.User)
                 .Where(c => c.TextMaterialId == textMaterialId)
+                .OrderBy(c => c.CreatedAt)
                 .ToListAsync();
         }
 

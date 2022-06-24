@@ -1,8 +1,8 @@
-<a class="item" routerLink="/main/{{category?.id}}" routerLinkActive="true">
+<div class="item">
     <div class="body">
         <div>
             {{category?.title}}
+            <button class="delete-btn" (click)="deleteCategory()"><mat-icon>delete</mat-icon></button>
         </div>
-        <img src="../../../assets/empty-category.png">
     </div>
-</a>
+</div>

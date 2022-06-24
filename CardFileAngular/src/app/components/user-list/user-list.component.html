@@ -7,3 +7,4 @@
         </app-user-item>
     </div>
 </div>
+<app-pagination [totalPages]="paginator?.TotalPages" (next)="onNextPage($event) " (previous)="onPreviousPage($event) " [isUserListPage]="true"></app-pagination>

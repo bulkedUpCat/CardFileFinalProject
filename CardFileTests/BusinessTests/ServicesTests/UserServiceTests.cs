@@ -2,6 +2,7 @@
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
+using Core.RequestFeatures;
 using DAL.Abstractions.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
 
             // Act
-            var actual = await userService.GetAll();
+            var actual = await userService.GetAll(new UserParameters());
 
             // Assert
             actual.Should().BeEquivalentTo(expected);
@@ -84,6 +85,55 @@ namespace CardFileTests.BusinessTests.ServicesTests
 
             // Act
             Func<Task> act = async () => await userService.GetUserById(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [TestCase("1",true)]
+        [TestCase("2",false)]
+        public async Task UserService_ToggleReceiveNotifications_SetsReceiveNotificationsStatus(string userId, bool receiveNotifications)
+        {
+            // Arrange
+            var user = GetUserEntities.FirstOrDefault(u => u.Id == userId);
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockStore = new Mock<IUserStore<User>>();
+            var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.Update(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+
+            // Act
+            await userService.ToggleReceiveNotifications(userId, receiveNotifications);
+
+            // Assert
+            mockUnitOfWork.Verify(x => x.UserRepository.Update(It.Is<User>(u => u.Id == userId && u.ReceiveNotifications == receiveNotifications)), Times.Once);
+            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [TestCase("0", true)]
+        [TestCase("-1", true)]
+        public async Task UserService_ToggleReceiveNotifications_ThrowsExceptionIfIdInvalid(string userId, bool receiveNotifications)
+        {
+            // Arrange
+            var user = GetUserEntities.FirstOrDefault(u => u.Id == userId);
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockStore = new Mock<IUserStore<User>>();
+            var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.Update(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+
+            // Act
+            Func<Task> act = async () => await userService.ToggleReceiveNotifications(userId, receiveNotifications);
 
             // Assert
             await act.Should().ThrowAsync<CardFileException>();

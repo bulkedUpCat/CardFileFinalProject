@@ -42,14 +42,15 @@ namespace DAL.Repositories
             await _context.TextMaterialCategory.AddAsync(entity);
         }
 
-        public void DeleteEntity(TextMaterialCategory entity)
+        public void Update(TextMaterialCategory entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(TextMaterialCategory entity)
+        public async void Delete(int id)
         {
-            throw new NotImplementedException();
+            var category = _context.TextMaterialCategory.FirstOrDefault(tmc => tmc.Id == id);
+            _context.TextMaterialCategory.Remove(category);
         }
     }
 }

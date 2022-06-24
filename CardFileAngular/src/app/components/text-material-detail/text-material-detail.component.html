@@ -1,6 +1,10 @@
 <div class="grid-container">
     <button class="back-btn" (click)="goBack()">Back</button>
-    <div *ngIf="isAdmin">Reject count: <strong>{{textMaterial?.rejectCount}}</strong></div>
+    <div class="reject" *ngIf="isAdmin && textMaterial?.approvalStatusId != 1">
+        <div *ngIf="textMaterial?.rejectCount">Reject count: <strong>{{textMaterial?.rejectCount}}</strong></div>
+        <div *ngIf="textMaterial?.rejectMessage">Reject message: <strong>{{textMaterial?.rejectMessage}}</strong></div>
+    </div>
+
     <div class="prop top">
         <div>Category: <strong>{{textMaterial?.categoryTitle}}</strong></div>
         <div *ngIf="isLoggedIn" class="buttons">
@@ -15,7 +19,7 @@
     <div class="prop title ">
         <span>Title: <strong>{{textMaterial?.title}}</strong></span>
     </div>
-    <div class="prop content " [innerHTML]="textMaterial?.content "></div>
+    <div class="prop content " [innerHTML]="textMaterial?.content | sanitizeHtml"></div>
     <div class="prop bottom ">
         <span class="author ">
           Author:
@@ -24,12 +28,19 @@
           </a>
         </span>
         <span class="date "><strong>{{textMaterial?.datePublished | date: 'MMM, d, y'}}</strong></span>
+        <div *ngIf="userId && textMaterial?.approvalStatusId == 1" class="likes">
+            <span *ngIf="!isLiked"><button (click)="addToLiked()"><mat-icon>favorite_border</mat-icon></button> {{textMaterial?.likesCount}}</span>
+            <span *ngIf="isLiked"><button (click)="removeFromLiked()"><mat-icon>favorite</mat-icon></button> {{textMaterial?.likesCount}}</span>
+        </div>
+        <div *ngIf="!userId && textMaterial?.approvalStatusId == 1" class="likes">
+            <span>Likes: {{textMaterial?.likesCount}}</span>
+        </div>
     </div>
     <div class="btn-approve " *ngIf="isManager && !isAuthor && loadedStatus && textMaterial?.approvalStatusId==0 ">
         <button (click)="approveTextMaterial() ">Approve this text material</button>
         <button (click)="rejectTextMaterial() ">Reject this text material</button>
     </div>
     <div *ngIf="textMaterial && textMaterial.approvalStatusId == 1" class="comments">
-        <app-comment-list [textMaterialId]="textMaterial?.id" [currentUserId]="userId"></app-comment-list>
+        <app-comment-list [isAdmin]="isAdmin" [textMaterialId]="textMaterial?.id" [currentUserId]="userId"></app-comment-list>
     </div>
 </div>

@@ -134,8 +134,6 @@ export class TextMaterialsComponent implements OnInit {
         this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
       }
 
-      //this.sharedParams.approvalStatus = this.textMaterialParams.approvalStatus;
-      console.log(this.sharedParams.approvalStatus);
       if (!this.sharedParams.showSaved){
         this.textMaterialService.getTextMaterials(this.textMaterialParams).subscribe( tm => {
           this.textMaterials = tm.body;

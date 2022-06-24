@@ -21,7 +21,7 @@ export class AddTextMaterialComponent implements OnInit {
   categories: MaterialCategory[];
   public tools: object = {
     items: [
-      'Undo','Redo','Bold','Italic','FontSize'
+      'Undo','Redo','Bold','Italic', 'Underline', 'FontSize', 'Indent', 'Outdent', 'Alignments'
     ]
   };
 

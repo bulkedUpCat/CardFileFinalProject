@@ -13,19 +13,13 @@ namespace BLL.Services
 {
     public class AuthService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AuthService(IUnitOfWork unitOfWork,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            RoleManager<IdentityRole> roleIdentity)
+        public AuthService(UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
-            _unitOfWork = unitOfWork;
             _userManager = userManager;
-            _roleManager = roleIdentity;
             _signInManager = signInManager;
 
         }
@@ -36,7 +30,7 @@ namespace BLL.Services
 
             if (foundUser == null)
             {
-                throw new Exception($"User with email {user.Email} does not exist");
+                throw new CardFileException($"User with email {user.Email} does not exist");
             }
 
             var result = await _signInManager.PasswordSignInAsync(foundUser, user.Password, false, false);

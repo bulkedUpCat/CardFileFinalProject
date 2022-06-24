@@ -13,6 +13,7 @@ export class CommentComponent implements OnInit {
   @Input() currentUserId: string;
   @Input() replies: Comment[];
   @Input() activeComment: ActiveComment;
+  @Input() isAdmin: boolean;
 
   @Output() setActiveComment = new EventEmitter<ActiveComment>();
   @Output() addComment = new EventEmitter<{content: string, parentId: number}>();
@@ -34,7 +35,8 @@ export class CommentComponent implements OnInit {
   setUp(){
     this.canReply = !!this.currentUserId;
     this.canEdit = this.comment.userId == this.currentUserId;
-    this.canDelete = this.comment.userId == this.currentUserId && this.replies.length == 0;
+    this.canDelete = (this.comment.userId == this.currentUserId && this.replies.length == 0)
+    || (this.isAdmin && this.replies.length == 0);
   }
 
   isReplying(){

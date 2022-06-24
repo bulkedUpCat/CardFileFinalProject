@@ -4,7 +4,7 @@
     </div>
     <div class="comment-right-part">
         <div class="comment-content">
-            <div class="comment-author">{{ comment?.userName }}</div>
+            <a routerLink="/user/{{comment.userId}}" class="comment-author">{{ comment?.userName }}</a>
             <div>{{ comment?.createdAt | date: 'MMM, d, y'}}</div>
         </div>
         <div class="comment-text" *ngIf="!isEditing()">{{ comment.content }}</div>

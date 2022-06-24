@@ -165,10 +165,11 @@ namespace BLL.Services
             }
         }
 
-        public void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial)
+        public void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial, string? rejectMessage = null)
         {
             var body = $"Hello {user.UserName}." +
-                $"Your text material '{textMaterial.Title}' was rejected.";
+                $"Your text material '{textMaterial.Title}' was rejected.\n" +
+                $"Reason: {rejectMessage}";
 
             try
             {

@@ -76,7 +76,6 @@ export class AuthService {
           payload = window.atob(payload);
           payload = JSON.parse(payload);
           this.claims.next(payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
-          //console.log(this.claims);
           this.loggedIn.next(true);
         }
       }));

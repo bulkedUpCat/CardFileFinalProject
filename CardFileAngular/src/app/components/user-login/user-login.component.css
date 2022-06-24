@@ -10,7 +10,7 @@
     text-align: center;
     font-weight: bold;
     font-size: 5vh;
-    color: rgb(40, 10, 232);
+    color: #FFF;
 }
 
 [class*="input"] {
@@ -24,7 +24,8 @@
 
 .no-account>a {
     text-decoration: none;
-    color: rgb(40, 10, 232);
+    /* color: rgb(40, 10, 232); */
+    color: #FFF;
 }
 
 .no-account>a:hover {
@@ -38,7 +39,8 @@
 
 .forgot-password>a {
     text-decoration: none;
-    color: rgb(40, 10, 232);
+    /* color: rgb(40, 10, 232); */
+    color: #FFF;
     cursor: pointer;
 }
 
@@ -70,7 +72,8 @@ input[class*="input-item"] {
     font-weight: bold;
     border: none;
     border-radius: 15px;
-    background-color: rgb(40, 10, 232);
+    /* background-color: rgb(40, 10, 232); */
+    background-color: rgb(12, 1, 83);
     color: #FFF;
     cursor: pointer;
 }

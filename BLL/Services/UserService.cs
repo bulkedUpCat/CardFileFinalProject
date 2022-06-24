@@ -2,6 +2,7 @@
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
+using Core.RequestFeatures;
 using DAL.Abstractions.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -27,7 +28,7 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAll()
+        public async Task<PagedList<UserDTO>> GetAll(UserParameters userParameters)
         {
             var users = await _unitOfWork.UserRepository.GetWithDetailsAsync();
             var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
@@ -39,7 +40,7 @@ namespace BLL.Services
                 user.Roles = roles?.ToList();
             }
 
-            return userDTOs;
+            return PagedList<UserDTO>.ToPagedList(userDTOs, userParameters.PageNumber, userParameters.PageSize);
         }
 
         public async Task<UserDTO> GetUserById(string id)

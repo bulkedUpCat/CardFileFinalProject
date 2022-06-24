@@ -16,23 +16,42 @@ namespace CardFileApi.Controllers
     {
         private readonly UserService _userService;
         private readonly TextMaterialService _textMaterialService;
+        private readonly SavedTextMaterialsService _savedTextMaterialService;
+        private readonly LikedTextMaterialService _likedTextMaterialService;
 
         public UserController(UserService userService,
-            TextMaterialService textMaterialService)
+            TextMaterialService textMaterialService,
+            SavedTextMaterialsService savedTextMaterialService,
+            LikedTextMaterialService likedTextMaterialService)
         {
             _userService = userService;
             _textMaterialService = textMaterialService;
+            _savedTextMaterialService = savedTextMaterialService;
+            _likedTextMaterialService = likedTextMaterialService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> Get()
+        public async Task<ActionResult<IEnumerable<User>>> Get([FromQuery]UserParameters userParameters)
         {
-            var users = await _userService.GetAll();
+            var users = await _userService.GetAll(userParameters);
 
             if (users == null)
             {
                 return NotFound("No users were found");
             }
+
+            var metadata = new
+            {
+                users.TotalCount,
+                users.PageSize,
+                users.CurrentPage,
+                users.TotalPages,
+                users.HasNext,
+                users.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
             return Ok(users);
         }
@@ -85,7 +104,7 @@ namespace CardFileApi.Controllers
         {
             try
             {
-                var savedTextMaterials = await _textMaterialService.GetSavedTextMaterialsOfUser(id, textMaterialParams);
+                var savedTextMaterials = await _savedTextMaterialService.GetSavedTextMaterialsOfUser(id, textMaterialParams);
 
                 var metadata = new
                 {
@@ -119,7 +138,7 @@ namespace CardFileApi.Controllers
 
             try
             {
-                await _textMaterialService.AddTextMaterialToSaved(id, textMaterialId);
+                await _savedTextMaterialService.AddTextMaterialToSaved(id, textMaterialId);
 
                 return NoContent();
             }
@@ -139,9 +158,54 @@ namespace CardFileApi.Controllers
 
             try
             {
-                await _textMaterialService.RemoveTextMaterialFromSaved(id, textMaterialId);
+                await _savedTextMaterialService.RemoveTextMaterialFromSaved(id, textMaterialId);
 
                 return NoContent();
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/textMaterials/liked")]
+        public async Task<IActionResult> GetLikedTextMaterials(string id)
+        {
+            try
+            {
+                var likedTextMaterials = await _likedTextMaterialService.GetLikedTextMaterialsByUserId(id);
+
+                return Ok(likedTextMaterials);
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("{id}/textMaterials/liked")]
+        public async Task<IActionResult> AddTextMaterialToLiked(string id, [FromBody] int textMaterialId)
+        {
+            try
+            {
+                await _likedTextMaterialService.AddTextMaterialToLiked(id, textMaterialId);
+
+                return Ok();
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}/textMaterials/liked")]
+        public async Task<IActionResult> RemoveTextMaterialFromLiked(string id, [FromBody] int textMaterialId)
+        {
+            try
+            {
+                await _likedTextMaterialService.RemoveTextMaterialFromLiked(id, textMaterialId);
+
+                return Ok();
             }
             catch (CardFileException e)
             {

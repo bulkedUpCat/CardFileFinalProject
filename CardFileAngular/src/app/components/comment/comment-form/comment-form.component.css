@@ -13,15 +13,18 @@ textarea {
 
 .comment-form-button {
     font-size: 1.2em;
+    font-weight: bold;
     padding: 8px 16px;
-    background: rgb(59, 130, 246);
+    /* background: #FFBB1C; */
+    background-color: #FFF;
     border-radius: 8px;
-    color: #FFF;
+    color: #000;
 }
 
 .comment-form-button:hover:enabled {
     cursor: pointer;
-    background: rgb(37, 99, 235);
+    /* background: #FFBB1C; */
+    background-color: #FFF;
 }
 
 .comment-form-button:disabled {

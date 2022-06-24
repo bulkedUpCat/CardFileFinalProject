@@ -56,6 +56,7 @@ namespace DAL.Repositories
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
                 .Include(tm => tm.UsersWhoSaved)
+                .Include(tm => tm.UsersWhoLiked)
                 .FilterByDatePublished(parameters.StartDate, parameters.EndDate)
                 .SearchByTitle(parameters.SearchTitle)
                 .SearchByCategory(parameters.SearchCategory)
@@ -76,6 +77,7 @@ namespace DAL.Repositories
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
                 .Include(tm => tm.UsersWhoSaved)
+                .Include(tm => tm.UsersWhoLiked)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

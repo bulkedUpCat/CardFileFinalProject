@@ -11,5 +11,6 @@ namespace DAL.Abstractions.Interfaces
     {
         Task<TextMaterialCategory> GetByTitleAsync(string title);
         Task<TextMaterialCategory> GetByIdAsync(int id);
+        void Delete(int id);
     }
 }

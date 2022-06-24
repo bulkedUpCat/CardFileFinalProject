@@ -19,9 +19,6 @@ namespace BLL.Validation.Validators
             RuleFor(tm => tm.Content)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
 
-            RuleFor(tm => tm.CategoryTitle)
-                .NotEmpty().WithMessage("{PropertyName} must not be empty");
-
             RuleFor(tm => tm.AuthorId)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty");
         }
