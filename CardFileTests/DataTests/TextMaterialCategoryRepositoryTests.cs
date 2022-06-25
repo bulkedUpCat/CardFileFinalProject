@@ -79,6 +79,43 @@ namespace CardFileTests.DataTests
             Assert.That(context.TextMaterialCategory.Count(), Is.EqualTo(3), message: "CreateAsync method works incorrectly");
         }
 
+        [Test]
+        public async Task TextMaterialCategoryRepository_Update_UpdatesCategoryInDatabase()
+        {
+            // Arrange
+            var category = ExpectedTextMaterialCategories.First();
+            category.Title = "Updated title";
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            var repository = new TextMaterialCategoryRepository(context);
+
+            // Act
+            repository.Update(category);
+            await context.SaveChangesAsync();
+
+            // Assert
+            Assert.That(category, Is.EqualTo(new TextMaterialCategory
+            {
+                Id = 1,
+                Title = "Updated title"
+            }).Using(new TextMaterialCategoryEqualityComparer()), message: "Update method works incorrectly");
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task TextMaterialCategoryRepository_Delete_DeletesCategoryFromDatabase(int id)
+        {
+            // Arrange
+            using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
+            var repository = new TextMaterialCategoryRepository(context);
+
+            // Act
+            repository.Delete(id);
+            await context.SaveChangesAsync();
+
+            // Assert
+            Assert.That(context.TextMaterialCategory.Count(), Is.EqualTo(1), message: "Delete method works incorrectly");
+        }
+
         private static IEnumerable<TextMaterialCategory> ExpectedTextMaterialCategories =
             new[]
             {

@@ -34,11 +34,6 @@ namespace BLL.Services
         {
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);
 
-            if (category == null)
-            {
-                throw new CardFileException($"Failed to find a category with id {id}");
-            }
-
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }
 

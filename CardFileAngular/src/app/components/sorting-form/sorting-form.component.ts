@@ -258,37 +258,35 @@ export class SortingFormComponent implements OnInit {
       this.textMaterialParams.approvalStatus.push(2);
     }
 
-    this.textMaterialParams.orderBy = '';
-
-    if (!this.isHomePage && this.isAdmin){
-      if (this.sortingParamsForm.get('sortByRejectCount').value != null){
-      if (this.sortingParamsForm.get('sortByRejectCount').value){
-        this.textMaterialParams.orderBy += 'rejectCount asc,';
-      }
-      else{
-        this.textMaterialParams.orderBy += 'rejectCount desc,';
-      }
-    }
-    }
+    // if (!this.isHomePage && this.isAdmin){
+    //   if (this.sortingParamsForm.get('sortByRejectCount').value != null){
+    //   if (this.sortingParamsForm.get('sortByRejectCount').value){
+    //     this.textMaterialParams.orderBy += 'rejectCount asc,';
+    //   }
+    //   else{
+    //     this.textMaterialParams.orderBy += 'rejectCount desc,';
+    //   }
+    // }
+    // }
 
 
-    if (this.sortingParamsForm.get('sortByTitle').value != null){
-      if (this.sortingParamsForm.get('sortByTitle').value){
-        this.textMaterialParams.orderBy += 'title asc,';
-      }
-      else{
-        this.textMaterialParams.orderBy += 'title desc,';
-      }
-    }
+    // if (this.sortingParamsForm.get('sortByTitle').value != null){
+    //   if (this.sortingParamsForm.get('sortByTitle').value){
+    //     this.textMaterialParams.orderBy += 'title asc,';
+    //   }
+    //   else{
+    //     this.textMaterialParams.orderBy += 'title desc,';
+    //   }
+    // }
 
-    if (this.sortingParamsForm.get('sortByDatePublished').value != null){
-      if (this.sortingParamsForm.get('sortByDatePublished').value){
-        this.textMaterialParams.orderBy += 'datePublished asc';
-      }
-      else {
-        this.textMaterialParams.orderBy += 'datePublished desc';
-      }
-    }
+    // if (this.sortingParamsForm.get('sortByDatePublished').value != null){
+    //   if (this.sortingParamsForm.get('sortByDatePublished').value){
+    //     this.textMaterialParams.orderBy += 'datePublished asc';
+    //   }
+    //   else {
+    //     this.textMaterialParams.orderBy += 'datePublished desc';
+    //   }
+    // }
 
     this.textMaterialParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
 
@@ -305,5 +303,134 @@ export class SortingFormComponent implements OnInit {
     }
 
     this.filter.emit(this.textMaterialParams);
+  }
+
+  handleChangeSortByTitle(){
+    if (this.textMaterialParams.orderBy == null){
+      this.textMaterialParams.orderBy = '';
+    }
+
+    if (this.sortingParamsForm.get('sortByTitle').value){
+      if (!this.textMaterialParams.orderBy.includes('title asc,')){
+        if (this.textMaterialParams.orderBy.includes('title desc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('title desc,','');
+        }
+        this.textMaterialParams.orderBy += 'title asc,';
+      }
+    }
+    else
+    {
+      if (!this.textMaterialParams.orderBy.includes('title desc,')){
+        if (this.textMaterialParams.orderBy.includes('title asc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('title asc,','');
+        }
+        this.textMaterialParams.orderBy += 'title desc,';
+      }
+    }
+
+    console.log(this.textMaterialParams.orderBy);
+
+    this.onSubmit();
+  }
+
+  resetSortByTitle(status: boolean){
+    if (status && this.textMaterialParams?.orderBy?.includes('title asc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('title asc,','');
+      this.sortingParamsForm.get('sortByTitle').setValue(null);
+    }
+    else if (!status && this.textMaterialParams?.orderBy?.includes('title desc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('title desc,','');
+      this.sortingParamsForm.get('sortByTitle').setValue(null);
+    }
+
+    this.onSubmit();
+  }
+
+  handleChangeSortByPublishmentDate(){
+    if (this.textMaterialParams.orderBy == null){
+      this.textMaterialParams.orderBy = '';
+    }
+
+    if (this.sortingParamsForm.get('sortByDatePublished').value){
+      if (!this.textMaterialParams.orderBy.includes('datePublished asc,')){
+        if (this.textMaterialParams.orderBy.includes('datePublished desc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('datePublished desc,','');
+        }
+
+        this.textMaterialParams.orderBy += 'datePublished asc,';
+      }
+    }
+    else
+    {
+      if (!this.textMaterialParams.orderBy.includes('datePublished desc,')){
+        if (this.textMaterialParams.orderBy.includes('datePublished asc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('datePublished asc,','');
+        }
+
+        this.textMaterialParams.orderBy += 'datePublished desc,';
+      }
+    }
+
+    console.log(this.textMaterialParams.orderBy);
+
+    this.onSubmit();
+  }
+
+  resetSortByPublishmentDate(status: boolean){
+    if (status && this.textMaterialParams.orderBy.includes('datePublished asc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('datePublished asc,','');
+      this.sortingParamsForm.get('sortByDatePublished').setValue(null);
+    }
+    else if (!status && this.textMaterialParams.orderBy.includes('datePublished desc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('datePublished desc,','');
+      this.sortingParamsForm.get('sortByDatePublished').setValue(null);
+    }
+
+    this.onSubmit();
+  }
+
+  handleChangeSortByRejectCount(){
+    if (this.textMaterialParams.orderBy == null){
+      this.textMaterialParams.orderBy = '';
+    }
+
+    if (this.sortingParamsForm.get('sortByRejectCount').value){
+      if (!this.textMaterialParams.orderBy.includes('rejectCount asc,')){
+        if (this.textMaterialParams.orderBy.includes('rejectCount desc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('rejectCount desc,','');
+        }
+
+        this.textMaterialParams.orderBy += 'rejectCount asc,';
+      }
+    }
+    else
+    {
+      if (!this.sortingParamsForm.get('sortByRejectCount').value){
+        if (!this.textMaterialParams.orderBy.includes('rejectCount desc,')){
+          if (this.textMaterialParams.orderBy.includes('rejectCount asc,')){
+            this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('rejectCount asc,','');
+          }
+
+          this.textMaterialParams.orderBy += 'rejectCount desc,';
+        }
+      }
+    }
+
+    console.log(this.textMaterialParams.orderBy);
+
+    this.onSubmit();
+  }
+
+  resetSortByRejectCount(status: boolean){
+    if (status && this.textMaterialParams.orderBy.includes('rejectCount asc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('rejectCount asc,','');
+      this.sortingParamsForm.get('sortByRejectCount').setValue(null);
+    }
+    else if (!status && this.textMaterialParams.orderBy.includes('rejectCount desc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('rejectCount desc,','');
+      this.sortingParamsForm.get('sortByRejectCount').setValue(null);
+    }
+
+    this.onSubmit();
   }
 }

@@ -56,25 +56,6 @@ namespace CardFileTests.BusinessTests.ServicesTests
             actual.Should().BeEquivalentTo(expected);
         }
 
-        [TestCase(0)]
-        [TestCase(-2)]
-        public async Task TextMaterialCategoryService_GetTextMaterialCategoryById_ThrowsExceptionIfIdInvalid(int id)
-        {
-            // Arrange
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork
-                .Setup(x => x.TextMaterialCategoryRepository.GetByIdAsync(id))
-                .ReturnsAsync(GetTextMaterialCategoryEntities.FirstOrDefault(tm => tm.Id == id));
-
-            var textMaterialCategoryService = new TextMaterialCategoryService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
-
-            // Act
-            Func<Task> act = async () => await textMaterialCategoryService.GetTextMaterialCategoryById(id);
-
-            // Assert
-            await act.Should().ThrowAsync<CardFileException>();
-        }
-
         [Test]
         public async Task TextMaterialCategoryService_CreateTextMaterialCategoryAsync_AddsTextMaterialCategoryToDatabase()
         {

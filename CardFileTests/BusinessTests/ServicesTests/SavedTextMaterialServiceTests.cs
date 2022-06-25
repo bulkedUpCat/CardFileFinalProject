@@ -21,7 +21,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
         public async Task SavedTextMaterialService_GetSavedTextMaterialsOfUser_ReturnsCorrectValues(string userId)
         {
             // Arrange
-            var expected = GetTextMaterialDTOs;
+            var expected = new List<TextMaterialDTO> { GetTextMaterialDTOs[0], GetTextMaterialDTOs[1] };
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(userId))
@@ -94,14 +94,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
         public List<User> GetUserEntities =>
            new List<User>()
            {
-                new User { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com", SavedTextMaterials = GetTextMaterialEntities },
-                new User { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com",  SavedTextMaterials = GetTextMaterialEntities }
+                new User { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com", SavedTextMaterials = new List<TextMaterial>{ new TextMaterial { Id = 1 }, new TextMaterial { Id = 2 } } },
+                new User { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com",  SavedTextMaterials = new List<TextMaterial>(){ new TextMaterial { Id = 1 }, new TextMaterial { Id = 2 } } }
            };
 
         public List<TextMaterial> GetTextMaterialEntities =>
             new List<TextMaterial>
             {
-                new TextMaterial { Id = 1, UsersWhoSaved = new List<User> { new User { Id = "1" } }, DatePublished = new DateTime(2000,1,1) },
+                new TextMaterial { Id = 1, UsersWhoSaved = new List<User>{ GetUserEntities[0] }, DatePublished = new DateTime(2000,1,1) },
                 new TextMaterial { Id = 2, UsersWhoSaved = new List<User> { new User(), new User() }, DatePublished = new DateTime(2003,1,1) },
                 new TextMaterial { Id = 3, UsersWhoSaved = new List<User>(), DatePublished = new DateTime(2005,1,1) }
             };

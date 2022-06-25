@@ -88,18 +88,15 @@ namespace CardFileTests.DataTests
             Assert.That(context.Users.Count(), Is.EqualTo(2), message: "Delete method works incorrecly");
         }*/
 
-       /* [Test]
+        [Test]
         public async Task UserRepository_Update_UpdatesModelInDatabase()
         {
             // Arrange
             using var context = new AppDbContext(UnitTestHelper.GetUnitTestDbOptions());
             var repository = new UserRepository(context);
-            var user = new User
-            {
-                Id = "1",
-                UserName = "UpdatedTommy",
-                Email = "tommy@gmail.com"
-            };
+            var user = ExpectedUsers.First();
+            user.UserName = "UpdatedTommy";
+            user.Email = "updatedTommy@gmail.com";
 
             // Act
             repository.Update(user);
@@ -116,10 +113,10 @@ namespace CardFileTests.DataTests
             Assert.That(user, Is.EqualTo(new User
             {
                 Id = "1",
-                UserName = "UpdateTommy",
-                Email = "updateTommy@gmail.com"
-            }).Using(new UserRepositoryEqualityComparer()));
-        }*/
+                UserName = "UpdatedTommy",
+                Email = "updatedTommy@gmail.com"
+            }).Using(new UserRepositoryEqualityComparer()), message: "Update method works incorrectly");
+        }
 
         private static IEnumerable<User> ExpectedUsers =>
             new[]

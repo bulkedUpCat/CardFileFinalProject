@@ -49,9 +49,9 @@ namespace CardFileTests
         public static void SeedData(AppDbContext context)
         {
             context.TextMaterials.AddRange(
-                new TextMaterial { Id = 1, AuthorId = "1", ApprovalStatus = ApprovalStatus.Pending, Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 2, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1 },
-                new TextMaterial { Id = 3, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2 });
+                new TextMaterial { Id = 1, AuthorId = "1", ApprovalStatus = ApprovalStatus.Pending, Content = "firstContent", Title = "firstArticle", TextMaterialCategoryId = 1, DatePublished = new DateTime(2000,3,12) },
+                new TextMaterial { Id = 2, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "secondContent", Title = "secondArticle", TextMaterialCategoryId = 1, DatePublished = new DateTime(2003, 4,23) },
+                new TextMaterial { Id = 3, AuthorId = "2", ApprovalStatus = ApprovalStatus.Approved, Content = "thirdContent", Title = "thirdArticle", TextMaterialCategoryId = 2, DatePublished = new DateTime(2004,1,1) });
 
             context.TextMaterialCategory.AddRange(
                 new TextMaterialCategory { Id = 1, Title = "First one" },

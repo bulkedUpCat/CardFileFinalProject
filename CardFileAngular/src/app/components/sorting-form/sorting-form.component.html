@@ -6,28 +6,28 @@
                 <div>
                     <span>Title:&nbsp;&nbsp;&nbsp;</span>
                     <label>Asc:
-                  <input id="titleAsc" [value]="true" type="radio" formControlName="sortByTitle">
+                  <input id="titleAsc" (dblclick)="resetSortByTitle(true)" (change)="handleChangeSortByTitle()" [value]="true" type="radio" formControlName="sortByTitle">
                 </label>&nbsp;&nbsp;
                     <label>Desc:
-                  <input id="titleDesc" [value]="false" type="radio" formControlName="sortByTitle">
+                  <input id="titleDesc" (dblclick)="resetSortByTitle(false)" (change)="handleChangeSortByTitle()" [value]="false" type="radio" formControlName="sortByTitle">
                 </label>
                 </div>
                 <div>
                     <span>Publishment Date:&nbsp;&nbsp;</span>
                     <label>Asc:
-                    <input id="datePublishedAsc" [value]="true" type="radio" formControlName="sortByDatePublished">
+                    <input id="datePublishedAsc" (dblclick)="resetSortByPublishmentDate(true)" (change)="handleChangeSortByPublishmentDate()" [value]="true" type="radio" formControlName="sortByDatePublished">
                   </label>&nbsp;
                     <label>Desc:
-                    <input id="datePublishedDesc" [value]="false" type="radio" formControlName="sortByDatePublished">
+                    <input id="datePublishedDesc" (dblclick)="resetSortByPublishmentDate(false)" (change)="handleChangeSortByPublishmentDate()" [value]="false" type="radio" formControlName="sortByDatePublished">
                   </label>
                 </div>
                 <div *ngIf="!isHomePage && isAdmin">
                     <span>Reject count:&nbsp;&nbsp;&nbsp;</span>
                     <label>Asc:
-                    <input id="rejectCountAsc" [value]="true" type="radio" formControlName="sortByRejectCount">
+                    <input id="rejectCountAsc" (dblclick)="resetSortByRejectCount(true)" (change)="handleChangeSortByRejectCount()" [value]="true" type="radio" formControlName="sortByRejectCount">
                   </label>&nbsp;
                     <label>Desc:
-                    <input id="rejectCountDesc" [value]="false" type="radio" formControlName="sortByRejectCount">
+                    <input id="rejectCountDesc" (dblclick)="resetSortByRejectCount(false)" (change)="handleChangeSortByRejectCount()" [value]="false" type="radio" formControlName="sortByRejectCount">
                   </label>
                 </div>
             </div>

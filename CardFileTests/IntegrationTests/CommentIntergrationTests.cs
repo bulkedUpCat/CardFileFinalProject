@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,6 +69,26 @@ namespace CardFileTests.IntegrationTests
         }
 
         [Test]
+        public async Task CommentController_Post_ReturnsBadRequestIfModelInvalid()
+        {
+            // Arrange
+            var comment = new CreateCommentDTO
+            {
+                ParentCommentId = null,
+                UserId = "1",
+                TextMaterialId = 1,
+                Content = " "
+            };
+            var content = new StringContent(JsonConvert.SerializeObject(comment), Encoding.UTF8, "application/json");
+
+            // Act
+            var httpResponse = await _client.PostAsync(RequestUri, content);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Test]
         public async Task CommentController_Put_UpdatesCommentInDatabase()
         {
             // Arrange
@@ -109,11 +130,22 @@ namespace CardFileTests.IntegrationTests
             }
         }
 
+        [Test]
+        public async Task CommentController_Delete_ReturnsBadRequestIfIdInvalid()
+        {
+            // Arrange
+            var id = -1000;
+
+            // Act
+            var httpResponse = await _client.DeleteAsync(RequestUri + id);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
         private static readonly IEnumerable<CommentDTO> ExpectedCommentDTOs =
             new List<CommentDTO>
             {
-                /*new CommentDTO { Id = 1, Content = "first comment", ParentCommentId = null, UserId = "1", UserName = "Tommy", TextMaterialId = 1, CreatedAt = new DateTime(2000,1,1) },
-                new CommentDTO { Id = 2, Content = "second comment", ParentCommentId = null, UserId = "1", UserName = "Tommy", TextMaterialId = 1, CreatedAt = new DateTime(2000,1,2) },*/
                 new CommentDTO { Id = 1, Content = "first comment", UserName = "Tommy", UserId = "1", TextMaterialId = 1, CreatedAt = new DateTime(2007, 11, 12), ParentCommentId = null},
                 new CommentDTO { Id = 2, Content = "second comment", UserName = "Tommy", UserId = "1", TextMaterialId = 1, CreatedAt = new DateTime(2001,1,23), ParentCommentId = null},
                 new CommentDTO { Id = 3, Content = "third comment", UserName = "Johnny", UserId = "2", TextMaterialId = 3, CreatedAt = new DateTime(2000,12,1), ParentCommentId = null } 

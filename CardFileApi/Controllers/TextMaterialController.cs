@@ -60,7 +60,7 @@ namespace CardFileApi.Controllers
 
 
         [HttpGet("{id}", Name = "GetTextMaterialById")]
-        public async Task<ActionResult<TextMaterialDTO>> Get(int id)
+        public async Task<ActionResult<TextMaterialDTO>> GetById(int id)
         {
             var textMaterial = await _textMaterialService.GetTextMaterialById(id);
 
@@ -155,6 +155,7 @@ namespace CardFileApi.Controllers
             }
         }
 
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

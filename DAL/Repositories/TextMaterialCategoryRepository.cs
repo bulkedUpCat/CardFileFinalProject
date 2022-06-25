@@ -44,10 +44,10 @@ namespace DAL.Repositories
 
         public void Update(TextMaterialCategory entity)
         {
-            throw new NotImplementedException();
+            _context.Update(entity);
         }
 
-        public async void Delete(int id)
+        public void Delete(int id)
         {
             var category = _context.TextMaterialCategory.FirstOrDefault(tmc => tmc.Id == id);
             _context.TextMaterialCategory.Remove(category);

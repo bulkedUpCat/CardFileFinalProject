@@ -59,11 +59,6 @@ namespace BLL.Services
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(id);
 
-            if (textMaterial == null)
-            {
-                throw new CardFileException($"Text material with id {id} doesn't exist");
-            }
-
             return _mapper.Map<TextMaterialDTO>(textMaterial);
         }
 
