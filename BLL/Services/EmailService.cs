@@ -19,12 +19,22 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operation regarding working with email such as sending a text material's info on the particular user's email,
+    /// notifying the user of the creation, deleting, approval and rejection of their text material with a message on their email
+    /// </summary>
     public class EmailService: IEmailService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
 
+        /// <summary>
+        /// Constructor which takes three arguments
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
+        /// <param name="userManager">Instance of class UserManager to perform operations on users</param>
+        /// <param name="emailSender">Instance of class EmailSender to perform operations with smtp client</param>
         public EmailService(IUnitOfWork unitOfWork,
             UserManager<User> userManager,
             IEmailSender emailSender)
@@ -34,6 +44,13 @@ namespace BLL.Services
             _emailSender = emailSender;
         }
 
+        /// <summary>
+        /// Sends the text material's info on user's email
+        /// </summary>
+        /// <param name="user">User to receive an email</param>
+        /// <param name="textMaterial">Text material which info is to be sent</param>
+        /// <param name="emailParams">Parameters that will be present in a generated pdf file</param>
+        /// <exception cref="CardFileException"></exception>
         public void SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams)
         {
             var stream = new MemoryStream();
@@ -66,6 +83,13 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Helper method to generate a pdf file taking in account email parameters
+        /// </summary>
+        /// <param name="pdf">PdfDocument</param>
+        /// <param name="textMaterial">Text material which info will be sent</param>
+        /// <param name="emailParams">Parameters that will be present in a generated pdf file</param>
+        /// <returns>Generated pdf document</returns>
         private Document CreateDocument(PdfDocument pdf, TextMaterial textMaterial, EmailParameters emailParams)
         {
             var document = new Document(pdf);
@@ -101,6 +125,12 @@ namespace BLL.Services
             return document;
         }
 
+        /// <summary>
+        /// Sends a notification on user's email if their text material was created
+        /// </summary>
+        /// <param name="user">The author of the text material</param>
+        /// <param name="textMaterial">Text material that was recently created</param>
+        /// <exception cref="CardFileException"></exception>
         public void NotifyThatTextMaterialWasCreated(User user, TextMaterial textMaterial)
         {
             var body = $"Hello {user.UserName}." +
@@ -123,6 +153,12 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Sends a notification on user's email if their text material was deleted
+        /// </summary>
+        /// <param name="user">The author of text material</param>
+        /// <param name="textMaterial">Text material that was recently deleted</param>
+        /// <exception cref="CardFileException"></exception>
         public void NotifyThatTextMaterialWasDeleted(User user, TextMaterial textMaterial)
         {
             var body = $"Hello {user.UserName}." +
@@ -144,6 +180,12 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Sends a notification on user's email if their text material was approved
+        /// </summary>
+        /// <param name="user">The author of text material</param>
+        /// <param name="textMaterial">Text material that was recently approved</param>
+        /// <exception cref="CardFileException"></exception>
         public void NotifyThatTextMaterialWasApproved(User user, TextMaterial textMaterial)
         {
             var body = $"Hello {user.UserName}." +
@@ -164,7 +206,14 @@ namespace BLL.Services
                 throw new CardFileException(e.Message);
             }
         }
-
+        
+        /// <summary>
+        /// Sends a notification on user's email if their text material was rejected
+        /// </summary>
+        /// <param name="user">The author of text material</param>
+        /// <param name="textMaterial">Text material that was recently rejected</param>
+        /// <param name="rejectMessage">The reason why the text material was rejected</param>
+        /// <exception cref="CardFileException"></exception>
         public void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial, string? rejectMessage = null)
         {
             var body = $"Hello {user.UserName}." +

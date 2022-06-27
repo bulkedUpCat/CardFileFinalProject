@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of TextMaterial
+    /// </summary>
     public class TextMaterialValidator : AbstractValidator<TextMaterial>
     {
         public TextMaterialValidator()

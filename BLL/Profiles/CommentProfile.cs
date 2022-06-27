@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Profiles
 {
+    /// <summary>
+    /// AutoMapper profile for Comment entity
+    /// </summary>
     public class CommentProfile: Profile
     {
         public CommentProfile()

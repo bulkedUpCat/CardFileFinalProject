@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of CreateTextMaterialCategoryDTO
+    /// </summary>
     public class CreateTextMaterialCategoryDTOValidator: AbstractValidator<CreateTextMaterialCategoryDTO> 
     {
         public CreateTextMaterialCategoryDTOValidator()

@@ -11,11 +11,20 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operations regarding Comment entities such as getting all comment of the particular text material from the database,
+    /// adding a comment to database, updating a comment in database, deleting a comment from database
+    /// </summary>
     public class CommentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Constructor that takes two arguments
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
+        /// <param name="mapper">Instance of class that implemetns IMapper interface</param>
         public CommentService(IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -23,6 +32,12 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Finds the comments by the text material id
+        /// </summary>
+        /// <param name="textMaterialId">Id of the text material</param>
+        /// <returns>Correct comments if textMaterialId was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<IEnumerable<CommentDTO>> GetCommentsOfTextMaterial(int textMaterialId)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(textMaterialId);
@@ -37,6 +52,12 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<CommentDTO>>(comments);
         }
 
+        /// <summary>
+        /// Adds a comment to the database
+        /// </summary>
+        /// <param name="createCommentDTO">Comment model to add</param>
+        /// <returns>Comment transfer object if model was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<CommentDTO> CreateComment(CreateCommentDTO createCommentDTO)
         {
             if (createCommentDTO == null)
@@ -83,6 +104,12 @@ namespace BLL.Services
             return _mapper.Map<CommentDTO>(comment);
         }
 
+        /// <summary>
+        /// Updates comment in database
+        /// </summary>
+        /// <param name="commentDTO">Comment model to update</param>
+        /// <returns>Comment transfer object if model was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<CommentDTO> UpdateComment(UpdateCommentDTO commentDTO)
         {
             var comment = await _unitOfWork.CommentRepository.GetCommentById(commentDTO.Id);
@@ -107,6 +134,12 @@ namespace BLL.Services
             return _mapper.Map<CommentDTO>(comment);
         }
 
+        /// <summary>
+        /// Deketes comment from database
+        /// </summary>
+        /// <param name="id">Id of the comment to delete</param>
+        /// <returns>Task if the comment was found and deleted</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task DeleteComment(int id)
         {
             var comment = await _unitOfWork.CommentRepository.GetCommentById(id);

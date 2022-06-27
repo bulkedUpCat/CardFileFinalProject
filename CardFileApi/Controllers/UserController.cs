@@ -31,7 +31,7 @@ namespace CardFileApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> Get([FromQuery]UserParameters userParameters)
+        public async Task<ActionResult<IEnumerable<UserDTO>>> Get([FromQuery]UserParameters userParameters)
         {
             var users = await _userService.GetAll(userParameters);
 

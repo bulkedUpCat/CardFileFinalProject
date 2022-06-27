@@ -12,12 +12,24 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operations on TextMaterial entities such as getting all text materials from the database,
+    /// getting text materials of the particular author by the author's id, getting the text material from the database by its id,
+    /// adding a text material to database, updating a text material in database, removing a text material from database, 
+    /// changing the approval status of the text material, sending a text material and optionally its info on email of the specified by id user as a pdf file
+    /// </summary>
     public class TextMaterialService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
 
+        /// <summary>
+        /// Constructor which takes three arguments
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
+        /// <param name="mapper">Instance of class that implements IMapper interface</param>
+        /// <param name="emailService">Instance of class that implements IEmailService interface</param>
         public TextMaterialService(IUnitOfWork unitOfWork, 
             IMapper mapper,
             IEmailService emailService)
@@ -27,6 +39,11 @@ namespace BLL.Services
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Finds all text materials in database that satisfy given parameters
+        /// </summary>
+        /// <param name="parameters">Parameters to take into account</param>
+        /// <returns>All text materials that satisfy the given parameters</returns>
         public async Task<PagedList<TextMaterialDTO>> GetTextMaterials(TextMaterialParameters parameters)
         {
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(parameters);
@@ -35,6 +52,13 @@ namespace BLL.Services
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
         }
         
+        /// <summary>
+        /// Finds the text materials created by the given user by their id
+        /// </summary>
+        /// <param name="id">Id of the author of the textMaterial</param>
+        /// <param name="textMaterialParams">Parameters to take into account</param>
+        /// <returns>All text materials that were created by the author by their id</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<PagedList<TextMaterialDTO>> GetTextMaterialsOfUser(string id, TextMaterialParameters textMaterialParams)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -55,6 +79,11 @@ namespace BLL.Services
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);
         }
 
+        /// <summary>
+        /// Finds a text material by its id
+        /// </summary>
+        /// <param name="id">Id of the text material to find</param>
+        /// <returns>Found text material if id was valid</returns>
         public async Task<TextMaterialDTO> GetTextMaterialById(int id)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(id);
@@ -62,6 +91,12 @@ namespace BLL.Services
             return _mapper.Map<TextMaterialDTO>(textMaterial);
         }
 
+        /// <summary>
+        /// Adds a text material to database and optionally notifies the user
+        /// </summary>
+        /// <param name="textMaterialDTO">Text material data to create</param>
+        /// <returns>Newly created text material transfer object</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<TextMaterialDTO> CreateTextMaterial(CreateTextMaterialDTO textMaterialDTO)
         {
             var textMaterial = _mapper.Map<TextMaterial>(textMaterialDTO);
@@ -101,6 +136,12 @@ namespace BLL.Services
             return _mapper.Map<TextMaterialDTO>(textMaterial);
         }
 
+        /// <summary>
+        /// Apdates a text material in database
+        /// </summary>
+        /// <param name="textMaterialDTO">text material data to update</param>
+        /// <returns>Task if model was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task UpdateTextMaterial(UpdateTextMaterialDTO textMaterialDTO)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdAsync(textMaterialDTO.Id);
@@ -126,6 +167,12 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Removes a text material from database by its id and optionally notifies the user
+        /// </summary>
+        /// <param name="id">Id of the text material to delete</param>
+        /// <returns>Task if id was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task DeleteTextMaterial(int id)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(id);
@@ -151,6 +198,12 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Approves a text material by its id and optionally notifies the user
+        /// </summary>
+        /// <param name="textMaterialId">Id of the text material to approve</param>
+        /// <returns>Task if id was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task ApproveTextMaterial(int textMaterialId)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
@@ -188,6 +241,13 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Rejects text material by its id and sends the author on their email the reject message
+        /// </summary>
+        /// <param name="textMaterialId">Id of text material to reject</param>
+        /// <param name="rejectMessage">Reason why text material was rejected</param>
+        /// <returns>Task if provided data was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task RejectTextMaterial(int textMaterialId, string? rejectMessage = null)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId);
@@ -227,6 +287,14 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Sends text material data to on given user's email
+        /// </summary>
+        /// <param name="userId">Id of the user to receive data about the text material</param>
+        /// <param name="textMaterialId">Id of the text material which data is to be sent on user's email</param>
+        /// <param name="emailParams">Parameters to take into accout when generating a pdf file</param>
+        /// <returns>Task if provided data was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task SendTextMaterialAsPdf(string userId, int textMaterialId, EmailParameters emailParams)
         {
             if (string.IsNullOrWhiteSpace(userId))

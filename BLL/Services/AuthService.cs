@@ -1,4 +1,5 @@
-﻿using BLL.Validation;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
 using DAL.Abstractions.Interfaces;
@@ -11,11 +12,19 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class AuthService
+    /// <summary>
+    /// Service to perform various operation regarding authentication and authorization such as logging in, signing up
+    /// </summary>
+    public class AuthService: IAuthService
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
+        /// <summary>
+        /// Constructor that takes two arguments
+        /// </summary>
+        /// <param name="userManager">Instance of class UserManager to perform various operations on users</param>
+        /// <param name="signInManager">Instance of class SignInManager to perform various operations regardign signing in a user</param>
         public AuthService(UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
@@ -24,6 +33,12 @@ namespace BLL.Services
 
         }
 
+        /// <summary>
+        /// Logs the user in if valid credentials are provided
+        /// </summary>
+        /// <param name="user">Credentials: email and password</param>
+        /// <returns>User if credentials were valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<User> LogInAsync(UserLoginDTO user)
         {
             var foundUser = await _userManager.FindByEmailAsync(user.Email);
@@ -43,6 +58,12 @@ namespace BLL.Services
             return foundUser;
         }
 
+        /// <summary>
+        /// Signs the user up if valid credentials were provided
+        /// </summary>
+        /// <param name="user">Sign up model: name, email, password, confirm password</param>
+        /// <returns>User if credentials were valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<User> SignUpAsync(UserRegisterDTO user)
         {
             var userExists = await _userManager.FindByEmailAsync(user.Email);

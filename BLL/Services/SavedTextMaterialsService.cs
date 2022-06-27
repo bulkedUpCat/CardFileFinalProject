@@ -11,11 +11,20 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operations regarding saving text materials such as getting saved text materials of the user by their id,
+    /// adding a text material to saved of the specified by id user, removing a text material from saved of the specified by id user
+    /// </summary>
     public class SavedTextMaterialsService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Constructor which takes two arguments
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork inteface</param>
+        /// <param name="mapper">Instance of class that implements IMapper interface</param>
         public SavedTextMaterialsService(IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -23,6 +32,13 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Find saved text materials of the specified user by given parameters
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="textMaterialParams">Text material parameters to take into account</param>
+        /// <returns>Saved text materials of the user which satisfy the parameters</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<PagedList<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId, TextMaterialParameters textMaterialParams)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
@@ -39,6 +55,13 @@ namespace BLL.Services
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(savedTextMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);
         }
 
+        /// <summary>
+        /// Adds text material to saved of the specified user
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="textMaterialId">Id of text material to add to saved</param>
+        /// <returns>Task if data was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task AddTextMaterialToSaved(string userId, int textMaterialId)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
@@ -68,6 +91,13 @@ namespace BLL.Services
             }
         }
 
+        /// <summary>
+        /// Removes text material from saved of the user
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="textMaterialId">Id of text material to remove from saved</param>
+        /// <returns>Task if data was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task RemoveTextMaterialFromSaved(string userId, int textMaterialId)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);

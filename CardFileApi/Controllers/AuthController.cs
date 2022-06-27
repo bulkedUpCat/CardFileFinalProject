@@ -19,12 +19,12 @@ namespace CardFileApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private readonly JwtHandler _jwtHandler;
         private readonly ILoggerManager _logger;
         private readonly IEmailSender _emailSender;
 
-        public AuthController(AuthService authService,
+        public AuthController(IAuthService authService,
             UserManager<User> userManager,
             JwtHandler jwtHandler,
             ILoggerManager logger,

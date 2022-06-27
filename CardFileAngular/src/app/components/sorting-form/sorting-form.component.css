@@ -9,10 +9,6 @@
     column-gap: 1em;
 }
 
-.prop {
-    font-size: 1em;
-}
-
 .header {
     text-align: center;
     font-weight: bold;
@@ -22,6 +18,10 @@
 
 .sorting-menu {
     display: grid;
+}
+
+.sorting-menu>div {
+    margin-bottom: 2%;
 }
 
 .filter-menu {

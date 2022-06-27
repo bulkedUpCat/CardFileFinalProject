@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of UserRegisterDTO
+    /// </summary>
     public class UserRegisterDTOValidator : AbstractValidator<UserRegisterDTO>
     {
         public UserRegisterDTOValidator()

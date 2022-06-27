@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class SharedHomeParamsService {
   pageNumber: number = 1;
-  pageSize: number = 1;
+  pageSize: number = 5;
   filterFromDate: Date = null;
   filterToDate: Date = null;
   searchTitle: string = null;

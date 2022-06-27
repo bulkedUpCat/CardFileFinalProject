@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of CreateCommentDTO
+    /// </summary>
     public class CreateCommentDTOValidator: AbstractValidator<CreateCommentDTO>
     {
         public CreateCommentDTOValidator()

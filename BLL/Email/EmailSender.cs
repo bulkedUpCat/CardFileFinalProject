@@ -12,15 +12,27 @@ using System.Threading.Tasks;
 
 namespace BLL.Email
 {
+    /// <summary>
+    /// Class to perform various operation regarding send email messages via smtp client
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         private readonly IConfiguration _config;
 
+        /// <summary>
+        /// Constructor which takes one argument
+        /// </summary>
+        /// <param name="config">Instance of class that implements IConfiguration interfece to have access to appsettings.json file</param>
         public EmailSender(IConfiguration config)
         {
             _config = config;
         }
 
+        /// <summary>
+        /// Generates an instance of class MailMessage from the template
+        /// </summary>
+        /// <param name="emailTemplate">Instance of custom class EmailTemplate which contains all info for creating an instance of class MailMessage</param>
+        /// <returns></returns>
         private static MailMessage GetMailMessage(EmailTemplate emailTemplate)
         {
             MailMessage mail = new MailMessage();
@@ -38,6 +50,12 @@ namespace BLL.Email
             return mail;
         }
 
+        /// <summary>
+        /// Sends an email using smtp client
+        /// </summary>
+        /// <param name="emailTemplate">Instance of custom class EmailTemplate which contains all info for creating an instance of class MailMessage</param>
+        /// <returns>True if email was successfully sent, throws exception otherwise</returns>
+        /// <exception cref="CardFileException"></exception>
         public bool SendSmtpMail(EmailTemplate emailTemplate)
         {
             try

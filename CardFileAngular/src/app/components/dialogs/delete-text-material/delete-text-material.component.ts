@@ -19,6 +19,7 @@ export class DeleteTextMaterialComponent implements OnInit {
     private notifier: NotifierService) { }
 
   ngOnInit(): void {
+    console.log(this.data);
   }
 
   deleteTextMaterial(){

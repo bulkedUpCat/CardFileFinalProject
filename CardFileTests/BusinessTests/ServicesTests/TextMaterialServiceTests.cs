@@ -159,6 +159,65 @@ namespace CardFileTests.BusinessTests.ServicesTests
             await act.Should().ThrowAsync<CardFileException>();
         }
 
+        [Test]
+        public async Task TextMaterialService_UpdateTextMaterial_UpdatesTextMaterialInDatabase()
+        {
+            // Arrange
+            var textMaterial = new UpdateTextMaterialDTO
+            {
+                Id = 1,
+                AuthorId = "1",
+                Title = "Updated title",
+                Content = "Updated content"
+            };
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(textMaterial.Id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == textMaterial.Id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+
+            var mockEmailService = new Mock<IEmailService>();
+            var textMaterialService = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            await textMaterialService.UpdateTextMaterial(textMaterial);
+
+            // Assert
+            mockUnitOfWork.Verify(x => x.TextMaterialRepository.Update(It.Is<TextMaterial>(tm => tm.Id == textMaterial.Id && tm.AuthorId == textMaterial.AuthorId && tm.Title == textMaterial.Title && tm.Content == textMaterial.Content)), Times.Once());
+            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
+        }
+
+        [TestCase(-1)]
+        [TestCase(0)]
+        [TestCase(10000)]
+        public async Task TextMaterialService_UpdateTextMaterial_ThrowsExceptionIfTextMaterialIdInvalid(int id)
+        {
+            // Arrange
+            var textMaterial = new UpdateTextMaterialDTO
+            {
+                Id = id,
+                AuthorId = "1",
+                Title = "Updated title",
+                Content = "Updated content"
+            };
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdAsync(textMaterial.Id))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == textMaterial.Id));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
+
+            var mockEmailService = new Mock<IEmailService>();
+            var textMaterialService = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialService.UpdateTextMaterial(textMaterial);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -367,6 +426,55 @@ namespace CardFileTests.BusinessTests.ServicesTests
 
             // Act
             Func<Task> act = async () => await textMaterialServie.RejectTextMaterial(id);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
+        [Test]
+        public async Task TextMaterialService_SendTextMaterialAsPdf_SendsPdfFileOnEmail()
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetUserEntities.First());
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
+                .ReturnsAsync(GetTextMaterialEntities.First());
+            var mockEmailService = new Mock<IEmailService>();
+            mockEmailService
+                .Setup(x => x.SendTextMaterialAsPdf(It.IsAny<User>(), It.IsAny<TextMaterial>(), It.IsAny<EmailParameters>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            await textMaterialServie.SendTextMaterialAsPdf("1", 1, new EmailParameters());
+
+            // Assert
+            mockUnitOfWork.VerifyAll();
+            mockEmailService.VerifyAll();
+        }
+
+        [TestCase("0",-100)]
+        [TestCase("-23",3)]
+        [TestCase("undefined",0)]
+        public async Task TextMaterialService_SendTextMaterialAsPdf_ThrowsExceptionIfProvidedDataInvalid(string userId, int textMaterialId)
+        {
+            // Arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
+            mockUnitOfWork
+                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(textMaterialId))
+                .ReturnsAsync(GetTextMaterialEntities.FirstOrDefault(tm => tm.Id == textMaterialId));
+            var mockEmailService = new Mock<IEmailService>();
+            mockEmailService
+                .Setup(x => x.SendTextMaterialAsPdf(It.IsAny<User>(), It.IsAny<TextMaterial>(), It.IsAny<EmailParameters>()));
+            var textMaterialServie = new TextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
+
+            // Act
+            Func<Task> act = async () => await textMaterialServie.SendTextMaterialAsPdf("1", 1, new EmailParameters());
 
             // Assert
             await act.Should().ThrowAsync<CardFileException>();

@@ -11,11 +11,20 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operations on TextMaterialCategory entities such as getting all categories from the database,
+    /// getting a category by its id, adding a text material category to database, removing a text material category from the database
+    /// </summary>
     public class TextMaterialCategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Constructor which takes two arguments
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
+        /// <param name="mapper">Instance of class that implements IMapper interface</param>
         public TextMaterialCategoryService(IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -23,6 +32,10 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Finds all existing text material categories in database
+        /// </summary>
+        /// <returns>All existing text material categories</returns>
         public async Task<IEnumerable<TextMaterialCategoryDTO>> GetTextMaterialCategoriesAsync()
         {
             var categories = await _unitOfWork.TextMaterialCategoryRepository.GetAsync();
@@ -30,6 +43,11 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<TextMaterialCategoryDTO>>(categories);
         }
 
+        /// <summary>
+        /// Finds a text material category by its id
+        /// </summary>
+        /// <param name="id">Id of text material category to find</param>
+        /// <returns>Correct text material category</returns>
         public async Task<TextMaterialCategoryDTO> GetTextMaterialCategoryById(int id)
         {
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);
@@ -37,6 +55,12 @@ namespace BLL.Services
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }
 
+        /// <summary>
+        /// Adds new text material category to database
+        /// </summary>
+        /// <param name="categoryDTO">category Transfer object to create</param>
+        /// <returns>Newly created text material category transfer object</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<TextMaterialCategoryDTO> CreateTextMaterialCategoryAsync(CreateTextMaterialCategoryDTO categoryDTO)
         {
             var existingCategory = await _unitOfWork.TextMaterialCategoryRepository.GetByTitleAsync(categoryDTO.Title);
@@ -62,6 +86,12 @@ namespace BLL.Services
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }
 
+        /// <summary>
+        /// Removes text material category from database by its id
+        /// </summary>
+        /// <param name="id">Id of text material category to delete</param>
+        /// <returns>Task if id was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task DeleteTextMaterialCategoryAsync(int id)
         {
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);

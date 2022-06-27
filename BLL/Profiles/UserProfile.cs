@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Profiles
 {
+    /// <summary>
+    /// AutoMapper profile for User entity
+    /// </summary>
     public class UserProfile : Profile
     {
         public UserProfile()

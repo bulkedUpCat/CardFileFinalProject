@@ -133,6 +133,7 @@ export class TextMaterialDetailComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data = {
+      textMaterial: this.textMaterial,
       textMaterialId: this.textMaterial.id
     };
 

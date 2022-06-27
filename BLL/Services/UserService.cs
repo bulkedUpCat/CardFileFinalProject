@@ -13,12 +13,22 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// Service to perform various operations on User entities such as getting all users from the database,
+    /// getting a single user from the database by their id, changing the receive notifications status of the user by their id
+    /// </summary>
     public class UserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Constructor of UserService which accepts three instances
+        /// </summary>
+        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
+        /// <param name="userManager">Instance of UserManager</param>
+        /// <param name="mapper">Instance of class that implements IMapper interface</param>
         public UserService(IUnitOfWork unitOfWork,
             UserManager<User> userManager,
             IMapper mapper)
@@ -28,6 +38,11 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Finds all users by parameters
+        /// </summary>
+        /// <param name="userParameters">Parameters to take into account</param>
+        /// <returns>All users that satisfy the parameters</returns>
         public async Task<PagedList<UserDTO>> GetAll(UserParameters userParameters)
         {
             var users = await _unitOfWork.UserRepository.GetWithDetailsAsync();
@@ -43,6 +58,12 @@ namespace BLL.Services
             return PagedList<UserDTO>.ToPagedList(userDTOs, userParameters.PageNumber, userParameters.PageSize);
         }
 
+        /// <summary>
+        /// Finds a user by its id
+        /// </summary>
+        /// <param name="id">Id of the user to find</param>
+        /// <returns>Found user</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<UserDTO> GetUserById(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -64,6 +85,13 @@ namespace BLL.Services
             return userDTO;
         }
 
+        /// <summary>
+        /// Sets receive notification status of user to given boolean value
+        /// </summary>
+        /// <param name="userId">Id of the user to change their receive notifications status</param>
+        /// <param name="receiveNotifications">New value of receive notifications field of the user</param>
+        /// <returns>User transfer object if data was valid</returns>
+        /// <exception cref="CardFileException"></exception>
         public async Task<UserDTO> ToggleReceiveNotifications(string userId, bool receiveNotifications)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of UserLoginDTO
+    /// </summary>
     public class UserLoginDTOValidator : AbstractValidator<UserLoginDTO>
     {
         public UserLoginDTOValidator()

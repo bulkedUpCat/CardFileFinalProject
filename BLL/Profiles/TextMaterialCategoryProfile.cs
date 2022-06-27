@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Profiles
 {
+    /// <summary>
+    /// AutoMapper profile for TextMaterialCategory entity
+    /// </summary>
     public class TextMaterialCategoryProfile : Profile
     {
         public TextMaterialCategoryProfile()
