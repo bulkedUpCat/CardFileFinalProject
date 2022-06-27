@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Services;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -34,6 +35,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<User>>().Object,
                 null,null,null,null);
+            var mockEmailSender = new Mock<IEmailSender>();
             mockUserManager
                 .Setup(x => x.FindByEmailAsync(email))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Email == email));
@@ -41,7 +43,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 .Setup(x => x.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Success);
 
-            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object);
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object);
 
             // Act
             var actual = await authService.LogInAsync(user);
@@ -67,6 +69,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<User>>().Object,
                 null, null, null, null);
+            var mockEmailSender = new Mock<IEmailSender>();
             mockUserManager
                 .Setup(x => x.FindByEmailAsync(email))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Email == email));
@@ -74,7 +77,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 .Setup(x => x.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Success);
 
-            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object);
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object);
 
             // Act
             Func<Task> act = async () => await authService.LogInAsync(user);
@@ -99,6 +102,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<User>>().Object,
                 null, null, null, null);
+            var mockEmailSender = new Mock<IEmailSender>();
             mockUserManager
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetUserEntities[0]);
@@ -106,7 +110,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 .Setup(x => x.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(SignInResult.Failed);
 
-            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object);
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object);
 
             // Act
             Func<Task> act = async () => await authService.LogInAsync(user);
@@ -132,13 +136,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<User>>().Object,
                 null, null, null, null);
+            var mockEmailSender = new Mock<IEmailSender>();
             mockUserManager
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()));
             mockUserManager
                 .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object);
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object);
 
             // Act
             await authService.SignUpAsync(user);
@@ -165,6 +170,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<User>>().Object,
                 null, null, null, null);
+            var mockEmailSender = new Mock<IEmailSender>();
             mockUserManager
                 .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Email == email));
@@ -172,7 +178,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object);
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object);
 
             // Act
             Func<Task> act = async () => await authService.SignUpAsync(user);

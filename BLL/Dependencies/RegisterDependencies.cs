@@ -21,13 +21,13 @@ namespace BLL.Dependencies
         /// <param name="services">Instance of IServiceCollection interface to add dependencies</param>
         public static void ConfigureBLLServices(this IServiceCollection services)
         {
-            services.AddScoped<TextMaterialService>();
+            services.AddScoped<ITextMaterialService, TextMaterialService>();
             services.AddScoped<TextMaterialCategoryService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<RoleService>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<CommentService>();
+            services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<UserService>();
             services.AddScoped<SavedTextMaterialsService>();
             services.AddScoped<LikedTextMaterialService>();

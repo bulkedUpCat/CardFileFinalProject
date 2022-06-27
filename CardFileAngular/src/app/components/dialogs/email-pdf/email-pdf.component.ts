@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmailParameters } from 'src/app/models/parameters/EmailParameters';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class EmailPdfComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<EmailPdfComponent>,
     @Inject(MAT_DIALOG_DATA) private data,
     private textMaterialService: TextMaterialService,
-    private fb: FormBuilder) {}
+    private fb: FormBuilder,
+    private notifier: NotifierService) {}
 
   ngOnInit(): void {
     this.textMaterialId = this.data.textMaterialId;
@@ -39,9 +41,11 @@ export class EmailPdfComponent implements OnInit {
 
     this.textMaterialService.sendTextMaterialAsPdf(this.textMaterialId,emailParams).subscribe(tm => {
       this.dialogRef.close();
+      this.notifier.showNotification("Pdf file has been sent to your email","OK","SUCCESS")
     }, err => {
       console.log(err);
       this.dialogRef.close();
+      this.notifier.showNotification("Something went wrong","OK","ERROR");
     })
   }
 }

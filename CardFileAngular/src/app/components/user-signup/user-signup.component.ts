@@ -26,7 +26,10 @@ export class UserSignupComponent implements OnInit {
     this.signupForm = this.fb.group({
       email: [null,[Validators.required,Validators.email]],
       name: [null,[Validators.required, Validators.minLength(4)]],
-      password: [null,[Validators.required,Validators.minLength(6)]],
+      password: [null,[Validators.required,Validators.minLength(6),
+        this.patternValidator(/\d/, { hasNumber: true }),
+        this.patternValidator(/[a-z]/, { hasLowerCase: true }),
+        this.patternValidator(/(?=.*?[#?!@$%^&*-])/, {hasSymbol: true})]],
       confirmPassword: [null,[Validators.required]]
     });
   }
@@ -35,6 +38,18 @@ export class UserSignupComponent implements OnInit {
     let password = this.signupForm.get('password').value;
     let confirmPassword = this.signupForm.get('confirmPassword').value;
     return password === confirmPassword ? null : { notSame: true};
+  }
+
+  patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn{
+    return (control: AbstractControl): { [key: string]: any } => {
+      if (!control.value){
+        return null;
+      }
+
+      const valid = regex.test(control.value);
+
+      return valid ? null : error;
+    }
   }
 
   get email(){

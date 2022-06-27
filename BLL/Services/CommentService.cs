@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.cs.Interfaces;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -15,7 +16,7 @@ namespace BLL.Services
     /// Service to perform various operations regarding Comment entities such as getting all comment of the particular text material from the database,
     /// adding a comment to database, updating a comment in database, deleting a comment from database
     /// </summary>
-    public class CommentService
+    public class CommentService : ICommentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

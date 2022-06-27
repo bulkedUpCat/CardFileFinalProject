@@ -19,6 +19,13 @@ namespace CardFileTests.IntegrationTests
         private HttpClient _client;
         private const string RequestUri = "api/users/";
 
+        [SetUp]
+        public void Init()
+        {
+            _factory = new CustomWebApplicationFactory();
+            _client = _factory.CreateClient();
+        }
+
         [Test]
         public async Task UserController_Get_ReturnsAllUsers()
         {
@@ -78,13 +85,6 @@ namespace CardFileTests.IntegrationTests
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
             var actual = JsonConvert.DeserializeObject<IEnumerable<TextMaterialDTO>>(stringResponse);
             actual.Should().BeEquivalentTo(expected);
-        }
-
-        [SetUp]
-        public void Init()
-        {
-            _factory = new CustomWebApplicationFactory();
-            _client = _factory.CreateClient();
         }
 
         private static readonly IEnumerable<User> ExpectedUserEntities =

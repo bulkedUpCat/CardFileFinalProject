@@ -133,7 +133,7 @@ namespace CardFileTests.IntegrationTests
         }
 
         [Test]
-        public async Task TextMaterialCategoryController_DeleteCategory_ReturnBadRequestIfIdInvalid()
+        public async Task TextMaterialCategoryController_DeleteCategory_ReturnsBadRequestIfIdInvalid()
         {
             // Arrange
             var id = -1000;

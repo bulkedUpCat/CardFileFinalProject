@@ -34,6 +34,15 @@
                 <div *ngIf="password.errors['minlength']">
                     Password must be at least 6 symbols long
                 </div>
+                <div *ngIf="password.errors['hasNumber']">
+                    Password must contain at least one digit
+                </div>
+                <div *ngIf="password.errors['hasLowerCase']">
+                    Password must contain at least one lower case letter
+                </div>
+                <div *ngIf="password.errors['hasSymbol']">
+                    Password must contain at least one symbol
+                </div>
             </div>
         </div>
         <div class="input">

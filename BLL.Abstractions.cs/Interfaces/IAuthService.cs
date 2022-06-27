@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 namespace BLL.Abstractions.cs.Interfaces
 {
     /// <summary>
-    /// Interface to be implemented by class which perform various authentication and authorization operations
+    /// Interface to be implemented by classes which perform various authentication and authorization operations
     /// </summary>
     public interface IAuthService
     {
         Task<User> LogInAsync(UserLoginDTO user);
         Task<User> SignUpAsync(UserRegisterDTO user);
+        Task ForgotPassword(ForgotPasswordDTO model);
+        Task ResetPassword(ResetPasswordDTO model);
     }
 }

@@ -18,7 +18,7 @@ namespace BLL.Services
     /// adding a text material to database, updating a text material in database, removing a text material from database, 
     /// changing the approval status of the text material, sending a text material and optionally its info on email of the specified by id user as a pdf file
     /// </summary>
-    public class TextMaterialService
+    public class TextMaterialService: ITextMaterialService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

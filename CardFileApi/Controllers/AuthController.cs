@@ -10,42 +10,49 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace CardFileApi.Controllers
 {
+    /// <summary>
+    /// Controller that provides endpoints for working with authorization and authentication
+    /// </summary>
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly IAuthService _authService;
         private readonly JwtHandler _jwtHandler;
         private readonly ILoggerManager _logger;
-        private readonly IEmailSender _emailSender;
 
+        /// <summary>
+        /// Constructor with three parameteres
+        /// </summary>
+        /// <param name="authService">Instance of class that implements IAuthService interface</param>
+        /// <param name="jwtHandler">Instance of class JWtHandler which contains logic to create a Jwt token</param>
+        /// <param name="logger">Instance of class that implements ILoggerManager interface to log information</param>
         public AuthController(IAuthService authService,
-            UserManager<User> userManager,
             JwtHandler jwtHandler,
-            ILoggerManager logger,
-            IEmailSender emailSender)
+            ILoggerManager logger)
         {
-            _userManager = userManager;
             _authService = authService;
             _jwtHandler = jwtHandler;
             _logger = logger;
-            _emailSender = emailSender;
         }
 
+        /// <summary>
+        /// Logs the user in and returns a generated Jwt token
+        /// </summary>
+        /// <param name="user">Data transfer object which contains data of the user</param>
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> LogIn(UserLoginDTO user)
         {
-            if (user == null)
-            {
-                _logger.LogInfo("No credentials were provided");
-                return BadRequest("No credentials were provided");
-            }
-
             try
             {
                 var foundUser = await _authService.LogInAsync(user);
@@ -67,15 +74,15 @@ namespace CardFileApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Signs up the user and returns the user entity
+        /// </summary>
+        /// <param name="user">Data transfer object which contains data for a new user</param>
         [HttpPost("signup")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUp(UserRegisterDTO user)
         {
-            if (user == null)
-            {
-                _logger.LogInfo("No credentials were provided");
-                return BadRequest("No credentials were provided");
-            }
-
             try
             {
                 var newUser = await _authService.SignUpAsync(user);
@@ -89,72 +96,47 @@ namespace CardFileApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Sends a reset password link on user's email
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("forgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-
-            if (user == null)
-            {
-                return BadRequest($"Failed to find a user with email {model.Email}");
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var parameters = new Dictionary<string, string>
-            {
-                {"token", token },
-                {"email", model.Email }
-            };
-
-            var callback = QueryHelpers.AddQueryString(model.ClientURI, parameters);
-
             try
             {
-                _emailSender.SendSmtpMail(new EmailTemplate()
-                {
-                    To = user.Email,
-                    Subject = "Password reset on Text Materials website",
-                    Body = $"Click this link to reset your password:\n{callback}\n\nIf it wasn't you, ignore this email please.",
-                    UserId = user.Id
-                });
+                await _authService.ForgotPassword(model);
+
+                return Ok();
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"While sending a reset password link: {e.Message}");
                 return BadRequest(e.Message);
             }
-
-            return Ok();
         }
 
+        /// <summary>
+        /// Resets the password of the specified user
+        /// </summary>
+        /// <param name="model">Data transfer object which contains data of the user whose password needs to be reset</param>
         [HttpPost("passwordReset")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
         {
-            if (model.Password != model.ConfirmPassword)
+            try
             {
-                return BadRequest("Passwords don't match");
+                await _authService.ResetPassword(model);
+
+                return Ok();
             }
-
-            var user = await _userManager.FindByEmailAsync(model.Email);
-
-            if (user == null)
+            catch (CardFileException e)
             {
-                return BadRequest("User not found");
+                _logger.LogInfo($"While resetting the password: {e.Message}");
+                return BadRequest(e.Message);
             }
-
-            if (string.IsNullOrEmpty(model.Token))
-            {
-                return BadRequest("Empty password reset token");
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest("Failed to reset the password");
-            }
-
-            return Ok();
         }
     }
 }
