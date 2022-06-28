@@ -1,6 +1,6 @@
 <div class="container">
     <div class="link">
-        <a routerLink="main" routerLinkActive="active">Main Page</a>
+        <a routerLink="main" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Main Page</a>
         <a *ngIf="userLoggedIn" routerLink="home-page" routerLinkActive="active">Home page</a>
         <a *ngIf="userLoggedIn" routerLink="add-text-material" routerLinkActive="active">Add text material</a>
     </div>

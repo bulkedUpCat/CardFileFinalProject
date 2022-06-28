@@ -104,7 +104,54 @@ namespace BLL.Services
                 throw new CardFileException($"Failed to create a user with email {user.Email}");
             }
 
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+
+            var parameters = new Dictionary<string, string>
+            {
+                {"token", token },
+                {"email", user.Email }
+            };
+
+            var confirmationLink = QueryHelpers.AddQueryString("http://localhost:4200/confirm-email", parameters);
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Email confirmation on Text Materials website",
+                    Body = $"Click this link to confirm your email:\n{confirmationLink}\n\nIf it wasn't you, ignore this email please."
+                });
+            }
+            catch (CardFileException e)
+            {
+                throw new CardFileException(e.Message);
+            }
+
             return newUser;
+        }
+
+        /// <summary>
+        /// Confirms email of the user
+        /// </summary>
+        /// <param name="token">Email confirmation token</param>
+        /// <param name="email">Email of the user</param>
+        /// <returns>Task representing an asynchronous operation</returns>
+        public async Task ConfirmEmail(ConfirmEmailDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with email {model.Email}");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, model.Token);
+
+            if (!result.Succeeded)
+            {
+                throw new CardFileException("Invalid email confirmation token");
+            }
         }
 
         /// <summary>

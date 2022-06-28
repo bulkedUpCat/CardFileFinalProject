@@ -91,7 +91,29 @@ namespace CardFileApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogInfo(e.Message);
+                _logger.LogInfo($"While signing up: {e.Message}");
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Confirms email of the user
+        /// </summary>
+        /// <param name="model">Model that contains user's email and email confirmation token</param>
+        [HttpPost("confirmEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDTO model)
+        {
+            try
+            {
+                await _authService.ConfirmEmail(model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInfo($"While confirming email: {e.Message}");
                 return BadRequest(e.Message);
             }
         }

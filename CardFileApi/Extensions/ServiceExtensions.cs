@@ -50,6 +50,9 @@ namespace CardFileApi.Extensions
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequireUppercase = false;
+
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();

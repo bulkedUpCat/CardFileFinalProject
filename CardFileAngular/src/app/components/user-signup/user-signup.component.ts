@@ -83,7 +83,7 @@ export class UserSignupComponent implements OnInit {
     const user = this.signupForm.value;
 
     this.authService.signUp(user).subscribe(u => {
-      this.notifier.showNotification("You've successfully signed up!","OK","SUCCESS");
+      this.notifier.showNotification("You've successfully signed up! Confirm your email before logging in!","OK","SUCCESS");
       this.router.navigateByUrl('login');
     },
     err => {

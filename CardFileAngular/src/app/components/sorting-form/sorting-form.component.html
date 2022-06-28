@@ -43,6 +43,10 @@
                     <label for="toDate">To:</label>
                     <input id="toDate" type="date" formControlName="filterToDate" (change)="validateToDate()">
                 </div>
+                <!-- <div>
+                    <label for="minLikes">Min likes count:</label>
+                    <input id="minLikes" type="number" formControlName="minLikesCount" (change)="validateMinLikesCount()">
+                </div> -->
                 <div *ngIf="isManager || isHomePage">
                     <label for="pending">Pending:</label>
                     <input id="pending" type="checkbox" formControlName="pending">

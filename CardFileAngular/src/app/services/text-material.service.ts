@@ -23,6 +23,7 @@ export class TextMaterialService {
     if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
     if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
     if (textParams.filterToDate) parameters['endDate'] = textParams.filterToDate;
+    //if (textParams.minLikesCount) parameters['minLikesCount'] = textParams.minLikesCount;
     if (textParams.searchTitle) parameters['searchTitle'] = textParams.searchTitle;
     if (textParams.searchCategory) parameters['searchCategory'] = textParams.searchCategory;
     if (textParams.searchAuthor) parameters['searchAuthor'] = textParams.searchAuthor;
@@ -45,6 +46,7 @@ export class TextMaterialService {
     if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
     if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
     if (textParams.filterToDate) parameters['endDate'] = textParams.filterToDate;
+    //if (textParams.minLikesCount) parameters['minLikesCount'] = textParams.minLikesCount;
     if (textParams.searchTitle) parameters['searchTitle'] = textParams.searchTitle;
     if (textParams.searchCategory) parameters['searchCategory'] = textParams.searchCategory;
     if (textParams.searchAuthor) parameters['searchAuthor'] = textParams.searchAuthor;
@@ -67,6 +69,7 @@ export class TextMaterialService {
     if (textParams.pageSize) parameters['pageSize'] = textParams.pageSize;
     if (textParams.filterFromDate) parameters['startDate'] = textParams.filterFromDate;
     if (textParams.filterToDate) parameters['endDate'] = textParams.filterToDate;
+    //if (textParams.minLikesCount) parameters['minLikesCount'] = textParams.minLikesCount;
     if (textParams.searchTitle) parameters['searchTitle'] = textParams.searchTitle;
     if (textParams.searchCategory) parameters['searchCategory'] = textParams.searchCategory;
     if (textParams.orderBy) parameters['orderBy'] = textParams.orderBy;

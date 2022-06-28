@@ -8,6 +8,7 @@ export class SharedHomeParamsService {
   pageSize: number = 5;
   filterFromDate: Date = null;
   filterToDate: Date = null;
+  //minLikesCount: number = 0;
   searchTitle: string = null;
   searchCategory: string = null;
   searchAuthor: string = null;

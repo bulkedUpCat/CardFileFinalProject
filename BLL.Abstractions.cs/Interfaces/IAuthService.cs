@@ -17,5 +17,6 @@ namespace BLL.Abstractions.cs.Interfaces
         Task<User> SignUpAsync(UserRegisterDTO user);
         Task ForgotPassword(ForgotPasswordDTO model);
         Task ResetPassword(ResetPasswordDTO model);
+        Task ConfirmEmail(ConfirmEmailDTO model);
     }
 }

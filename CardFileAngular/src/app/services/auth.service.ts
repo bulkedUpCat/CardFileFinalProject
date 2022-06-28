@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ConfirmEmailDTO } from '../models/user/ConfirmEmailDTO';
 import { ForgotPasswordDTO } from '../models/user/ForgotPasswordDTO';
 import { ResetPasswordDTO } from '../models/user/ResetPasswordDTO';
 import { UserLogin } from '../models/user/UserLogin';
@@ -96,6 +97,10 @@ export class AuthService {
     localStorage.removeItem("TokenInfo");
     this.claims.next([]);
     this.router.navigate(['/login']);
+  }
+
+  confirmEmail(model: ConfirmEmailDTO){
+    return this.http.post(`${environment.apiUrl}/auth/confirmEmail`, model);
   }
 
   forgotPassword(model: ForgotPasswordDTO){

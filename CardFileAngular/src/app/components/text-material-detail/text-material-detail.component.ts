@@ -13,6 +13,8 @@ import { EmailPdfComponent } from '../dialogs/email-pdf/email-pdf.component';
 import { RejectTextMaterialComponent } from '../dialogs/reject-text-material/reject-text-material.component';
 import { UpdateTextMaterialComponent } from '../dialogs/update-text-material/update-text-material.component';
 
+import * as jsPDF from 'jspdf';
+
 @Component({
   selector: 'app-text-material-detail',
   templateUrl: './text-material-detail.component.html',

@@ -3,6 +3,7 @@ export class TextMaterialParams implements TextMaterialParameters{
   pageSize: number;
   filterFromDate: Date;
   filterToDate: Date;
+  //minLikesCount: number;
   searchTitle: string;
   searchCategory: string;
   searchAuthor: string;
@@ -15,6 +16,7 @@ export interface TextMaterialParameters{
   pageSize: number;
   filterFromDate: Date;
   filterToDate: Date;
+  //minLikesCount: number;
   searchTitle: string;
   searchCategory: string;
   searchAuthor: string;

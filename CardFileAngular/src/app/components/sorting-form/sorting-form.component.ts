@@ -58,6 +58,7 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.orderBy = this.sharedParams.orderBy;
     this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
     this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
+    //this.textMaterialParams.minLikesCount = this.sharedParams.minLikesCount;
 
     if (!this.isManager){
       this.textMaterialParams.approvalStatus = [];
@@ -239,10 +240,18 @@ export class SortingFormComponent implements OnInit {
     }
   }
 
+  validateMinLikesCount(){
+    if (this.sortingParamsForm.get('minLikesCount').value < 0){
+      this.sortingParamsForm.get('minLikesCount').setValue(0);
+    }
+  }
+
   onSubmit(){
     this.textMaterialParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
 
     this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
+
+    //this.textMaterialParams.minLikesCount = this.sortingParamsForm.get('minLikesCount').value;
 
     this.textMaterialParams.approvalStatus = [];
 
@@ -257,36 +266,6 @@ export class SortingFormComponent implements OnInit {
     if (this.sortingParamsForm.get('rejected').value){
       this.textMaterialParams.approvalStatus.push(2);
     }
-
-    // if (!this.isHomePage && this.isAdmin){
-    //   if (this.sortingParamsForm.get('sortByRejectCount').value != null){
-    //   if (this.sortingParamsForm.get('sortByRejectCount').value){
-    //     this.textMaterialParams.orderBy += 'rejectCount asc,';
-    //   }
-    //   else{
-    //     this.textMaterialParams.orderBy += 'rejectCount desc,';
-    //   }
-    // }
-    // }
-
-
-    // if (this.sortingParamsForm.get('sortByTitle').value != null){
-    //   if (this.sortingParamsForm.get('sortByTitle').value){
-    //     this.textMaterialParams.orderBy += 'title asc,';
-    //   }
-    //   else{
-    //     this.textMaterialParams.orderBy += 'title desc,';
-    //   }
-    // }
-
-    // if (this.sortingParamsForm.get('sortByDatePublished').value != null){
-    //   if (this.sortingParamsForm.get('sortByDatePublished').value){
-    //     this.textMaterialParams.orderBy += 'datePublished asc';
-    //   }
-    //   else {
-    //     this.textMaterialParams.orderBy += 'datePublished desc';
-    //   }
-    // }
 
     this.textMaterialParams.searchTitle = this.sortingParamsForm.get('searchTitle').value;
 

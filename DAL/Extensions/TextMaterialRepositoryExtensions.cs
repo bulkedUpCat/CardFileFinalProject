@@ -38,6 +38,11 @@ namespace DAL.Extensions
                 DateTime.Compare(tm.DatePublished.Date, toDate) <= 0);
         }
 
+        public static IQueryable<TextMaterial> FilterByMinLikesCount(this IQueryable<TextMaterial> textMaterials, int minLikesCount)
+        {
+            return textMaterials.Where(tm => tm.UsersWhoLiked.Count >= minLikesCount);
+        }
+
         public static IQueryable<TextMaterial> SearchByTitle(this IQueryable<TextMaterial> textMaterials, string searchTitle)
         {
             if (string.IsNullOrEmpty(searchTitle))
