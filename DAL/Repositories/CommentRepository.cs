@@ -21,7 +21,7 @@ namespace DAL.Repositories
         private readonly AppDbContext _context;
 
         /// <summary>
-        /// Constructor with one argument
+        /// Constructor that accepts the database context
         /// </summary>
         /// <param name="context">Instance of the database context</param>
         public CommentRepository(AppDbContext context)

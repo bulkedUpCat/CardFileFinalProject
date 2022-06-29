@@ -61,7 +61,6 @@ namespace BLL.Email
             try
             {
                 MailMessage message = GetMailMessage(emailTemplate);
-                //var i = _config.GetSection("Smtp")["CredentialsUsername"];
                 var credentials = new NetworkCredential()
                 {
                     UserName = _config.GetSection("Smtp")["CredentialsUsername"],

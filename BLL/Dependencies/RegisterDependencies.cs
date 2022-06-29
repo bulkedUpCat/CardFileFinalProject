@@ -18,7 +18,7 @@ namespace BLL.Dependencies
         /// <summary>
         /// Extension method which registers all dependencies containing in business layer project
         /// </summary>
-        /// <param name="services">Instance of IServiceCollection interface to add dependencies</param>
+        /// <param name="services">Instance of class that implements IServiceCollection interface to add dependencies</param>
         public static void ConfigureBLLServices(this IServiceCollection services)
         {
             services.AddScoped<ITextMaterialService, TextMaterialService>();

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Abstractions.cs.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by classes to work with roles
+    /// </summary>
     public interface IRoleService
     {
         Task<IEnumerable<string>> GetRolesAsync();

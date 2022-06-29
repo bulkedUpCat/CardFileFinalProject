@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Abstractions.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by TextMaterialRepository
+    /// </summary>
     public interface ITextMaterialRepository : IGenericRepository<TextMaterial>
     {
         Task<IEnumerable<TextMaterial>> GetByCategoryId(int categoryId);

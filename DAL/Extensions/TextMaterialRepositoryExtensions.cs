@@ -11,8 +11,18 @@ using System.Linq;
 
 namespace DAL.Extensions
 {
+    /// <summary>
+    /// Extension class for TextMaterialRepository to implement sorting, filtering and searching
+    /// </summary>
     public static class TextMaterialRepositoryExtensions
     {
+        /// <summary>
+        /// Extension method to filter text materials by publishment date
+        /// </summary>
+        /// <param name="textMaterials">Text materials to filter</param>
+        /// <param name="startDate">Start publishment date</param>
+        /// <param name="endDate">End publishment date</param>
+        /// <returns>Filtered text materials</returns>
         public static IQueryable<TextMaterial> FilterByDatePublished(this IQueryable<TextMaterial> textMaterials, string startDate, string endDate)
         {
             if (string.IsNullOrWhiteSpace(startDate) &&
@@ -38,11 +48,12 @@ namespace DAL.Extensions
                 DateTime.Compare(tm.DatePublished.Date, toDate) <= 0);
         }
 
-        public static IQueryable<TextMaterial> FilterByMinLikesCount(this IQueryable<TextMaterial> textMaterials, int minLikesCount)
-        {
-            return textMaterials.Where(tm => tm.UsersWhoLiked.Count >= minLikesCount);
-        }
-
+        /// <summary>
+        /// Extension method to search text materials by title
+        /// </summary>
+        /// <param name="textMaterials">Text materials to be searched</param>
+        /// <param name="searchTitle">Search title to search text materials by</param>
+        /// <returns>Text materials with titles that contain search string</returns>
         public static IQueryable<TextMaterial> SearchByTitle(this IQueryable<TextMaterial> textMaterials, string searchTitle)
         {
             if (string.IsNullOrEmpty(searchTitle))
@@ -54,6 +65,12 @@ namespace DAL.Extensions
             return textMaterials.Where(tm => tm.Title.ToLower().Contains(lowerCaseTerm));
         }
 
+        /// <summary>
+        /// Extension method to search text materials by category title
+        /// </summary>
+        /// <param name="textMaterials">Text materials to be searched</param>
+        /// <param name="searchCategory">Category title to search text materials by</param>
+        /// <returns>Text materials with category titles that contain search string</returns>
         public static IQueryable<TextMaterial> SearchByCategory(this IQueryable<TextMaterial> textMaterials, string searchCategory)
         {
             if (string.IsNullOrEmpty(searchCategory))
@@ -65,6 +82,12 @@ namespace DAL.Extensions
             return textMaterials.Where(tm => tm.TextMaterialCategory.Title.ToLower().Contains(lowerCaseTerm));
         }
 
+        /// <summary>
+        /// Extension method to search text materials by author name
+        /// </summary>
+        /// <param name="textMaterials">Text materials to be searched</param>
+        /// <param name="searchAuthor">Author name to search text materials by</param>
+        /// <returns>Text materials with author names that contain search string</returns>
         public static IQueryable<TextMaterial> SearchByAuthor(this IQueryable<TextMaterial> textMaterials, string searchAuthor)
         {
             if (string.IsNullOrEmpty(searchAuthor))
@@ -76,6 +99,12 @@ namespace DAL.Extensions
             return textMaterials.Where(tm => tm.Author.UserName.ToLower().Contains(lowerCaseTerm));
         }
 
+        /// <summary>
+        /// Extension method to filter text materails by approval status
+        /// </summary>
+        /// <param name="textMaterials">Text materials to filter</param>
+        /// <param name="approvalStatus">Array of approval status to filter by</param>
+        /// <returns>Filtered by approval status text materials</returns>
         public static IQueryable<TextMaterial> FilterByApprovalStatus(this IQueryable<TextMaterial> textMaterials, List<int> approvalStatus)
         {
             if (approvalStatus == null)
@@ -86,6 +115,12 @@ namespace DAL.Extensions
             return textMaterials.Where(tm => approvalStatus.Contains((int)tm.ApprovalStatus));
         }
 
+        /// <summary>
+        /// Extension method to sort text materials
+        /// </summary>
+        /// <param name="textMaterials">Text materials to sort</param>
+        /// <param name="orderByQueryString">Orderby string to sort by</param>
+        /// <returns>Sorted text materials</returns>
         public static IQueryable<TextMaterial> Sort(this IQueryable<TextMaterial> textMaterials, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))

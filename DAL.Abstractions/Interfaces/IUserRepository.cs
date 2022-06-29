@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Abstractions.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by UserRepository
+    /// </summary>
     public interface IUserRepository : IGenericRepository<User>
     {
         Task<IEnumerable<User>> GetWithDetailsAsync();

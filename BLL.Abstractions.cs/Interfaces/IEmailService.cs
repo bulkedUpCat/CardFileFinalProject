@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Abstractions.cs.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by classes to work with email notifications
+    /// </summary>
     public interface IEmailService
     {
         void SendTextMaterialAsPdf(User user, TextMaterial textMaterial, EmailParameters emailParams);

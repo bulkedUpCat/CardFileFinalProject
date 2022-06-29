@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Contexts
 {
+    /// <summary>
+    /// Application database context
+    /// </summary>
     public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

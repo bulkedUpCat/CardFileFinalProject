@@ -16,12 +16,12 @@ namespace BLL.Validation
         /// </summary>
         public CardFileException() : base() { }
         /// <summary>
-        /// Constructor which takes one argument
+        /// Constructor that accepts an exception message
         /// </summary>
         /// <param name="message">Message of the exception</param>
         public CardFileException(string message) : base(message) { }
         /// <summary>
-        /// Constructor which takes two arguments
+        /// Constructor that accepts an exception message and inner exception
         /// </summary>
         /// <param name="message">Message of the exception</param>
         /// <param name="inner">Inner exception</param>

@@ -24,7 +24,7 @@ namespace BLL.Services
         private readonly IEmailSender _emailSender;
 
         /// <summary>
-        /// Constructor that takes three arguments
+        /// Constructor that accepts UserManager to work with users, SignInManager to sign in the user, emailSender to send emails
         /// </summary>
         /// <param name="userManager">Instance of class UserManager to perform various operations on users</param>
         /// <param name="signInManager">Instance of class SignInManager to perform various operations regardign signing in a user</param>

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace DAL.Abstractions.Interfaces
 {
+    /// <summary>
+    /// Generic repository to be implemented by other repositories
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public interface IGenericRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAsync();

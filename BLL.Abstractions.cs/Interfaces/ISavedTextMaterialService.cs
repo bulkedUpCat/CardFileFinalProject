@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Abstractions.cs.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by classes to work with a list of saved text materialss
+    /// </summary>
     public interface ISavedTextMaterialService
     {
         Task<PagedList<TextMaterialDTO>> GetSavedTextMaterialsOfUser(string userId, TextMaterialParameters textMaterialParams);

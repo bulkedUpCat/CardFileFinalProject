@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Abstractions.cs.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by classes to work with users
+    /// </summary>
     public interface IUserService
     {
         Task<PagedList<UserDTO>> GetAll(UserParameters userParameters);

@@ -72,19 +72,52 @@ namespace CardFileTests.IntegrationTests
         }
 
         [TestCase("1")]
-        public async Task UserController_Get_ReturnsTextMaterialsOfTheUser(string userId)
+        public async Task UserController_GetLikedTextMaterials_ReturnsLikedTextMaterialsByUserId(string userId)
         {
             // Arrange
-            var expected = ExpectedUserDTOs.FirstOrDefault(u => u.Id == userId).TextMaterials;
+            var expected = ExpectedUserEntities.FirstOrDefault(u => u.Id == userId).LikedTextMaterials;
 
             // Act
-            var httpResponse = await _client.GetAsync(RequestUri + userId + "/textMaterials/");
+            var httpResponse = await _client.GetAsync(RequestUri + userId + "/textMaterials/liked");
 
             // Assert
             httpResponse.EnsureSuccessStatusCode();
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
             var actual = JsonConvert.DeserializeObject<IEnumerable<TextMaterialDTO>>(stringResponse);
             actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCase("1", true)]
+        [TestCase("2", false)]
+        public async Task UserController_ToggleReceiceNotifications_SetsReceiveNotificationsStatusToGiven(string userId, bool status)
+        {
+            // Arrange
+            var expected = ExpectedUserDTOs.FirstOrDefault(u => u.Id == userId);
+            expected.ReceiveNotifications = status;
+            var content = new StringContent(JsonConvert.SerializeObject(status), Encoding.UTF8, "application/json");
+
+            // Act
+            var httpResponse = await _client.PutAsync(RequestUri + userId + "/notifications", content);
+
+            // Assert
+            httpResponse.EnsureSuccessStatusCode();
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+            var actual = JsonConvert.DeserializeObject<UserDTO>(stringResponse);
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCase("0")]
+        [TestCase("-1")]
+        public async Task UserController_ToggleReceiceNotifications_ReturnsBadRequestIfIdInvalid(string id)
+        {
+            // Arrange
+            var content = new StringContent(JsonConvert.SerializeObject(true), Encoding.UTF8, "application/json");
+
+            // Act
+            var httpResponse = await _client.PutAsync(RequestUri + id + "/notifications", content);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         private static readonly IEnumerable<User> ExpectedUserEntities =
@@ -98,17 +131,17 @@ namespace CardFileTests.IntegrationTests
         private IEnumerable<UserDTO> ExpectedUserDTOs =>
             new List<UserDTO>
             {
-                new UserDTO { Id = "1", UserName = "Tommy", Email = "tommy@gmail.com", TextMaterials = new List<TextMaterialDTO> { GetTextMaterialDTOs.First() } },
-                new UserDTO { Id = "2", UserName = "Johnny", Email = "johnny@gmail.com", TextMaterials = new List<TextMaterialDTO> {GetTextMaterialDTOs.FirstOrDefault(tm => tm.Id == 2), GetTextMaterialDTOs.FirstOrDefault(tm => tm.Id == 3) } },
-                new UserDTO { Id = "3", UserName = "Bobby", Email = "bobby@gmail.com", TextMaterials = new List<TextMaterialDTO>() }
+                new UserDTO { Id = "1", UserName = "Tommy", ReceiveNotifications = false, Email = "tommy@gmail.com", TextMaterials = new List<TextMaterialDTO> { GetTextMaterialDTOs.First() } },
+                new UserDTO { Id = "2", UserName = "Johnny", ReceiveNotifications = false, Email = "johnny@gmail.com", TextMaterials = new List<TextMaterialDTO> {GetTextMaterialDTOs.FirstOrDefault(tm => tm.Id == 2), GetTextMaterialDTOs.FirstOrDefault(tm => tm.Id == 3) } },
+                new UserDTO { Id = "3", UserName = "Bobby",  ReceiveNotifications = false, Email = "bobby@gmail.com", TextMaterials = new List<TextMaterialDTO>() }
             };
 
         private IEnumerable<TextMaterialDTO> GetTextMaterialDTOs =>
             new List<TextMaterialDTO>
             {
-                new TextMaterialDTO { Id = 1, AuthorId = "1", UserName = "Tommy", ApprovalStatusId = 0, CategoryTitle = "First one", Content = "firstContent", Title = "firstArticle", DatePublished = new DateTime(2000,3,12) },
-                new TextMaterialDTO { Id = 2, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, CategoryTitle = "First one", Content = "secondContent", Title = "secondArticle", DatePublished = new DateTime(2003, 4,23) },
-                new TextMaterialDTO { Id = 3, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, CategoryTitle = "Second one", Content = "thirdContent", Title = "thirdArticle", DatePublished = new DateTime(2004,1,1) }
+                new TextMaterialDTO { Id = 1, AuthorId = "1", UserName = "Tommy", ApprovalStatusId = 0, Content = "firstContent", Title = "firstArticle", DatePublished = new DateTime(2000,3,12) },
+                new TextMaterialDTO { Id = 2, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, Content = "secondContent", Title = "secondArticle", DatePublished = new DateTime(2003, 4,23) },
+                new TextMaterialDTO { Id = 3, AuthorId = "2", UserName = "Johnny", ApprovalStatusId = 1, Content = "thirdContent", Title = "thirdArticle", DatePublished = new DateTime(2004,1,1) }
             };
 
         [TearDown]

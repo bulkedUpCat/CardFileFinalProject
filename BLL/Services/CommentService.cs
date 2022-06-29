@@ -22,7 +22,7 @@ namespace BLL.Services
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Constructor that takes two arguments
+        /// Constructor that accepts unitOfWork to access the repositories, mapper to map entities
         /// </summary>
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="mapper">Instance of class that implemetns IMapper interface</param>

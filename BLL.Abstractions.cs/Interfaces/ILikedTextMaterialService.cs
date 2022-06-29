@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Abstractions.cs.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by classes to work with a list of liked text materials
+    /// </summary>
     public interface ILikedTextMaterialService
     {
         Task<IEnumerable<TextMaterialDTO>> GetLikedTextMaterialsByUserId(string userId);

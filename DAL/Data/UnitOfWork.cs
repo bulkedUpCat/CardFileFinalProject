@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Data
 {
+    /// <summary>
+    /// Class that incapsulates working with repositories
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;

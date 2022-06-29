@@ -25,22 +25,14 @@ namespace BLL.Services
     /// </summary>
     public class EmailService: IEmailService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
 
         /// <summary>
-        /// Constructor which takes three arguments
+        /// Constructor that accepts emailSender to send emails
         /// </summary>
-        /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
-        /// <param name="userManager">Instance of class UserManager to perform operations on users</param>
         /// <param name="emailSender">Instance of class EmailSender to perform operations with smtp client</param>
-        public EmailService(IUnitOfWork unitOfWork,
-            UserManager<User> userManager,
-            IEmailSender emailSender)
+        public EmailService(IEmailSender emailSender)
         {
-            _unitOfWork = unitOfWork;
-            _userManager = userManager;
             _emailSender = emailSender;
         }
 

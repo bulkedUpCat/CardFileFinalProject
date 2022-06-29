@@ -21,7 +21,7 @@ namespace BLL.Services
         private readonly RoleManager<IdentityRole> _roleManager;
 
         /// <summary>
-        /// Constructor which takes two arguments
+        /// Constructor that accepts UserManager to work with users and RoleManager to work with roles
         /// </summary>
         /// <param name="userManager">Instance of class UserManager to be able to perform operations on users</param>
         /// <param name="roleManager">Instance of class RoleManager to be able to perform operations on roles</param>

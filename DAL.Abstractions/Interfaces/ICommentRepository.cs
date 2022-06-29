@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Abstractions.Interfaces
 {
+    /// <summary>
+    /// Interface to be implemented by CommentRepository
+    /// </summary>
     public interface ICommentRepository : IGenericRepository<Comment>
     {
         Task<IEnumerable<Comment>> GetCommentsOfTextMaterial(int textMaterialId);

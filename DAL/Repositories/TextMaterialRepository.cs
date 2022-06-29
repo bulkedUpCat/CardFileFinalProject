@@ -23,7 +23,7 @@ namespace DAL.Repositories
         private readonly AppDbContext _context;
 
         /// <summary>
-        /// Constructror with one argument
+        /// Constructror that accepts the database context
         /// </summary>
         /// <param name="context">Instance of database context</param>
         public TextMaterialRepository(AppDbContext context)
@@ -64,9 +64,7 @@ namespace DAL.Repositories
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
                 .Include(tm => tm.UsersWhoSaved)
-                //.Include(tm => tm.UsersWhoLiked)
                 .FilterByDatePublished(parameters.StartDate, parameters.EndDate)
-                //.FilterByMinLikesCount(parameters.MinLikesCount)
                 .SearchByTitle(parameters.SearchTitle)
                 .SearchByCategory(parameters.SearchCategory)
                 .SearchByAuthor(parameters.SearchAuthor)
@@ -87,9 +85,7 @@ namespace DAL.Repositories
                 .Include(tm => tm.Author)
                 .Include(tm => tm.TextMaterialCategory)
                 .Include(tm => tm.UsersWhoSaved)
-                //.Include(tm => tm.UsersWhoLiked)
                 .FilterByDatePublished(parameters.StartDate, parameters.EndDate)
-                //.FilterByMinLikesCount(parameters.MinLikesCount)
                 .SearchByTitle(parameters.SearchTitle)
                 .SearchByCategory(parameters.SearchCategory)
                 .FilterByApprovalStatus(parameters.ApprovalStatus)

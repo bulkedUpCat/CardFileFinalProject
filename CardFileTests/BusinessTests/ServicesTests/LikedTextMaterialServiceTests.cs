@@ -98,8 +98,8 @@ namespace CardFileTests.BusinessTests.ServicesTests
         public List<TextMaterial> GetTextMaterials =>
             new List<TextMaterial>
             {
-                new TextMaterial { Id = 1, UsersWhoLiked = new List<User> { new User(), new User() }, DatePublished = new DateTime(2000,1,1) },
-                new TextMaterial { Id = 2, UsersWhoLiked = new List<User> { new User(), new User() }, DatePublished = new DateTime(2003,1,1) }
+                new TextMaterial { Id = 1, LikesCount = 2, UsersWhoLiked = new List<User> { new User(), new User() }, DatePublished = new DateTime(2000,1,1) },
+                new TextMaterial { Id = 2, LikesCount = 2, UsersWhoLiked = new List<User> { new User(), new User() }, DatePublished = new DateTime(2003,1,1) }
             };
 
         public List<TextMaterialDTO> GetTextMaterialDTOs =>

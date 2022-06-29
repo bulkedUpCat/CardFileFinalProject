@@ -25,7 +25,7 @@ namespace BLL.Services
         private readonly IEmailService _emailService;
 
         /// <summary>
-        /// Constructor which takes three arguments
+        /// Constructor that accepts to unitOfWork to access the repositories, mapper to map entities and emailService to send emails
         /// </summary>
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="mapper">Instance of class that implements IMapper interface</param>

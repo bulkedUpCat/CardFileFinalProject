@@ -22,7 +22,7 @@ namespace DAL.Repositories
         private readonly AppDbContext _context;
 
         /// <summary>
-        /// Constructor with one argument
+        /// Constructor that accepts the database context
         /// </summary>
         /// <param name="context">Instance of database context</param>
         public UserRepository(AppDbContext context)

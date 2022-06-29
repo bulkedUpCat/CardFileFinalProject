@@ -25,7 +25,7 @@ namespace BLL.Services
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Constructor of UserService which accepts unit of work to access repositories, UserManager to work with users and Mapper to map entities
+        /// Constructor that accepts unit of work to access repositories, UserManager to work with users and Mapper to map entities
         /// </summary>
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="userManager">Instance of UserManager</param>
