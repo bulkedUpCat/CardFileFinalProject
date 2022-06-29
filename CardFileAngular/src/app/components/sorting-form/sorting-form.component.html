@@ -21,6 +21,15 @@
                     <input id="datePublishedDesc" (dblclick)="resetSortByPublishmentDate(false)" (change)="handleChangeSortByPublishmentDate()" [value]="false" type="radio" formControlName="sortByDatePublished">
                   </label>
                 </div>
+                <div>
+                    <span>Likes count:&nbsp;&nbsp;</span>
+                    <label>Asc:
+                    <input id="likesCountAsc" (dblclick)="resetSortByLikesCount(true)" (change)="handleChangeSortByLikesCount()" [value]="true" type="radio" formControlName="sortByLikesCount">
+                  </label>&nbsp;
+                    <label>Desc:
+                    <input id="likesCountDesc" (dblclick)="resetSortByLikesCount(false)" (change)="handleChangeSortByLikesCount()" [value]="false" type="radio" formControlName="sortByLikesCount">
+                  </label>
+                </div>
                 <div *ngIf="!isHomePage && isAdmin">
                     <span>Reject count:&nbsp;&nbsp;&nbsp;</span>
                     <label>Asc:
@@ -43,10 +52,6 @@
                     <label for="toDate">To:</label>
                     <input id="toDate" type="date" formControlName="filterToDate" (change)="validateToDate()">
                 </div>
-                <!-- <div>
-                    <label for="minLikes">Min likes count:</label>
-                    <input id="minLikes" type="number" formControlName="minLikesCount" (change)="validateMinLikesCount()">
-                </div> -->
                 <div *ngIf="isManager || isHomePage">
                     <label for="pending">Pending:</label>
                     <input id="pending" type="checkbox" formControlName="pending">

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.cs.Interfaces;
 using BLL.Validation;
 using Core.DTOs;
 using DAL.Abstractions.Interfaces;
@@ -14,13 +15,13 @@ namespace BLL.Services
     /// Service to perform various operations regarding liked text materials such as getting all liked text materials of the user by user's id from the database,
     /// adding a text material to liked of the specified by id user, removing a text material from liked of the specified by id user
     /// </summary>
-    public class LikedTextMaterialService
+    public class LikedTextMaterialService: ILikedTextMaterialService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Constructor which takes two arguments
+        /// Constructor which accepts unit of work to access the repositories and mapper to map entities
         /// </summary>
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="mapper">Instance of class that implements IMapper interface</param>
@@ -77,6 +78,7 @@ namespace BLL.Services
             try
             {
                 textMaterial.UsersWhoLiked.Add(user);
+                textMaterial.LikesCount++;
                 
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();
@@ -118,6 +120,7 @@ namespace BLL.Services
             try
             {
                 textMaterial.UsersWhoLiked.Remove(user);
+                textMaterial.LikesCount--;
 
                 _unitOfWork.TextMaterialRepository.Update(textMaterial);
                 await _unitOfWork.SaveChangesAsync();

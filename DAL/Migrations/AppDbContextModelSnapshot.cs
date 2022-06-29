@@ -86,6 +86,9 @@ namespace DAL.Migrations
                     b.Property<DateTime>("DatePublished")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("RejectCount")
                         .HasColumnType("int");
 

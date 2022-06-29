@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.cs.Interfaces;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -15,7 +16,7 @@ namespace BLL.Services
     /// Service to perform various operations on TextMaterialCategory entities such as getting all categories from the database,
     /// getting a category by its id, adding a text material category to database, removing a text material category from the database
     /// </summary>
-    public class TextMaterialCategoryService
+    public class TextMaterialCategoryService: ITextMaterialCategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

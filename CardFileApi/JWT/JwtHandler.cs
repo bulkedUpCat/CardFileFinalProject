@@ -11,12 +11,20 @@ using System.Threading.Tasks;
 
 namespace CardFileApi.JWT
 {
-    public class JwtHandler
+    /// <summary>
+    /// Class helper for generating a Jwt token
+    /// </summary>
+    public class JwtHandler: IJwtHandler
     {
         private readonly IConfiguration _configuration;
         private readonly IConfigurationSection _jwtSettigns;
         private readonly UserManager<User> _userManager;
 
+        /// <summary>
+        /// Constructor which accepts configuration class and UserManager
+        /// </summary>
+        /// <param name="configuration">Instance of class that implements IConfiguration interface to have acces to configuration in appsettings.json</param>
+        /// <param name="userManager">Instance of UserManager class to work with users</param>
         public JwtHandler(IConfiguration configuration,
             UserManager<User> userManager)
         {
@@ -25,6 +33,10 @@ namespace CardFileApi.JWT
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Generates signing credentials using configuration from appsettings.json
+        /// </summary>
+        /// <returns>Generated signing credentials</returns>
         public SigningCredentials GetSigningCredentials()
         {
             var key = Encoding.UTF8.GetBytes(_jwtSettigns.GetSection("Key").Value);
@@ -33,6 +45,11 @@ namespace CardFileApi.JWT
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
+        /// <summary>
+        /// Creates claims for specified user
+        /// </summary>
+        /// <param name="user">Instance of User class whose claims are to be generated</param>
+        /// <returns>List of genereated claims of the user</returns>
         public async Task<List<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>()
@@ -52,6 +69,12 @@ namespace CardFileApi.JWT
             return claims;
         }
 
+        /// <summary>
+        /// Generated a Jwt token using signing credentials along with list of claims
+        /// </summary>
+        /// <param name="signingCredentials">Instance of SigningCredentials class</param>
+        /// <param name="claims">List of claims of the user</param>
+        /// <returns>Generated Jwt token</returns>
         public JwtSecurityToken GenerateToken(SigningCredentials signingCredentials,
             List<Claim> claims)
         {

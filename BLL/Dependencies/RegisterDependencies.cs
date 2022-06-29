@@ -22,15 +22,15 @@ namespace BLL.Dependencies
         public static void ConfigureBLLServices(this IServiceCollection services)
         {
             services.AddScoped<ITextMaterialService, TextMaterialService>();
-            services.AddScoped<TextMaterialCategoryService>();
+            services.AddScoped<ITextMaterialCategoryService, TextMaterialCategoryService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<RoleService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICommentService, CommentService>();
-            services.AddScoped<UserService>();
-            services.AddScoped<SavedTextMaterialsService>();
-            services.AddScoped<LikedTextMaterialService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISavedTextMaterialService, SavedTextMaterialService>();
+            services.AddScoped<ILikedTextMaterialService, LikedTextMaterialService>();
         }
     }
 }

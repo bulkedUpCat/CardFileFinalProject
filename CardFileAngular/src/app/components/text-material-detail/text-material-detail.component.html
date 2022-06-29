@@ -1,6 +1,6 @@
 <div class="grid-container">
     <button class="back-btn" (click)="goBack()">Back</button>
-    <div class="reject" *ngIf="isAdmin && textMaterial?.approvalStatusId != 1">
+    <div class="reject" *ngIf="(isAdmin && textMaterial?.approvalStatusId != 1) || (isAuthor && textMaterial?.approvalStatusId != 1)">
         <div *ngIf="textMaterial?.rejectCount">Reject count: <strong>{{textMaterial?.rejectCount}}</strong></div>
         <div *ngIf="textMaterial?.rejectMessage">Reject message: <strong>{{textMaterial?.rejectMessage}}</strong></div>
     </div>

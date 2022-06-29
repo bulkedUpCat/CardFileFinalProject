@@ -30,7 +30,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 .Setup(x => x.TextMaterialRepository.GetWithDetailsAsync(It.IsAny<TextMaterialParameters>()))
                 .ReturnsAsync(GetTextMaterialEntities);
 
-            var savedTextMaterialService = new SavedTextMaterialsService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var savedTextMaterialService = new SavedTextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
 
             // Act
             var actual = await savedTextMaterialService.GetSavedTextMaterialsOfUser(userId, new TextMaterialParameters());
@@ -55,7 +55,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork
                 .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
 
-            var savedTextMaterialService = new SavedTextMaterialsService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var savedTextMaterialService = new SavedTextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
 
             // Act
             await savedTextMaterialService.AddTextMaterialToSaved(user.Id, textMaterial.Id);
@@ -81,7 +81,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork
                 .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
 
-            var savedTextMaterialService = new SavedTextMaterialsService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var savedTextMaterialService = new SavedTextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
 
             // Act
             await savedTextMaterialService.RemoveTextMaterialFromSaved(user.Id, textMaterial.Id);

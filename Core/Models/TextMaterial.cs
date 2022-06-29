@@ -13,6 +13,7 @@ namespace Core.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public int LikesCount { get; set; }
 
         public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
         public int RejectCount { get; set; }

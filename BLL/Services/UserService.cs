@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BLL.Abstractions.cs.Interfaces;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -17,14 +18,14 @@ namespace BLL.Services
     /// Service to perform various operations on User entities such as getting all users from the database,
     /// getting a single user from the database by their id, changing the receive notifications status of the user by their id
     /// </summary>
-    public class UserService
+    public class UserService: IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Constructor of UserService which accepts three instances
+        /// Constructor of UserService which accepts unit of work to access repositories, UserManager to work with users and Mapper to map entities
         /// </summary>
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="userManager">Instance of UserManager</param>

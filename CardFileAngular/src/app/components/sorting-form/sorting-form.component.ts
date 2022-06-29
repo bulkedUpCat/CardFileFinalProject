@@ -58,7 +58,6 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.orderBy = this.sharedParams.orderBy;
     this.textMaterialParams.filterFromDate = this.sharedParams.filterFromDate;
     this.textMaterialParams.filterToDate = this.sharedParams.filterToDate;
-    //this.textMaterialParams.minLikesCount = this.sharedParams.minLikesCount;
 
     if (!this.isManager){
       this.textMaterialParams.approvalStatus = [];
@@ -105,6 +104,7 @@ export class SortingFormComponent implements OnInit {
     this.sortingParamsForm = this.fb.group({
       sortByTitle: [this.configureSortByTitle()],
       sortByDatePublished: [this.configureSortByDatePublished()],
+      sortByLikesCount: [this.configureSortByLikesCount()],
       sortByRejectCount: [this.configureSortByRejectCount()],
       filterFromDate: [this.sharedParams.filterFromDate],
       filterToDate: [this.sharedParams.filterToDate],
@@ -121,6 +121,7 @@ export class SortingFormComponent implements OnInit {
     this.sortingParamsForm = this.fb.group({
       sortByTitle: [this.configureSortByTitleHomePage()],
       sortByDatePublished: [this.configureSortByDatePublishedHome()],
+      sortByLikesCount: [this.configureSortByLikesCountHome()],
       filterFromDate: [this.sharedHomeParams.filterFromDate],
       filterToDate: [this.sharedHomeParams.filterToDate],
       pending: [this.sharedHomeParams.approvalStatus.includes(0)],
@@ -217,6 +218,40 @@ export class SortingFormComponent implements OnInit {
     return null;
   }
 
+  configureSortByLikesCount(){
+    var orderBy = this.sharedParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for (let i = 0; i < parts.length; i++){
+        if (parts[i] == 'likesCount asc'){
+          return true;
+        }
+        else if (parts[i] == 'likesCount desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  configureSortByLikesCountHome(){
+    var orderBy = this.sharedHomeParams.orderBy;
+    var parts = orderBy?.split(',');
+    if (parts){
+      for (let i = 0; i < parts.length; i++){
+        if (parts[i] == 'likesCount asc'){
+          return true;
+        }
+        else if (parts[i] == 'likesCount desc'){
+          return false;
+        }
+      }
+    }
+
+    return null;
+  }
+
   validateFromDate(){
     let currentDate = new Date();
     var fromDate = new Date(this.sortingParamsForm.get('filterFromDate').value);
@@ -250,8 +285,6 @@ export class SortingFormComponent implements OnInit {
     this.textMaterialParams.filterFromDate = this.sortingParamsForm.get('filterFromDate').value;
 
     this.textMaterialParams.filterToDate = this.sortingParamsForm.get('filterToDate').value;
-
-    //this.textMaterialParams.minLikesCount = this.sortingParamsForm.get('minLikesCount').value;
 
     this.textMaterialParams.approvalStatus = [];
 
@@ -350,8 +383,6 @@ export class SortingFormComponent implements OnInit {
       }
     }
 
-    console.log(this.textMaterialParams.orderBy);
-
     this.onSubmit();
   }
 
@@ -363,6 +394,49 @@ export class SortingFormComponent implements OnInit {
     else if (!status && this.textMaterialParams.orderBy.includes('datePublished desc,')){
       this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('datePublished desc,','');
       this.sortingParamsForm.get('sortByDatePublished').setValue(null);
+    }
+
+    this.onSubmit();
+  }
+
+  handleChangeSortByLikesCount(){
+    if (this.textMaterialParams.orderBy == null){
+      this.textMaterialParams.orderBy = '';
+    }
+
+    if (this.sortingParamsForm.get('sortByLikesCount').value){
+      if (!this.textMaterialParams.orderBy.includes('likesCount asc,')){
+        if (this.textMaterialParams.orderBy.includes('likesCount desc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('likesCount desc,','');
+        }
+
+        this.textMaterialParams.orderBy += 'likesCount asc,';
+      }
+    }
+    else
+    {
+      if (!this.textMaterialParams.orderBy.includes('likesCount desc,')){
+        if (this.textMaterialParams.orderBy.includes('likesCount asc,')){
+          this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('likesCount asc,','');
+        }
+
+        this.textMaterialParams.orderBy += 'likesCount desc,';
+      }
+    }
+
+    console.log(this.textMaterialParams.orderBy);
+
+    this.onSubmit();
+  }
+
+  resetSortByLikesCount(status: boolean){
+    if (status && this.textMaterialParams.orderBy.includes('likesCount asc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('likesCount asc,','');
+      this.sortingParamsForm.get('sortByLikesCount').setValue(null);
+    }
+    else if (!status && this.textMaterialParams.orderBy.includes('likesCount desc,')){
+      this.textMaterialParams.orderBy = this.textMaterialParams.orderBy.replace('likesCount desc,','');
+      this.sortingParamsForm.get('sortByLikesCount').setValue(null);
     }
 
     this.onSubmit();

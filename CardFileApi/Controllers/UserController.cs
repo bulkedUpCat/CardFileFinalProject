@@ -21,22 +21,22 @@ namespace CardFileApi.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly ITextMaterialService _textMaterialService;
-        private readonly SavedTextMaterialsService _savedTextMaterialService;
-        private readonly LikedTextMaterialService _likedTextMaterialService;
+        private readonly ISavedTextMaterialService _savedTextMaterialService;
+        private readonly ILikedTextMaterialService _likedTextMaterialService;
 
         /// <summary>
-        /// Constructor that takes four arguments
+        /// Constructor that accepts services for working with users, text materials, liked and saved lists of text materails
         /// </summary>
         /// <param name="userService">instance of class that implements IUserService interface to work with users</param>
         /// <param name="textMaterialService">Instance of class that implemetns ITextMaterialService to work with text materials</param>
         /// <param name="savedTextMaterialService">Instance of class that implements ISavedTextMaterialService to work with saving text materials</param>
         /// <param name="likedTextMaterialService">Instance of class that implements ILikedTextMaterialService to work with liking text materials</param>
-        public UserController(UserService userService,
+        public UserController(IUserService userService,
             ITextMaterialService textMaterialService,
-            SavedTextMaterialsService savedTextMaterialService,
-            LikedTextMaterialService likedTextMaterialService)
+            ISavedTextMaterialService savedTextMaterialService,
+            ILikedTextMaterialService likedTextMaterialService)
         {
             _userService = userService;
             _textMaterialService = textMaterialService;

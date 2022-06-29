@@ -1,4 +1,5 @@
-﻿using BLL.Validation;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Validation;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace BLL.Services
     /// Service to perform various operations regarding roles such as getting all role names from the database,
     /// adding a specified by id user to a particular role, removing a specified by id user from the particular role
     /// </summary>
-    public class RoleService
+    public class RoleService: IRoleService
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;

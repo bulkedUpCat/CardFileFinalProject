@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Services;
 using BLL.Validation;
 using CardFileApi.Logging;
 using Core.DTOs;
@@ -18,15 +19,15 @@ namespace CardFileApi.Controllers
     [Route("api/textMaterials/categories")]
     public class TextMaterialCategoryController : ControllerBase
     {
-        private readonly TextMaterialCategoryService _textMaterialCategoryService;
+        private readonly ITextMaterialCategoryService _textMaterialCategoryService;
         private readonly ILoggerManager _logger;
 
         /// <summary>
-        /// Constructor with two parameters
+        /// Constructor with accepts service to work with text material categories and logger to log information
         /// </summary>
         /// <param name="textMaterialCategoryService">Instance of class that implements ITextMaterialCategory interface to work with text material categories</param>
         /// <param name="logger">Instance of class that implements ILoggerManager interface to log the information</param>
-        public TextMaterialCategoryController(TextMaterialCategoryService textMaterialCategoryService,
+        public TextMaterialCategoryController(ITextMaterialCategoryService textMaterialCategoryService,
             ILoggerManager logger)
         {
             _textMaterialCategoryService = textMaterialCategoryService;

@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Services;
 using BLL.Validation;
 using CardFileApi.Logging;
 using Core.DTOs;
@@ -19,7 +20,7 @@ namespace CardFileApi.Controllers
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class RolesController : ControllerBase
     {
-        private readonly RoleService _roleService;
+        private readonly IRoleService _roleService;
         private readonly ILoggerManager _logger;
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="roleService">Instance of class that implements IRoleService interface to work with roles</param>
         /// <param name="logger">Instance of class ILoggerManager to log information</param>
-        public RolesController(RoleService roleService,
+        public RolesController(IRoleService roleService,
             ILoggerManager logger)
         {
             _roleService = roleService;

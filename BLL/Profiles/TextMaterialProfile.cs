@@ -24,8 +24,7 @@ namespace BLL.Profiles
                 .ForMember(tm => tm.CategoryTitle, src => src.MapFrom(x => x.TextMaterialCategory.Title))
                 .ForMember(tm => tm.AuthorId, src => src.MapFrom(x => x.Author.Id))
                 .ForMember(tm => tm.UserName, src => src.MapFrom(x => x.Author.UserName))
-                .ForMember(tm => tm.ApprovalStatusId, src => src.MapFrom(x => (int)x.ApprovalStatus))
-                .ForMember(tm => tm.LikesCount, src => src.MapFrom(x => x.UsersWhoLiked.Count()));
+                .ForMember(tm => tm.ApprovalStatusId, src => src.MapFrom(x => (int)x.ApprovalStatus));
 
             CreateMap<CreateTextMaterialDTO, TextMaterial>();
 

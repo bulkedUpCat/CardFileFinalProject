@@ -95,7 +95,7 @@ namespace CardFileApi.Extensions
 
         public static void ConfigureJwt(this IServiceCollection services)
         {
-            services.AddScoped<JwtHandler>();
+            services.AddScoped<IJwtHandler, JwtHandler>();
         }
 
         public static void ConfigureHttpContextAccessor(this IServiceCollection services)
