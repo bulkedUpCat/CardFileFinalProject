@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Core.RequestFeatures
 {
+    /// <summary>
+    /// Parameters that will be taken into account when returning text materials: start, end date of publishment, 
+    /// search strings for title, category, author, orderby string and array of approval status
+    /// </summary>
     public class TextMaterialParameters : RequestParameters
     {
+        /// <summary>
+        /// Constructor that sets orderby to datePublished desc by default, meaning text material will be automatically
+        /// sorted by publishment date descending
+        /// </summary>
         public TextMaterialParameters()
         {
             OrderBy = "datePublished desc";

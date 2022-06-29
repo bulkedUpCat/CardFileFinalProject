@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.RequestFeatures
 {
+    /// <summary>
+    /// Parameters that will be taken into account when generating a pdf file of a text material
+    /// </summary>
     public class EmailParameters
     {
         public bool? Title { get; set; }

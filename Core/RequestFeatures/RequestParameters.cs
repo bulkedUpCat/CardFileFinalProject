@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.RequestFeatures
 {
+    /// <summary>
+    /// Base class to be inherited by other parameter classes
+    /// </summary>
     public class RequestParameters
     {
         const int maxPageSize = 20;
