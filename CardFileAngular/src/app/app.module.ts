@@ -42,6 +42,7 @@ import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
 import { RejectTextMaterialComponent } from './components/dialogs/reject-text-material/reject-text-material.component';
 import { UserListPaginationComponent } from './components/user-list-pagination/user-list-pagination.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
+import { BanUserComponent } from './components/dialogs/ban-user/ban-user.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.
     RejectTextMaterialComponent,
     UserListPaginationComponent,
     ConfirmEmailComponent,
+    BanUserComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,11 @@
 <div class="item" (mouseover)="onShow()" (mouseout)="onHide()">
     <div class="header">
         <span routerLink="/user/{{user.id}}">{{user?.email}}</span>
-        <span><button class="btn" (click)="assign()"><mat-icon>cached</mat-icon></button></span>
+        <span>
+          <button class="btn" (click)="assignRole()"><mat-icon>cached</mat-icon></button>
+          <button class="btn" (click)="banOrUnban()"><mat-icon>lock</mat-icon></button>
+        </span>
+
     </div>
     <div *ngIf="showInfo" class="info">
         <div>

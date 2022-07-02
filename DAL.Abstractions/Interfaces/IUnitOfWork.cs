@@ -15,6 +15,7 @@ namespace DAL.Abstractions.Interfaces
         ITextMaterialCategoryRepository TextMaterialCategoryRepository { get; }
         IUserRepository UserRepository { get; }
         ICommentRepository CommentRepository { get; }
+        IBanRepository BanRepository { get; }
         Task SaveChangesAsync();
     }
 }

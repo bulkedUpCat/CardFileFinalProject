@@ -34,6 +34,11 @@ namespace DAL.Contexts
                 .WithMany(tm => tm.UsersWhoLiked)
                 .UsingEntity(t => t.ToTable("LikedTextMaterials"));
 
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Ban)
+                .WithOne(b => b.User)
+                .HasForeignKey<Ban>(b => b.UserId);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -41,5 +46,6 @@ namespace DAL.Contexts
         public DbSet<TextMaterialCategory> TextMaterialCategory { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Ban> Bans { get; set; }
     }
 }

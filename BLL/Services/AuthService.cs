@@ -22,6 +22,7 @@ namespace BLL.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Constructor that accepts UserManager to work with users, SignInManager to sign in the user, emailSender to send emails
@@ -31,15 +32,17 @@ namespace BLL.Services
         /// <param name="emailSender">Instance of class that implements IEmailSender interface to work with email</param>
         public AuthService(UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
-        /// Logs the user in if valid credentials are provided
+        /// Logs the user in if valid credentials are provided and user is not banned
         /// </summary>
         /// <param name="user">Credentials: email and password</param>
         /// <returns>User if credentials were valid</returns>
@@ -58,6 +61,13 @@ namespace BLL.Services
             if (!result.Succeeded)
             {
                 throw new CardFileException("Wrong email or password");
+            }
+
+            var userBan = await _unitOfWork.BanRepository.GetByUserIdAsync(foundUser.Id);
+
+            if (userBan != null && userBan.Expires > DateTime.Now)
+            {
+                throw new CardFileException($"User with email {foundUser.Email} is banned till {userBan.Expires.ToString("MM/dd/yyyy")}");
             }
 
             return foundUser;
@@ -151,6 +161,33 @@ namespace BLL.Services
             if (!result.Succeeded)
             {
                 throw new CardFileException("Invalid email confirmation token");
+            }
+        }
+
+        public async Task ChangeUserName(ChangeUserNameDTO model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {model.UserId}");
+            }
+
+            var userNameOccupied = await _userManager.FindByNameAsync(model.NewUserName);
+
+            if (userNameOccupied != null)
+            {
+                throw new CardFileException($"User with user name {model.NewUserName} already exists");
+            }
+
+            try
+            {
+                user.UserName = model.NewUserName;
+                await _userManager.UpdateAsync(user);
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
             }
         }
 

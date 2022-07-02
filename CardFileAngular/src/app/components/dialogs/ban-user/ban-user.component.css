@@ -1,0 +1,49 @@
+.container {
+    display: grid;
+    text-align: center;
+    font-size: 1.3em;
+    color: rgb(12, 1, 83);
+}
+
+[class*="input"] {
+    width: 100%;
+    margin-top: 2%;
+}
+
+input[class*="input-item"] {
+    width: 100%;
+    height: 7vh;
+    padding-left: 3%;
+    border-radius: 15px;
+    font-size: 1.3em;
+    border: 2px solid #000;
+}
+
+.error {
+    color: rgb(12, 1, 83);
+    font-weight: bold;
+}
+
+.btn {
+    margin-top: 4%;
+    width: 100%;
+    height: 5vh;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.btn-ban {
+    background-color: rgb(12, 1, 83);
+}
+
+.btn-unban {
+    color: #000;
+    background-color: #FFBB1C;
+}
+
+.btn-submit {
+    background-color: rgb(12, 1, 83);
+}

@@ -31,6 +31,7 @@ namespace BLL.Dependencies
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISavedTextMaterialService, SavedTextMaterialService>();
             services.AddScoped<ILikedTextMaterialService, LikedTextMaterialService>();
+            services.AddScoped<BanService>();
         }
     }
 }

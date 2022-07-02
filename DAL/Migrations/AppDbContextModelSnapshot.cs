@@ -22,6 +22,33 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Core.Models.Ban", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Bans");
+                });
+
             modelBuilder.Entity("Core.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -360,6 +387,17 @@ namespace DAL.Migrations
                     b.ToTable("LikedTextMaterials", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Models.Ban", b =>
+                {
+                    b.HasOne("Core.Models.User", "User")
+                        .WithOne("Ban")
+                        .HasForeignKey("Core.Models.Ban", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Core.Models.Comment", b =>
                 {
                     b.HasOne("Core.Models.Comment", "ParentComment")
@@ -491,6 +529,9 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Core.Models.User", b =>
                 {
+                    b.Navigation("Ban")
+                        .IsRequired();
+
                     b.Navigation("TextMaterials");
                 });
 #pragma warning restore 612, 618

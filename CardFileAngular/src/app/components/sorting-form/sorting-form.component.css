@@ -1,7 +1,6 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* background-color: rgb(8, 161, 243); */
     background-color: #045C94;
     color: #FFF;
     padding: 1%;
@@ -14,6 +13,10 @@
     font-weight: bold;
     font-size: 1.1em;
     margin-bottom: 2%;
+}
+
+.prop {
+    font-size: 0.7em;
 }
 
 .sorting-menu {
@@ -47,7 +50,7 @@
 
 .search-menu>div {
     display: grid;
-    grid-template-columns: 30% 40%;
+    grid-template-columns: 30% 70%;
     margin: 1% 0;
 }
 
@@ -65,19 +68,12 @@
 .btn-apply {
     padding: 2%;
     width: 100%;
-    /* background-color: rgb(22, 22, 230); */
     background-color: #02314D;
     color: #FFF;
     font-weight: bold;
     border: none;
     cursor: pointer;
 }
-
-
-/* .btn-apply:hover {
-    background-color: rgb(184, 184, 223);
-    color: #000;
-} */
 
 .image {
     width: 20px;
@@ -90,6 +86,9 @@
 }
 
 @media screen and (min-width: 601px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
     .prop {
         font-size: 1.2em;
     }

@@ -71,6 +71,7 @@ namespace CardFileApi.Extensions
                 c.AddProfile<TextMaterialCategoryProfile>();
                 c.AddProfile<UserProfile>();
                 c.AddProfile<CommentProfile>();
+                c.AddProfile<BanProfile>();
             })));
         }
 

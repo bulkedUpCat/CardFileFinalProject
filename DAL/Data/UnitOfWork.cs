@@ -19,6 +19,7 @@ namespace DAL.Data
         private ITextMaterialCategoryRepository _textMaterialCategoryRepository;
         private IUserRepository _userRepository;
         private ICommentRepository _commentRepository;
+        private IBanRepository _banRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -74,6 +75,19 @@ namespace DAL.Data
                 }
 
                 return _commentRepository;
+            }
+        }
+
+        public IBanRepository BanRepository
+        {
+            get
+            {
+                if (_banRepository == null)
+                {
+                    _banRepository = new BanRepository(_context);
+                }
+
+                return _banRepository;
             }
         }
 

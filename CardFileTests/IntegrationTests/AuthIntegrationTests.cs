@@ -44,7 +44,7 @@ namespace CardFileTests.IntegrationTests
             httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        [Test]
+        /*[Test]
         public async Task AuthController_SignUp_ReturnsNewUser()
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace CardFileTests.IntegrationTests
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
             var userInResponse = JsonConvert.DeserializeObject<User>(stringResponse);
             Assert.IsNotNull(userInResponse);
-        }
+        }*/
 
         [Test]
         public async Task AuthController_SignUp_ReturnsBadRequestIfPasswordsDontMatch()

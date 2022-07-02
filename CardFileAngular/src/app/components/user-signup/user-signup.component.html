@@ -12,6 +12,9 @@
                 <div *ngIf="name.errors['minlength']">
                     Name must be at lest 4 symbols long
                 </div>
+                <div *ngIf="name.errors['isAllLetters']">
+                    Name must be all latin letters
+                </div>
             </div>
         </div>
         <div class="input">

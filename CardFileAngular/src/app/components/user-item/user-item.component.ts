@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
+import { BanUserComponent } from '../dialogs/ban-user/ban-user.component';
 import { RoleComponent } from '../dialogs/role/role.component';
 
 @Component({
@@ -26,7 +27,7 @@ export class UserItemComponent implements OnInit {
     this.showInfo = false;
   }
 
-  assign(){
+  assignRole(){
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.data = {
@@ -45,5 +46,17 @@ export class UserItemComponent implements OnInit {
         }, err => console.log(err));
       }
     })
+  }
+
+  banOrUnban(){
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      user: this.user
+    };
+
+    dialogConfig.width = '400px';
+
+    this.dialog.open(BanUserComponent, dialogConfig);
   }
 }

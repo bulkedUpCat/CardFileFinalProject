@@ -56,7 +56,7 @@ export class UserLoginComponent implements OnInit {
       this.router.navigateByUrl('/main');
     }, err => {
       console.log(err);
-      this.notifier.showNotification("Invalid email or password, try again!","OK",'ERROR');
+      this.notifier.showNotification(err.error,"OK",'ERROR');
       this.loginForm.reset();
     });
   }

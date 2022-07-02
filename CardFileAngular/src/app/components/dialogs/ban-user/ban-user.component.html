@@ -1,0 +1,45 @@
+<div class="container">
+    <div *ngIf="ban">
+        <p>Ban</p>
+        <p>{{ban?.reason}}</p>
+        <p>Expires on {{ban?.expires | date: 'MMM, d, y'}}</p>
+    </div>
+    <button class="btn btn-ban" (click)="banUser()">Ban user</button>
+    <div *ngIf="banUserClicked">
+        <form [formGroup]="banForm" (ngSubmit)="onSubmit()">
+            <div class="input">
+                <label>
+                  Enter a reason:
+                  <input class="input-item" formControlName="reason">
+                </label>
+                <div *ngIf="submitted && reason.errors" class="error">
+                    <div *ngIf="reason.errors['required']">
+                        This field is required
+                    </div>
+                    <div *ngIf="reason.errors['maxlength']">
+                        Reason must be maximum 100 symbols
+                    </div>
+                </div>
+            </div>
+            <div class="input">
+                <label>
+                   Enter a number of days:
+                  <input class="input-item" type="number" formControlName="days">
+                </label>
+                <div *ngIf="submitted && days.errors" class="error">
+                    <div *ngIf="days.errors['required']">
+                        This field is required
+                    </div>
+                    <div *ngIf="days.errors['min']">
+                        Days must be more than 0
+                    </div>
+                    <div *ngIf="days.errors['max']">
+                        Days must be less than 100
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-submit" type="submit">BAN</button>
+        </form>
+    </div>
+    <button class="btn btn-unban" (click)="unbanUser()">Unban user</button>
+</div>
