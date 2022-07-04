@@ -43,6 +43,7 @@ import { RejectTextMaterialComponent } from './components/dialogs/reject-text-ma
 import { UserListPaginationComponent } from './components/user-list-pagination/user-list-pagination.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { BanUserComponent } from './components/dialogs/ban-user/ban-user.component';
+import { ChangeUserInfoComponent } from './components/dialogs/change-user-info/change-user-info.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { BanUserComponent } from './components/dialogs/ban-user/ban-user.compone
     UserListPaginationComponent,
     ConfirmEmailComponent,
     BanUserComponent,
+    ChangeUserInfoComponent,
   ],
   imports: [
     BrowserModule,

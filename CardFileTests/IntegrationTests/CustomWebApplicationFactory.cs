@@ -1,4 +1,5 @@
 ﻿using DAL.Contexts;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,8 @@ namespace CardFileTests.IntegrationTests
             builder.ConfigureServices(services =>
             {
                 RemoveLibraryDbContextRegistration(services);
+
+                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
 
                 var serviceProvider = GetInMemoryServiceProvider();
 

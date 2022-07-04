@@ -18,6 +18,7 @@ namespace CardFileApi.Controllers
     /// <summary>
     /// Controller that provides endpoints for working with authorization and authentication
     /// </summary>
+    [ApiVersion("1.0")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -124,6 +125,8 @@ namespace CardFileApi.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("forgotPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
         {
             try
@@ -157,6 +160,28 @@ namespace CardFileApi.Controllers
             catch (CardFileException e)
             {
                 _logger.LogInfo($"While resetting the password: {e.Message}");
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Changes the user name of the user with given id to the new specified one
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        /// <param name="model">New user name for the user</param>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ChangeUserName(string id, [FromBody] ChangeUserNameDTO model)
+        {
+            try
+            {
+                await _authService.ChangeUserName(id, model);
+
+                return NoContent();
+            }
+            catch (CardFileException e)
+            {
                 return BadRequest(e.Message);
             }
         }

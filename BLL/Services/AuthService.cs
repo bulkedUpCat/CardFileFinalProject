@@ -164,13 +164,19 @@ namespace BLL.Services
             }
         }
 
-        public async Task ChangeUserName(ChangeUserNameDTO model)
+        /// <summary>
+        /// Changes the user name of the user by its id
+        /// </summary>
+        /// <param name="userId">Id of the user to update</param>
+        /// <param name="model">Model that contains new user name of the user</param>
+        /// <returns>Task representing an asynchronous operation</returns>
+        public async Task ChangeUserName(string userId, ChangeUserNameDTO model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                throw new CardFileException($"Failed to find a user with id {model.UserId}");
+                throw new CardFileException($"Failed to find a user with id {userId}");
             }
 
             var userNameOccupied = await _userManager.FindByNameAsync(model.NewUserName);
@@ -183,7 +189,12 @@ namespace BLL.Services
             try
             {
                 user.UserName = model.NewUserName;
-                await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    throw new CardFileException(result.Errors.ToString());
+                }
             }
             catch (Exception e)
             {

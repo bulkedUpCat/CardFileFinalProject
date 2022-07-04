@@ -103,6 +103,14 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/auth/confirmEmail`, model);
   }
 
+  changeUsername(userId: string, newUserName: string){
+    let obj = {
+      NewUserName: newUserName
+    };
+
+    return this.http.put<string>(`${environment.apiUrl}/auth/${userId}`, newUserName);
+  }
+
   forgotPassword(model: ForgotPasswordDTO){
     const headers = {
       headers: new HttpHeaders({

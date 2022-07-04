@@ -1,12 +1,7 @@
 <div>
     <p class="text">
-        Welcome, {{userName}}
+        Welcome, {{userName}} <button class="btn-change-username" (click)="changeUserInfo()"><mat-icon>build</mat-icon></button>
     </p>
-    <div class="notifications">
-        <label class="text">
-        Receive email notifications when a text material is created, deleted, approved or rejected <input type="checkbox" [checked]="user?.receiveNotifications" (change)="toggleReceiveNotifications()">
-        </label>
-    </div>
 </div>
 <app-sorting-form [isHomePage]="true" (filter)="onFilter($event)"></app-sorting-form>
 <div class=" grid-container ">

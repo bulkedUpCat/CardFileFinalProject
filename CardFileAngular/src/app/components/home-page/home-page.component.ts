@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { User } from 'src/app/models/user/User';
@@ -6,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SharedHomeParamsService } from 'src/app/services/shared-home-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 import { UserService } from 'src/app/services/user.service';
+import { ChangeUserInfoComponent } from '../dialogs/change-user-info/change-user-info.component';
 
 @Component({
   selector: 'app-home-page',
@@ -25,7 +27,8 @@ export class HomePageComponent implements OnInit {
   constructor(private authService: AuthService,
     private userService: UserService,
     private textMaterialService: TextMaterialService,
-    private sharedHomeParams: SharedHomeParamsService) { }
+    private sharedHomeParams: SharedHomeParamsService,
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.authService.getUserInfo().subscribe( u => {
@@ -113,5 +116,17 @@ export class HomePageComponent implements OnInit {
     this.userService.toggleReceiveNotifications(this.userId, this.user.receiveNotifications).subscribe(res => {
       console.log('done');
     }, err => console.log(err));
+  }
+
+  changeUserInfo(){
+    const config = new MatDialogConfig();
+
+    config.data = {
+      user: this.user
+    };
+
+    config.width = '600px';
+
+    this.dialog.open(ChangeUserInfoComponent, config);
   }
 }

@@ -29,7 +29,7 @@ namespace BLL.Validation.Validators
             RuleFor(u => u.Name)
                 .NotEmpty().WithMessage("{PropretyName} must not be empty")
                 .MinimumLength(4).WithMessage("{PropertyName} must be at least 4 characters long")
-                .Must(IsValidName).WithMessage("{PropertyName} must be all letters");
+                .Matches(@"^[a-zA-Z]*$").WithMessage("{PropertyName} must be all letters");
 
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("{PropertyName} must not be empty")
@@ -44,11 +44,6 @@ namespace BLL.Validation.Validators
         private bool HasLowerCaseLetter(string password)
         {
             return password.Any(Char.IsLower);
-        }
-
-        private bool IsValidName(string name)
-        {
-            return name.All(Char.IsLetter);
         }
     }
 }

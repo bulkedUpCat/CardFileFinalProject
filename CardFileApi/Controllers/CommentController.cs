@@ -11,6 +11,7 @@ namespace CardFileApi.Controllers
     /// <summary>
     /// Controller that provides endpoints for working with comments
     /// </summary>
+    [ApiVersion("1.0")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]

@@ -42,6 +42,7 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureAutoMapper();
 builder.Services.ConfigureJwt();
 builder.Services.ConfigureHttpContextAccessor();
+builder.Services.ConfigureVersioning();
 builder.Services.ConfigureDALServices();
 builder.Services.ConfigureBLLServices();
 

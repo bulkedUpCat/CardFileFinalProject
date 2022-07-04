@@ -1,0 +1,27 @@
+<div class="container">
+    <div>
+        <label class="notifications">
+    Receive email notifications when a text material is created, deleted, approved or rejected <input type="checkbox" [checked]="user?.receiveNotifications" (change)="toggleReceiveNotifications()">
+    </label>
+    </div>
+    <div>
+        Your user name is <span class="user-name">{{user?.userName}}</span>
+        <button class="btn-change-user-name" (click)="openFieldForChangingUserName()"><mat-icon>account_circle</mat-icon></button>
+        <form *ngIf="changeUserName" [formGroup]="changeUserNameForm" (ngSubmit)="onChangeUserName()">
+            <input class="new-user-name" type="text" formControlName="newUserName">
+            <div *ngIf="submitted && newUserName.errors" class="error">
+                <div *ngIf="newUserName.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="newUserName.errors['minlength']">
+                    User name must at least 4 letters long
+                </div>
+                <div *ngIf="newUserName.errors['isAllLetters']">
+                    User name must be all letters
+                </div>
+            </div>
+            <button class="btn-submit" type="submit">Change</button>
+        </form>
+
+    </div>
+</div>

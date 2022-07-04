@@ -8,7 +8,11 @@ using System.Net.Mime;
 
 namespace CardFileApi.Controllers
 {
-    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    /// <summary>
+    /// Controller that provides endpoints for working with bans
+    /// </summary>
+    [ApiVersion("1.0")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -25,6 +29,9 @@ namespace CardFileApi.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Returns all existing bans from the database
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -34,38 +41,57 @@ namespace CardFileApi.Controllers
 
             if (bans == null)
             {
+                _logger.LogInfo("No bans were found");
                 return NotFound();
             }
 
             return Ok(bans);
         }
 
+        /// <summary>
+        /// Returns single ban with given id
+        /// </summary>
+        /// <param name="id">Id of the ban to return</param>
         [HttpGet("{id}", Name = "GetBanById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
             var ban = await _banService.GetBanById(id);
 
             if (ban == null)
             {
+                _logger.LogInfo($"Ban with id {id} doesn't exist");
                 return NotFound();
             }
 
             return Ok(ban);
         }
 
+        /// <summary>
+        /// Returns ban with given user id
+        /// </summary>
+        /// <param name="id">Id of the user</param>
         [HttpGet("users/{id}", Name = "GetBanByUserId")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByUserId(string id)
         {
             var ban = await _banService.GetBanByUserId(id);
 
             if (ban == null)
             {
+                _logger.LogInfo($"User with id {id} doesn't have a ban");
                 return NotFound();
             }
 
             return Ok(ban);
         }
         
+        /// <summary>
+        /// Creates a ban in the database
+        /// </summary>
+        /// <param name="ban">Model of a new ban to create</param>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,11 +105,18 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to create a ban: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
 
+        /// <summary>
+        /// Deletes a ban with given id
+        /// </summary>
+        /// <param name="id">Id of the ban to delete</param>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBanById(int id)
         {
             try
@@ -94,11 +127,18 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to delete a ban by its id: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
 
+        /// <summary>
+        /// Deletes a bna with given user id
+        /// </summary>
+        /// <param name="id">Id of the user to unban</param>
         [HttpDelete("users/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBanByUserId(string id)
         {
             try
@@ -109,6 +149,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to delete a ban by user id: {e.Message}");
                 return BadRequest(e.Message);
             }
         }

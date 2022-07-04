@@ -1,0 +1,46 @@
+.container {
+    font-size: 1.5em;
+    color: rgb(3, 3, 48);
+}
+
+.container>div {
+    margin-top: 4%;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+.btn-change-user-name {
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 2%;
+}
+
+.btn-change-user-name:hover {
+    background-color: rgb(118, 150, 219);
+}
+
+.new-user-name {
+    width: 100%;
+    height: 7vh;
+    padding-left: 3%;
+    border-radius: 15px;
+    margin: 2% 0;
+    font-size: 1.2em;
+}
+
+.error {
+    color: rgb(12, 1, 83);
+}
+
+.btn-submit {
+    width: 100%;
+    height: 5vh;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(12, 1, 83);
+    color: #FFF;
+    cursor: pointer;
+}

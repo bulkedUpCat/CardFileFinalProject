@@ -13,6 +13,7 @@ namespace CardFileApi.Controllers
     /// <summary>
     /// Controller that provides endpoints for working with roles
     /// </summary>
+    [ApiVersion("1.0")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]

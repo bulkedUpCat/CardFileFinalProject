@@ -120,7 +120,7 @@ namespace CardFileTests.IntegrationTests
             httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
-/*        [Test]
+        [Test]
         public async Task TextMaterialController_Approve_ApprovesTextMaterial()
         {
             // Arrange
@@ -136,8 +136,84 @@ namespace CardFileTests.IntegrationTests
                 var context = test.ServiceProvider.GetService<AppDbContext>();
                 Assert.AreEqual(context.TextMaterials.First().ApprovalStatus, ApprovalStatus.Approved);
             }
-        }*/
+        }
 
+        [Test]
+        public async Task TextMaterialController_Approve_ReturnsBadRequestIfTextMaterialAlreadyApproved()
+        {
+            // Arrange
+            var id = 2;
+
+            // Act
+            var httpResponse = await _client.PutAsync(RequestUri + id + "/approve", null);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Test]
+        public async Task TextMaterialController_Reject_RejectsTextMaterial()
+        {
+            // Arrange
+            var id = 1;
+            var content = new StringContent(JsonConvert.SerializeObject(new { RejectMessage = "fakeMessage" }), Encoding.UTF8, "application/json");
+
+            // Act
+            var httpResponse = await _client.PutAsync(RequestUri + id + "/reject", content);
+
+            // Assert
+            httpResponse.EnsureSuccessStatusCode();
+            using (var test = _factory.Services.CreateScope())
+            {
+                var context = test.ServiceProvider.GetService<AppDbContext>();
+                Assert.AreEqual(context.TextMaterials.First().ApprovalStatus, ApprovalStatus.Rejected);
+            }
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public async Task TextMaterialController_Delete_DeletesTextMaterial(int id)
+        {
+            // Arrange
+            var expectedLength = ExpectedTextMaterialDTOs.Count() - 1;
+
+            // Act
+            var httpResponse = await _client.DeleteAsync(RequestUri + id);
+
+            // Assert
+            httpResponse.EnsureSuccessStatusCode();
+            using (var test = _factory.Services.CreateScope())
+            {
+                var context = test.ServiceProvider.GetService<AppDbContext>();
+                context.TextMaterialCategory.Should().HaveCount(expectedLength);
+            }
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public async Task TextMaterialController_Delete_ReturnsBadRequestIfIdInvalid(int id)
+        {
+            // Act
+            var httpResponse = await _client.DeleteAsync(RequestUri + id);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Test]
+        public async Task TextMaterialController_Reject_ReturnsBadRequestIfTextMaterialAlreadyApproved()
+        {
+            // Arrange
+            var id = 3;
+            var content = new StringContent(JsonConvert.SerializeObject(new { RejectMessage = "fakeMessage" }), Encoding.UTF8, "application/json");
+
+            // Act
+            var httpResponse = await _client.PutAsync(RequestUri + id + "/reject", content);
+
+            // Assert
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
 
         public readonly IEnumerable<TextMaterialDTO> ExpectedTextMaterialDTOs =
             new List<TextMaterialDTO>
