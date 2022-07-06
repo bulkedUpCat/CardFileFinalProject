@@ -104,11 +104,13 @@ export class AuthService {
   }
 
   changeUsername(userId: string, newUserName: string){
-    let obj = {
-      NewUserName: newUserName
-    };
 
-    return this.http.put<string>(`${environment.apiUrl}/auth/${userId}`, newUserName);
+    return this.http.put<string>(`${environment.apiUrl}/auth/${userId}/userName`, newUserName);
+  }
+
+  changeEmail(userId: string, newEmail: string){
+
+    return this.http.put<string>(`${environment.apiUrl}/auth/${userId}/email`, newEmail);
   }
 
   forgotPassword(model: ForgotPasswordDTO){

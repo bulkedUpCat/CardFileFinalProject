@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Services;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -25,16 +26,17 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockStore = new Mock<IUserStore<User>>();
             var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockEmailService = new Mock<IEmailService>();
             var expected = GetUserDTOs;
             mockUnitOfWork
-                .Setup(x => x.UserRepository.GetWithDetailsAsync())
+                .Setup(x => x.UserRepository.GetWithDetailsAsync(It.IsAny<UserParameters>()))
                 .ReturnsAsync(GetUserEntities);
             mockUserManager
                 .Setup(x => x.FindByIdAsync(It.IsAny<string>()));
             mockUserManager
                 .Setup(x => x.GetRolesAsync(It.IsAny<User>()));
 
-            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             var actual = await userService.GetAll(new UserParameters());
@@ -52,13 +54,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockStore = new Mock<IUserStore<User>>();
             var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(id))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == id));
             mockUserManager
                 .Setup(x => x.GetRolesAsync(It.IsAny<User>()));
 
-            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             var actual = await userService.GetUserById(id);
@@ -75,13 +78,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockStore = new Mock<IUserStore<User>>();
             var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(id))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == id));
             mockUserManager
                 .Setup(x => x.GetRolesAsync(It.IsAny<User>()));
 
-            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             Func<Task> act = async () => await userService.GetUserById(id);
@@ -99,13 +103,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockStore = new Mock<IUserStore<User>>();
             var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(userId))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
             mockUnitOfWork
                 .Setup(x => x.UserRepository.Update(It.IsAny<User>()));
 
-            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             await userService.ToggleReceiveNotifications(userId, receiveNotifications);
@@ -124,13 +129,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockStore = new Mock<IUserStore<User>>();
             var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(userId))
                 .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Id == userId));
             mockUnitOfWork
                 .Setup(x => x.UserRepository.Update(It.IsAny<User>()));
 
-            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile());
+            var userService = new UserService(mockUnitOfWork.Object, mockUserManager.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             Func<Task> act = async () => await userService.ToggleReceiveNotifications(userId, receiveNotifications);

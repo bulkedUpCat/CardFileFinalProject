@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { User } from 'src/app/models/user/User';
+import { AuthService } from 'src/app/services/auth.service';
 import { SharedUserPageParamsService } from 'src/app/services/shared-user-page-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 import { UserService } from 'src/app/services/user.service';
@@ -17,6 +18,7 @@ export class UserPageComponent implements OnInit {
   textMaterialParams: TextMaterialParameters = new TextMaterialParams();
   totalCount: number;
   paginator: any;
+  loggedUserEmail: string;
   userId: string;
   user: User;
   totalLikeCount: number = 0;
@@ -24,15 +26,25 @@ export class UserPageComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private userService: UserService,
     private textMaterialService: TextMaterialService,
-    private sharedParams: SharedUserPageParamsService) { }
+    private sharedParams: SharedUserPageParamsService,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.userId = id;
 
+    this.getLoggedUserId();
     this.getUserById(id);
     this.configureTextMaterialParams();
     this.getTextMaterialsOfUser(id);
+  }
+
+  getLoggedUserId(){
+    this.authService.getUserInfo().subscribe(res => {
+      if (res){
+        this.loggedUserEmail = res.email;
+      }
+    }, err => console.log(err));
   }
 
   getUserById(id: string){
@@ -61,10 +73,15 @@ export class UserPageComponent implements OnInit {
   }
 
   getTotalLikeCount(){
-    console.log(this.textMaterials);
     for (let i = 0; i < this.textMaterials.length; i++){
       this.totalLikeCount += this.textMaterials[i].likesCount;
     }
+  }
+
+  sendTextMaterialsOfUser(){
+    this.userService.sendListOfTextMaterials(this.userId, this.loggedUserEmail).subscribe(res => {
+      console.log('sent');
+    }, err => console.log(err));
   }
 
   onNextPage(page: number){

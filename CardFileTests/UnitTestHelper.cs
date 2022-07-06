@@ -67,6 +67,11 @@ namespace CardFileTests
                 new Comment { Id = 2, Content = "second comment", UserId = "1", TextMaterialId = 1, CreatedAt = new DateTime(2001, 1, 23) },
                 new Comment { Id = 3, Content = "third comment", UserId = "2", TextMaterialId = 3, CreatedAt = new DateTime(2000,12,1) });
 
+            context.Bans.AddRange(
+                new Ban { Id = 1, Reason = "First test ban", UserId = "1", Expires = new DateTime(2001, 1, 1) },
+                new Ban { Id = 2, Reason = "Second test ban", UserId = "2", Expires = new DateTime(2005, 2, 3) },
+                new Ban { Id = 3, Reason = "Third test ban", UserId = "3", Expires = new DateTime(2022, 7, 5) });
+
             context.SaveChanges();
         }
     }

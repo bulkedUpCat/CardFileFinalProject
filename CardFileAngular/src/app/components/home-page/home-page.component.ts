@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { User } from 'src/app/models/user/User';
@@ -25,6 +26,7 @@ export class HomePageComponent implements OnInit {
   user: User;
 
   constructor(private authService: AuthService,
+    public router: Router,
     private userService: UserService,
     private textMaterialService: TextMaterialService,
     private sharedHomeParams: SharedHomeParamsService,
@@ -34,11 +36,11 @@ export class HomePageComponent implements OnInit {
     this.authService.getUserInfo().subscribe( u => {
       if (u){
         this.userId = u.sub;
-        this.userName = u.name;
       }
     });
     this.userService.getUserById(this.userId).subscribe(u => {
       if (u){
+        this.userName = u.userName;
         this.user = u;
       }
     });
@@ -125,7 +127,7 @@ export class HomePageComponent implements OnInit {
       user: this.user
     };
 
-    config.width = '600px';
+    config.width = '630px';
 
     this.dialog.open(ChangeUserInfoComponent, config);
   }

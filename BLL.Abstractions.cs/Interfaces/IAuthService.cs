@@ -19,5 +19,6 @@ namespace BLL.Abstractions.cs.Interfaces
         Task ResetPassword(ResetPasswordDTO model);
         Task ConfirmEmail(ConfirmEmailDTO model);
         Task ChangeUserName(string userId, ChangeUserNameDTO model);
+        Task ChangeEmail(string userId, ChangeEmailDTO model);
     }
 }

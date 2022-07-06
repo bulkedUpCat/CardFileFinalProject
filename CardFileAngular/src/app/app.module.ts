@@ -44,6 +44,7 @@ import { UserListPaginationComponent } from './components/user-list-pagination/u
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { BanUserComponent } from './components/dialogs/ban-user/ban-user.component';
 import { ChangeUserInfoComponent } from './components/dialogs/change-user-info/change-user-info.component';
+import { UserSortingFormComponent } from './components/user-sorting-form/user-sorting-form.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { ChangeUserInfoComponent } from './components/dialogs/change-user-info/c
     ConfirmEmailComponent,
     BanUserComponent,
     ChangeUserInfoComponent,
+    UserSortingFormComponent,
   ],
   imports: [
     BrowserModule,

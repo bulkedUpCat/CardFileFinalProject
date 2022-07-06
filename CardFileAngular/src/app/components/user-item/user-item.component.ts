@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
 import { BanUserComponent } from '../dialogs/ban-user/ban-user.component';
@@ -11,6 +11,8 @@ import { RoleComponent } from '../dialogs/role/role.component';
 })
 export class UserItemComponent implements OnInit {
   @Input() user;
+  @Output() reload = new EventEmitter();
+
   showInfo: boolean;
 
   constructor(private dialog: MatDialog,
@@ -57,6 +59,10 @@ export class UserItemComponent implements OnInit {
 
     dialogConfig.width = '400px';
 
-    this.dialog.open(BanUserComponent, dialogConfig);
+    let dialogRef = this.dialog.open(BanUserComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(res => {
+      this.reload.emit();
+    }, err => console.log(err));
   }
 }

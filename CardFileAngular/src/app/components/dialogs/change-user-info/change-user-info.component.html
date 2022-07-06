@@ -9,7 +9,7 @@
         <button class="btn-change-user-name" (click)="openFieldForChangingUserName()"><mat-icon>account_circle</mat-icon></button>
         <form *ngIf="changeUserName" [formGroup]="changeUserNameForm" (ngSubmit)="onChangeUserName()">
             <input class="new-user-name" type="text" formControlName="newUserName">
-            <div *ngIf="submitted && newUserName.errors" class="error">
+            <div *ngIf="submittedUserNameForm && newUserName.errors" class="error">
                 <div *ngIf="newUserName.errors['required']">
                     This field is required
                 </div>
@@ -22,6 +22,22 @@
             </div>
             <button class="btn-submit" type="submit">Change</button>
         </form>
-
+    </div>
+    <div>
+        Your email is <span class="email">{{user?.email}}</span>
+        <button class="btn-change-email" (click)="openFieldForChangingEmail()"><mat-icon>account_circle</mat-icon></button>
+        <form *ngIf="changeUserEmail" [formGroup]="changeEmailForm" (ngSubmit)="onChangeEmail()">
+            <p class="caution">Be careful. Once you change your email you'll need to confirm it. Otherwise you will lose access to your account</p>
+            <input class="new-email" type="text" formControlName="newEmail">
+            <div *ngIf="submittedEmailForm && newEmail.errors" class="error">
+                <div *ngIf="newEmail.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="newEmail.errors['email']">
+                    This email is not valid
+                </div>
+            </div>
+            <button class="btn-submit" type="submit">Change</button>
+        </form>
     </div>
 </div>

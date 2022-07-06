@@ -1,5 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { AuthService } from 'src/app/services/auth.service';
@@ -22,7 +23,8 @@ export class TextMaterialsComponent implements OnInit {
 
   constructor(private textMaterialService: TextMaterialService,
     private authService: AuthService,
-    public sharedParams: SharedParamsService) { }
+    public sharedParams: SharedParamsService,
+    public router: Router) { }
 
   ngOnInit(): void {
     this.authService.getUserInfo().subscribe(u => {

@@ -52,7 +52,7 @@ namespace CardFileApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> Get([FromQuery]UserParameters userParameters)
+        public async Task<ActionResult<IEnumerable<UserDTO>>> Get([FromQuery] UserParameters userParameters)
         {
             var users = await _userService.GetAll(userParameters);
 
@@ -106,11 +106,11 @@ namespace CardFileApi.Controllers
         [HttpGet("{id}/textMaterials", Name = "GetTextMaterialsByUserId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get(string id,[FromQuery]TextMaterialParameters textMaterialParams)
+        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get(string id, [FromQuery] TextMaterialParameters textMaterialParams)
         {
             try
             {
-                var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id,textMaterialParams);
+                var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id, textMaterialParams);
 
                 var metadata = new
                 {
@@ -142,7 +142,7 @@ namespace CardFileApi.Controllers
         [HttpGet("{id}/textMaterials/saved")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetSavedTextMaterials(string id, [FromQuery]TextMaterialParameters textMaterialParams)
+        public async Task<IActionResult> GetSavedTextMaterials(string id, [FromQuery] TextMaterialParameters textMaterialParams)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace CardFileApi.Controllers
             {
                 return BadRequest(e.Message);
             }
-           
+
         }
 
         /// <summary>
@@ -306,6 +306,28 @@ namespace CardFileApi.Controllers
                 var user = await _userService.ToggleReceiveNotifications(id, receiveNotifications);
 
                 return Ok(user);
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends the list of the text materials of the specified user on the specified email
+        /// </summary>
+        /// <param name="id">Id of the user</param>
+        /// <param name="email">Id of email where to send a pdf file</param>
+        [HttpGet("{id}/textMaterials/print")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SendListOfTextMaterialsAsPdf(string id, [FromQuery] string email)
+        {
+            try
+            {
+                await _userService.SendListOfTextMaterialsAsPdf(id, email);
+
+                return Ok();
             }
             catch (CardFileException e)
             {

@@ -111,7 +111,7 @@ namespace BLL.Services
 
             if (emailParams.DatePublished != null)
             {
-                document.Add(new Paragraph($"DATE PUBLISHED: {textMaterial.DatePublished}"));
+                document.Add(new Paragraph($"DATE PUBLISHED: {textMaterial.DatePublished.ToString("MM/dd/yyyy")}"));
             }
 
             return document;
@@ -225,6 +225,50 @@ namespace BLL.Services
             catch (Exception e)
             {
                 throw new CardFileException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends a list of text materials of the specified user as a pdf file on specified email
+        /// </summary>
+        /// <param name="user">Id of the author of text materials</param>
+        /// <param name="email">Email where to send a pdf file</param>
+        public void SendListOfTextMaterialsOfTheUser(User user, string email)
+        {
+            var stream = new MemoryStream();
+            var writer = new PdfWriter(stream);
+            var pdfDocument = new PdfDocument(writer);
+
+            var document = new Document(pdfDocument);
+
+            document.Add(new Paragraph("List of text materials of " + user.UserName));
+            foreach (var textMaterial in user.TextMaterials.Where(tm => tm.ApprovalStatus == ApprovalStatus.Approved))
+            {
+                document.Add(new Paragraph(textMaterial.Title + "   " + textMaterial.DatePublished.Date.ToString("MM/dd/yyyy")));
+            }
+
+            document.Close();
+            MemoryStream pdfStream = new MemoryStream(stream.ToArray());
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = email,
+                    Subject = "List of text materials of the user",
+                    Body = "List of text materials of the user",
+                    Attachment = new Attachment(pdfStream, "listOfTextMaterials.pdf")
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+            finally
+            {
+                stream.Close();
+                pdfStream.Close();
+                writer.Close();
             }
         }
     }

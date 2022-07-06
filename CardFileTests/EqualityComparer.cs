@@ -110,4 +110,30 @@ namespace CardFileTests
             return obj.GetHashCode();
         }
     }
+
+    internal class BanEqualityComparer : IEqualityComparer<Ban>
+    {
+        public bool Equals(Ban? x, Ban? y)
+        {
+            if (x == null && y == null)
+            {
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            return x.Id == y.Id &&
+                x.Reason == y.Reason &&
+                x.UserId == y.UserId &&
+                x.Expires == y.Expires;
+        }
+
+        public int GetHashCode([DisallowNull] Ban obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
 }

@@ -114,7 +114,7 @@ namespace BLL.Services
                 throw new CardFileException($"Failed to create a user with email {user.Email}");
             }
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            /*var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
             var parameters = new Dictionary<string, string>
             {
@@ -136,9 +136,37 @@ namespace BLL.Services
             catch (CardFileException e)
             {
                 throw new CardFileException(e.Message);
-            }
+            }*/
+            await SendConfirmationLink(newUser, newUser.Email);
 
             return newUser;
+        }
+
+        private async Task SendConfirmationLink(User user, string email)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var parameters = new Dictionary<string, string>
+            {
+                {"token", token },
+                {"email", email }
+            };
+
+            var confirmationLink = QueryHelpers.AddQueryString("http://localhost:4200/confirm-email", parameters);
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Email confirmation on Text Materials website",
+                    Body = $"Click this link to confirm your email:\n{confirmationLink}\n\nIf it wasn't you, ignore this email please."
+                });
+            }
+            catch (CardFileException e)
+            {
+                throw new CardFileException(e.Message);
+            }
         }
 
         /// <summary>
@@ -193,8 +221,49 @@ namespace BLL.Services
 
                 if (!result.Succeeded)
                 {
-                    throw new CardFileException(result.Errors.ToString());
+                    throw new CardFileException("Failed to change user name");
                 }
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Changes the email of the user by its id and sends email confirmation link
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="model">New email of the user</param>
+        /// <returns>Task representing an asynchronous operation</returns>
+        public async Task ChangeEmail(string userId, ChangeEmailDTO model)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {userId}");
+            }
+
+            var emailOccupied = await _userManager.FindByEmailAsync(model.NewEmail);
+
+            if (emailOccupied != null)
+            {
+                throw new CardFileException($"User with email {model.NewEmail} already exists");
+            }
+
+            try
+            {
+                user.Email = model.NewEmail;
+                //user.EmailConfirmed = false;
+                var result = await _userManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    throw new CardFileException("Failed to change email");
+                }
+
+                //await SendConfirmationLink(user, user.Email);
             }
             catch (Exception e)
             {

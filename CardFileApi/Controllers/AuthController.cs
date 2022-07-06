@@ -169,7 +169,7 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="id">Id of the user</param>
         /// <param name="model">New user name for the user</param>
-        [HttpPut("{id}")]
+        [HttpPut("{id}/userName")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeUserName(string id, [FromBody] ChangeUserNameDTO model)
@@ -177,6 +177,21 @@ namespace CardFileApi.Controllers
             try
             {
                 await _authService.ChangeUserName(id, model);
+
+                return NoContent();
+            }
+            catch (CardFileException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{id}/email")]
+        public async Task<IActionResult> ChangeEmail(string id, [FromBody] ChangeEmailDTO model)
+        {
+            try
+            {
+                await _authService.ChangeEmail(id, model);
 
                 return NoContent();
             }

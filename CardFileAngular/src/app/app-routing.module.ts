@@ -13,17 +13,21 @@ import { UserLoginComponent } from './components/user-login/user-login.component
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { UserSignupComponent } from './components/user-signup/user-signup.component';
 import { AdminGuard } from './guards/admin.guard';
+import { ApprovalStatusGuard } from './guards/approval-status.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { AuthorGuard } from './guards/author.guard';
+import { ManagerGuard } from './guards/manager.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/main', pathMatch: 'full'},
   {path: 'main', component: TextMaterialsComponent},
-  {path: 'main/:id', component: TextMaterialDetailComponent},
+  {path: 'main/:id', component: TextMaterialDetailComponent, canActivate: [ApprovalStatusGuard]},
   {path: 'login', component: UserLoginComponent},
   {path: 'signup', component: UserSignupComponent},
   {path: 'confirm-email', component: ConfirmEmailComponent },
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'home-page', component: HomePageComponent, canActivate: [AuthGuard]},
+  {path: 'home-page/:id', component: TextMaterialDetailComponent, canActivate: [AuthGuard, AuthorGuard]},
   {path: 'home-page/personal-info', component: PersonalInfoComponent, canActivate: [AuthGuard]},
   {path: 'add-text-material', component: AddTextMaterialComponent, canActivate: [AuthGuard]},
   {path: 'user/:id', component: UserPageComponent},

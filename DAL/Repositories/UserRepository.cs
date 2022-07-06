@@ -1,7 +1,9 @@
 ﻿using Core.DTOs;
 using Core.Models;
+using Core.RequestFeatures;
 using DAL.Abstractions.Interfaces;
 using DAL.Contexts;
+using DAL.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -43,10 +45,13 @@ namespace DAL.Repositories
         /// Finds all User entities in the database along with their relations
         /// </summary>
         /// <returns>List of all User entities from the datbase including their TextMaterials</returns>
-        public async Task<IEnumerable<User>> GetWithDetailsAsync()
+        public async Task<IEnumerable<User>> GetWithDetailsAsync(UserParameters parameters)
         {
             return await _context.Users
                 .Include(u => u.TextMaterials)
+                .SearcByUserName(parameters.UserName)
+                .SearchByEmail(parameters.Email)
+                .FilterByBanStatus(parameters.IsBanned)
                 .ToListAsync();
         }
 

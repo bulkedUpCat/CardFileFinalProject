@@ -52,7 +52,7 @@ namespace CardFileApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get([FromQuery]TextMaterialParameters parameters)
+        public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get([FromQuery] TextMaterialParameters parameters)
         {
             var textMaterials = await _textMaterialService.GetTextMaterials(parameters);
 
@@ -105,7 +105,7 @@ namespace CardFileApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody]CreateTextMaterialDTO textMaterialDTO)
+        public async Task<IActionResult> Post([FromBody] CreateTextMaterialDTO textMaterialDTO)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace CardFileApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-        
+
         /// <summary>
         /// Sends on user's email text material's content and optionally its data by its id as a pdf file, available only for authenticated users
         /// </summary>
@@ -129,7 +129,7 @@ namespace CardFileApi.Controllers
         [HttpGet("{id}/print")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SendAsPdf(int id,[FromQuery] EmailParameters emailParams)
+        public async Task<IActionResult> SendAsPdf(int id, [FromQuery] EmailParameters emailParams)
         {
             try
             {
@@ -141,6 +141,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to send as a pdf file: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
@@ -163,6 +164,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to approve a text material with id {id}: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
@@ -186,6 +188,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to reject a text material with id {id}: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
@@ -208,6 +211,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to update a text material with id {textMaterialDTO.Id}: {e.Message}");
                 return BadRequest(e.Message);
             }
         }
@@ -230,6 +234,7 @@ namespace CardFileApi.Controllers
             }
             catch (CardFileException e)
             {
+                _logger.LogInfo($"Failed to delete a text material with id {id}: {e.Message}");
                 return BadRequest(e.Message);
             }
         }

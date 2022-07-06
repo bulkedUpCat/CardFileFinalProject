@@ -18,7 +18,7 @@ export class TextMaterialComponent implements OnInit {
 
   }
 
-  onShow(){
-    this.router.navigateByUrl('main/' + this.textMaterial.id);
-  }
+  // onShow(){
+  //   this.router.navigateByUrl('main/' + this.textMaterial.id);
+  // }
 }

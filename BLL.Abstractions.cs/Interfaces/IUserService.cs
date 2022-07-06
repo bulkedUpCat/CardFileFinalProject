@@ -16,5 +16,6 @@ namespace BLL.Abstractions.cs.Interfaces
         Task<PagedList<UserDTO>> GetAll(UserParameters userParameters);
         Task<UserDTO> GetUserById(string id);
         Task<UserDTO> ToggleReceiveNotifications(string userId, bool receiveNotifications);
+        Task SendListOfTextMaterialsAsPdf(string userId, string email);
     }
 }

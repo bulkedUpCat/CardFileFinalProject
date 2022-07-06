@@ -22,12 +22,42 @@ export class UserListComponent implements OnInit {
     this.getAllUsers();
   }
 
+  reload(){
+    this.userService.getUsers(this.userParams).subscribe(u => {
+      this.users = u.body;
+      this.paginator = JSON.parse(u.headers.get('X-Pagination'));
+    }, err => {
+      console.log(err);
+    });
+  }
+
   configureUserParams(){
+    this.userParams.email = this.sharedUserListParams.email;
+    this.userParams.userName = this.sharedUserListParams.userName;
+    this.userParams.isBanned = this.sharedUserListParams.isBanned;
     this.userParams.pageNumber = this.sharedUserListParams.pageNumber;
     this.userParams.pageSize = this.sharedUserListParams.pageSize;
   }
 
   getAllUsers(){
+    this.userService.getUsers(this.userParams).subscribe(u => {
+      this.users = u.body;
+      this.paginator = JSON.parse(u.headers.get('X-Pagination'));
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  onFilter(params: UserParameters){
+    this.sharedUserListParams.email = params.email;
+    this.userParams.email = params.email;
+
+    this.sharedUserListParams.userName = params.userName;
+    this.userParams.userName = params.userName;
+
+    this.sharedUserListParams.isBanned = params.isBanned;
+    this.userParams.isBanned = params.isBanned;
+
     this.userService.getUsers(this.userParams).subscribe(u => {
       this.users = u.body;
       this.paginator = JSON.parse(u.headers.get('X-Pagination'));;

@@ -18,6 +18,9 @@ export class UserService {
 
     if (userParams.pageNumber) parameters['pageNumber'] = userParams.pageNumber;
     if (userParams.pageSize) parameters['pageSize'] = userParams.pageSize;
+    if (userParams.userName) parameters['userName'] = userParams.userName;
+    if (userParams.email) parameters['email'] = userParams.email;
+    if (userParams.isBanned) parameters['isBanned'] = userParams.isBanned;
 
     return this.http.get(`${environment.apiUrl}/users`, {
       responseType: 'json',
@@ -45,6 +48,14 @@ export class UserService {
   removeTextMaterialFromLiked(id: string, textMaterialId: number){
     return this.http.delete(`${environment.apiUrl}/users/${id}/textMaterials/liked`, {
       body: textMaterialId
+    });
+  }
+
+  sendListOfTextMaterials(id: string, email: string){
+    return this.http.get(`${environment.apiUrl}/users/${id}/textMaterials/print`, {
+      params: {
+        email: email
+      }
     });
   }
 }

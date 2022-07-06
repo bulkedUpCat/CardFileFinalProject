@@ -288,7 +288,7 @@ namespace BLL.Services
         }
 
         /// <summary>
-        /// Sends text material data to on given user's email
+        /// Sends text material data to given user's email
         /// </summary>
         /// <param name="userId">Id of the user to receive data about the text material</param>
         /// <param name="textMaterialId">Id of the text material which data is to be sent on user's email</param>

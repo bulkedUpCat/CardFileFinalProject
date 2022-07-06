@@ -41,5 +41,5 @@
             <button class="btn btn-submit" type="submit">BAN</button>
         </form>
     </div>
-    <button class="btn btn-unban" (click)="unbanUser()">Unban user</button>
+    <button *ngIf="ban" class="btn btn-unban" (click)="unbanUser()">Unban user</button>
 </div>

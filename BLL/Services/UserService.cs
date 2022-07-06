@@ -23,6 +23,7 @@ namespace BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         /// <summary>
         /// Constructor that accepts unit of work to access repositories, UserManager to work with users and Mapper to map entities
@@ -30,13 +31,16 @@ namespace BLL.Services
         /// <param name="unitOfWork">Instance of class that implements IUnitOfWork interface</param>
         /// <param name="userManager">Instance of UserManager</param>
         /// <param name="mapper">Instance of class that implements IMapper interface</param>
+        /// <param name="emailService">Instance of class that implements IEmailService</param>
         public UserService(IUnitOfWork unitOfWork,
             UserManager<User> userManager,
-            IMapper mapper)
+            IMapper mapper,
+            IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -46,7 +50,7 @@ namespace BLL.Services
         /// <returns>All users that satisfy the parameters</returns>
         public async Task<PagedList<UserDTO>> GetAll(UserParameters userParameters)
         {
-            var users = await _unitOfWork.UserRepository.GetWithDetailsAsync();
+            var users = await _unitOfWork.UserRepository.GetWithDetailsAsync(userParameters);
             var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
             
             foreach(var user in userDTOs)
@@ -113,6 +117,36 @@ namespace BLL.Services
             catch (Exception e)
             {
                 throw new CardFileException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends the list of text materials of the user to the given email
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="email">Email of the receiver</param>
+        /// <returns>Task representing an asycnhronous operation</returns>
+        public async Task SendListOfTextMaterialsAsPdf(string userId, string email)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                throw new CardFileException("User id was not provided");
+            }
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"User with id {userId} doesn't exist");
+            }
+
+            try
+            {
+                _emailService.SendListOfTextMaterialsOfTheUser(user, email);
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException("Failed to send an email with pdf attached");
             }
         }
     }
