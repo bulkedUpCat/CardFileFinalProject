@@ -39,12 +39,26 @@
 
 .forgot-password>a {
     text-decoration: none;
-    /* color: rgb(40, 10, 232); */
     color: #FFF;
     cursor: pointer;
 }
 
 .forgot-password>a:hover {
+    text-decoration: underline;
+}
+
+.confirm-email {
+    grid-column: 3 / 9;
+    text-align: center;
+}
+
+.confirm-email>a {
+    text-decoration: none;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.confirm-email>a:hover {
     text-decoration: underline;
 }
 
@@ -93,6 +107,10 @@ input[class*="input-item"] {
     }
     .forgot-password {
         grid-column: 2 / 8;
+        text-align: center;
+    }
+    .confirm-email {
+        grid-column: 2/8;
         text-align: center;
     }
     .btn {

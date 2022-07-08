@@ -99,6 +99,10 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  sendEmailConfirmationLink(model: any){
+    return this.http.post(`${environment.apiUrl}/auth/sendConfirmationLink`, model);
+  }
+
   confirmEmail(model: ConfirmEmailDTO){
     return this.http.post(`${environment.apiUrl}/auth/confirmEmail`, model);
   }

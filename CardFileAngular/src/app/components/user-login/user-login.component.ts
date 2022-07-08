@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotifierService } from 'src/app/services/notifier.service';
+import { ConfirmEmailDialogComponent } from '../dialogs/confirm-email-dialog/confirm-email-dialog.component';
 import { ForgotPasswordComponent } from '../dialogs/forgot-password/forgot-password.component';
 
 @Component({
@@ -23,7 +24,6 @@ export class UserLoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.createLoginForm();
-    //this.notifier.showNotification("Testing it!","OK","SUCCESS")
   }
 
   createLoginForm(){
@@ -63,6 +63,12 @@ export class UserLoginComponent implements OnInit {
 
   onForgotPassword(){
     this.dialog.open(ForgotPasswordComponent,{
+      width: '400px'
+    });
+  }
+
+  onConfirmEmail(){
+    this.dialog.open(ConfirmEmailDialogComponent, {
       width: '400px'
     });
   }

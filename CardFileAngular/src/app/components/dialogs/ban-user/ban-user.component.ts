@@ -72,11 +72,22 @@ export class BanUserComponent implements OnInit {
 
     const ban = this.banForm.value;
 
-    this.banService.banUser(ban).subscribe(res => {
-      this.dialogRef.close();
-      this.notifier.showNotification(`User with email ${this.data.user.email} is banned till ${this.datePipe.transform(res.expires, 'MMM, d, y')}`,'OK','SUCCESS');
-    }, err => {
-      this.notifier.showNotification(err.error,'OK','ERROR');
-    });
+    if (!this.ban){
+      this.banService.banUser(ban).subscribe(res => {
+        this.dialogRef.close();
+        this.notifier.showNotification(`User with email ${this.data.user.email} is banned till ${this.datePipe.transform(res.expires, 'MMM, d, y')}`,'OK','SUCCESS');
+      }, err => {
+        this.notifier.showNotification(err.error,'OK','ERROR');
+      });
+    }
+    else{
+      this.banService.updateBan(this.ban.id, ban).subscribe(res => {
+        this.dialogRef.close();
+        this.notifier.showNotification(`User with email ${this.data.user.email} is banned till ${this.datePipe.transform(res.expires, 'MMM, d, y')}`,'OK','SUCCESS');
+      }, err => {
+        this.notifier.showNotification(err.error,'OK','ERROR');
+      });
+    }
+
   }
 }

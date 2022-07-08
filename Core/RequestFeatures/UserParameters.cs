@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 namespace Core.RequestFeatures
 {
     /// <summary>
-    /// Parameters for users. To perform paging, sorting
+    /// Parameters for users to perform paging, sorting
     /// </summary>
     public class UserParameters : RequestParameters
     {
+        /// <summary>
+        /// Constructor that sets order by to default empty string
+        /// </summary>
         public UserParameters()
         {
             OrderBy = String.Empty;

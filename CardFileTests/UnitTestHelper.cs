@@ -34,6 +34,7 @@ namespace CardFileTests
             var textMaterialCategoryProfile = new TextMaterialCategoryProfile();
             var userProfile = new UserProfile();
             var commentProfile = new CommentProfile();
+            var banProfile = new BanProfile();
 
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -41,6 +42,7 @@ namespace CardFileTests
                 cfg.AddProfile(textMaterialCategoryProfile);
                 cfg.AddProfile(userProfile);
                 cfg.AddProfile(commentProfile);
+                cfg.AddProfile(banProfile);
             });
 
             return new Mapper(configuration);

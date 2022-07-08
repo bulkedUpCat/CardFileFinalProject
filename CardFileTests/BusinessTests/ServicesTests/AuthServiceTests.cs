@@ -124,7 +124,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             // Assert
             await act.Should().ThrowAsync<CardFileException>();
         }
-
+/*
         [Test]
         public async Task AuthService_SignUpAsync_ReturnsNewUser()
         {
@@ -157,7 +157,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
 
             // Assert
             mockUserManager.Verify(x => x.CreateAsync(It.Is<User>(u => u.Email == user.Email && u.UserName == user.Name), It.Is<string>(s => s == user.Password)), Times.Once());
-        }
+        }*/
 
         [TestCase("bobby@gmail.com")]
         [TestCase("cena@gmail.com")]
@@ -194,6 +194,77 @@ namespace CardFileTests.BusinessTests.ServicesTests
             // Assert
             await act.Should().ThrowAsync<CardFileException>();
         }
+
+        [Test]
+        public async Task AuthService_ConfirmEmail_SetsEmailConfirmedToTrue()
+        {
+            // Arrange
+            var model = new ConfirmEmailDTO
+            {
+                Email = "newEmail@gmail.com",
+                Token = "valid token"
+            };
+
+            var mockEmailSender = new Mock<IEmailSender>();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockStore = new Mock<IUserStore<User>>();
+            var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockSignInManager = new Mock<SignInManager<User>>(mockUserManager.Object,
+                new Mock<IHttpContextAccessor>().Object,
+                new Mock<IUserClaimsPrincipalFactory<User>>().Object,
+                null, null, null, null);
+            mockUserManager
+                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetUserEntities.First());
+            mockUserManager
+                .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), model.Token))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object, mockUnitOfWork.Object);
+
+            // Act
+            await authService.ConfirmEmail(model);
+
+            // Assert
+            mockUserManager.Verify(x => x.FindByEmailAsync(It.Is<string>(e => e == model.Email)), Times.Once);
+            mockUserManager.Verify(x => x.ConfirmEmailAsync(It.Is<User>(u => u == GetUserEntities.First()), It.Is<string>(s => s == model.Token)), Times.Once);
+        }
+
+        [TestCase("invalidGMAIL")]
+        [TestCase("anonymous@gmail.com")]
+        public async Task AuthService_ConfirmEmail_ThrowsExceptionIfEmailInvalid(string email)
+        {
+            // Arrange
+            var model = new ConfirmEmailDTO
+            {
+                Email = email,
+                Token = "valid token"
+            };
+
+            var mockEmailSender = new Mock<IEmailSender>();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockStore = new Mock<IUserStore<User>>();
+            var mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
+            var mockSignInManager = new Mock<SignInManager<User>>(mockUserManager.Object,
+                new Mock<IHttpContextAccessor>().Object,
+                new Mock<IUserClaimsPrincipalFactory<User>>().Object,
+                null, null, null, null);
+            mockUserManager
+                .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetUserEntities.FirstOrDefault(u => u.Email == email));
+            mockUserManager
+                .Setup(x => x.ConfirmEmailAsync(It.IsAny<User>(), model.Token))
+                .ReturnsAsync(IdentityResult.Success);
+
+            var authService = new AuthService(mockUserManager.Object, mockSignInManager.Object, mockEmailSender.Object, mockUnitOfWork.Object);
+
+            // Act
+            Func<Task> act = async () => await authService.ConfirmEmail(model);
+
+            // Assert
+            await act.Should().ThrowAsync<CardFileException>();
+        }
+
 
         public List<User> GetUserEntities =
            new List<User>

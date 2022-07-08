@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/parameters/TextMaterialParameters';
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { User } from 'src/app/models/user/User';
@@ -27,7 +27,8 @@ export class UserPageComponent implements OnInit {
     private userService: UserService,
     private textMaterialService: TextMaterialService,
     private sharedParams: SharedUserPageParamsService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    public router: Router) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

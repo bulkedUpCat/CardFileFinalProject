@@ -97,6 +97,24 @@ namespace CardFileApi.Controllers
             }
         }
 
+        [HttpPost("sendConfirmationLink")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SendEmailConfirmationLink(SendEmailConfirmationLinkDTO model) 
+        {
+            try
+            {
+                await _authService.SendConfirmationLink(model.Email);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInfo($"While sending an email confirmation link: {e.Message}");
+                return BadRequest(e.Message);
+            }
+        }
+
         /// <summary>
         /// Confirms email of the user
         /// </summary>

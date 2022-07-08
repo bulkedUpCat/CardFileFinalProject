@@ -42,7 +42,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
 
         [TestCase("1")]
         [TestCase("2")]
-        public async Task TextMaterialService_GetTextMaterialsOfUser_ReturnsTextMaterialOfUser(string userId)
+        public async Task TextMaterialService_GetTextMaterialsOfUser_ReturnsTextMateriaslOfUser(string userId)
         {
             // Arrange
             var expected = GetTextMaterialDTOs.Where(tm => tm.AuthorId == userId);

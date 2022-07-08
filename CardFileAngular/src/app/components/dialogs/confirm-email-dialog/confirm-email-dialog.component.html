@@ -1,0 +1,26 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="confirmEmailForm">
+    <div class="forgot-password">
+        <p>Confirm email</p>
+    </div>
+
+
+    <div class="grid-container">
+        <div class="input">
+            <input class="input-item" type="text" placeholder="Enter your email" formControlName="email" />
+            <div class="error" *ngIf="submitted && email.errors">
+                <div *ngIf="email.errors['required']">
+                    This field is required
+                </div>
+                <div *ngIf="email.errors['email']">
+                    Email is not valid
+                </div>
+            </div>
+        </div>
+
+        <div class="btn">
+            <button type="submit">
+          Send email confirmation link
+          </button>
+        </div>
+    </div>
+</form>

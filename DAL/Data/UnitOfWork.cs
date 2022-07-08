@@ -91,6 +91,10 @@ namespace DAL.Data
             }
         }
 
+        /// <summary>
+        /// Saves changes in the database
+        /// </summary>
+        /// <returns>Task representing an asynchronous operation</returns>
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

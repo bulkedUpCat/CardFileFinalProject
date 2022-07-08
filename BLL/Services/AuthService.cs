@@ -114,36 +114,31 @@ namespace BLL.Services
                 throw new CardFileException($"Failed to create a user with email {user.Email}");
             }
 
-            /*var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-
-            var parameters = new Dictionary<string, string>
-            {
-                {"token", token },
-                {"email", user.Email }
-            };
-
-            var confirmationLink = QueryHelpers.AddQueryString("http://localhost:4200/confirm-email", parameters);
-
-            try
-            {
-                _emailSender.SendSmtpMail(new EmailTemplate()
-                {
-                    To = user.Email,
-                    Subject = "Email confirmation on Text Materials website",
-                    Body = $"Click this link to confirm your email:\n{confirmationLink}\n\nIf it wasn't you, ignore this email please."
-                });
-            }
-            catch (CardFileException e)
-            {
-                throw new CardFileException(e.Message);
-            }*/
-            await SendConfirmationLink(newUser, newUser.Email);
+            await SendConfirmationLink(newUser.Email);
 
             return newUser;
         }
 
-        private async Task SendConfirmationLink(User user, string email)
+        /// <summary>
+        /// Sends confirmation link on user's email
+        /// </summary>
+        /// <param name="user">User model to generate an email token</param>
+        /// <param name="email">Email to receive a message</param>
+        /// <returns>Task representing an asynchronous operation</returns>
+        public async Task SendConfirmationLink(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with email {email}");
+            }
+
+            if (user.EmailConfirmed)
+            {
+                throw new CardFileException($"Email {email} is already confirmed");
+            }
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var parameters = new Dictionary<string, string>
@@ -263,7 +258,7 @@ namespace BLL.Services
                     throw new CardFileException("Failed to change email");
                 }
 
-                //await SendConfirmationLink(user, user.Email);
+                //await SendConfirmationLink(user.Email);
             }
             catch (Exception e)
             {

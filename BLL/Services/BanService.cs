@@ -47,26 +47,14 @@ namespace BLL.Services
 
             if (user == null)
             {
-                throw new CardFileException("Failed to find a user");
+                throw new CardFileException($"Failed to find a user with id {banDTO.UserId}");
             }
-
-            var userIsAlreadyBanned = false;
 
             var existingBan = await _unitOfWork.BanRepository.GetByUserIdAsync(banDTO.UserId);
 
             if (existingBan != null)
             {
-                if (existingBan.Expires > DateTime.Now)
-                {
-                    existingBan.Expires = existingBan.Expires.AddDays(banDTO.Days);
-                }
-                else
-                {
-                    existingBan.Expires = DateTime.Now.AddDays(banDTO.Days);
-                }
-
-                existingBan.Reason += $"\n{banDTO.Reason}";
-                userIsAlreadyBanned = true;
+                throw new CardFileException($"User with id {banDTO.UserId} is already banned");
             }
 
             var ban = _mapper.Map<Ban>(banDTO);
@@ -74,18 +62,50 @@ namespace BLL.Services
 
             try
             {
-                if (userIsAlreadyBanned)
-                {
-                    _unitOfWork.BanRepository.Update(existingBan);
-                }
-                else
-                {
-                    await _unitOfWork.BanRepository.CreateAsync(ban);
-                }
-
+                await _unitOfWork.BanRepository.CreateAsync(ban);
                 await _unitOfWork.SaveChangesAsync();
 
-                return userIsAlreadyBanned ? _mapper.Map<BanDTO>(existingBan) : _mapper.Map<BanDTO>(ban);
+                return _mapper.Map<BanDTO>(ban);
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        public async Task<BanDTO> UpdateExistingBan(UpdateBanDTO banDTO)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(banDTO.UserId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"Failed to find a user with id {banDTO.UserId}");
+            }
+
+            var ban = await _unitOfWork.BanRepository.GetByUserIdAsync(banDTO.UserId);
+
+            if (ban == null)
+            {
+                throw new CardFileException($"Failed to find a ban with user id {banDTO.UserId}");
+            }
+
+            if (ban.Expires > DateTime.Now)
+            {
+                ban.Expires = ban.Expires.AddDays(banDTO.Days);
+            }
+            else
+            {
+                ban.Expires = DateTime.Now.AddDays(banDTO.Days);
+            }
+
+            ban.Reason += $"\n{banDTO.Reason}";
+
+            try
+            {
+                _unitOfWork.BanRepository.Update(ban);
+                await _unitOfWork.SaveChangesAsync();
+
+                return _mapper.Map<BanDTO>(ban);
             }
             catch (Exception e)
             {

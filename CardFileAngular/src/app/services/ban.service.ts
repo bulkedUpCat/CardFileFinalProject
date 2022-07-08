@@ -24,6 +24,10 @@ export class BanService {
     return this.http.post(`${environment.apiUrl}/bans`, ban);
   }
 
+  updateBan(id: number, ban: CreateBanDTO): any{
+    return this.http.put(`${environment.apiUrl}/bans/${id}`, ban);
+  }
+
   unbanUser(id: number){
     return this.http.delete(`${environment.apiUrl}/bans/${id}`);
   }

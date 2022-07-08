@@ -17,7 +17,7 @@ namespace CardFileApi.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/bans")]
-    public class BansController: ControllerBase
+    public class BansController : ControllerBase
     {
         private readonly BanService _banService;
         private readonly ILoggerManager _logger;
@@ -87,7 +87,7 @@ namespace CardFileApi.Controllers
 
             return Ok(ban);
         }
-        
+
         /// <summary>
         /// Creates a ban in the database
         /// </summary>
@@ -106,6 +106,29 @@ namespace CardFileApi.Controllers
             catch (CardFileException e)
             {
                 _logger.LogInfo($"Failed to create a ban: {e.Message}");
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates ban in the database
+        /// </summary>
+        /// <param name="id">Id of an existing ban</param>
+        /// <param name="ban">Model that contains new data of the ban</param>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateBan(int id, [FromBody] UpdateBanDTO ban)
+        {
+            try
+            {
+                var updateddBan = await _banService.UpdateExistingBan(ban);
+
+                return Ok(updateddBan);
+            }
+            catch (CardFileException e)
+            {
+                _logger.LogInfo($"Failed to update a ban: {e.Message}");
                 return BadRequest(e.Message);
             }
         }

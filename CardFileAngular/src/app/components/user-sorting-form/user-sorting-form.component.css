@@ -1,0 +1,30 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: #045C94;
+    color: #FFF;
+    padding: 1%;
+    row-gap: 1em;
+    column-gap: 1em;
+}
+
+.input {
+    height: 5vh;
+    padding: 1%;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn {
+    grid-column: 2/3;
+}
+
+.btn>button {
+    padding: 2%;
+    width: 100%;
+    background-color: #02314D;
+    color: #FFF;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
