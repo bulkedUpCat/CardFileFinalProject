@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{2012471E-97CE-4258-B333-B3B6BF246616}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL.Abstractions.cs", "BLL.Abstractions.cs\BLL.Abstractions.cs.csproj", "{311FFBCA-323F-4E0E-B36F-FE0033D55BB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL.Abstractions", "BLL.Abstractions.cs\BLL.Abstractions.csproj", "{311FFBCA-323F-4E0E-B36F-FE0033D55BB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{021BB9A7-2AD4-4976-B7B0-0F7A01E20506}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL.Abstractions", "DAL.Abstractions\DAL.Abstractions.csproj", "{0C63EC80-B90B-4BE8-9403-25EAF8313D83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardFileTests", "CardFileTests\CardFileTests.csproj", "{890CBCA8-83DB-4B1E-9711-18119CC5BB42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardFileTests", "CardFileTests\CardFileTests.csproj", "{890CBCA8-83DB-4B1E-9711-18119CC5BB42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
