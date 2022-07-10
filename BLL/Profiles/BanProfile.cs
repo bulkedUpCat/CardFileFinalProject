@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Profiles
 {
+    /// <summary>
+    /// Automapper profile for Ban entity
+    /// </summary>
     public class BanProfile: Profile
     {
         public BanProfile()

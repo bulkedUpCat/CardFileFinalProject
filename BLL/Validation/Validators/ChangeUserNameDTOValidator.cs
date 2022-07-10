@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of ChangeUserNameDTO
+    /// </summary>
     public class ChangeUserNameDTOValidator: AbstractValidator<ChangeUserNameDTO>
     {
         public ChangeUserNameDTOValidator()

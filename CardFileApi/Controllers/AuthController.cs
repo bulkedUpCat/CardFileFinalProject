@@ -68,7 +68,7 @@ namespace CardFileApi.Controllers
                     expiration = token.ValidTo
                 });
             }
-            catch (Exception e)
+            catch (CardFileException e)
             {
                 _logger.LogInfo(e.Message);
                 return Unauthorized(e.Message);
@@ -90,7 +90,7 @@ namespace CardFileApi.Controllers
 
                 return Ok(newUser);
             }
-            catch (Exception e)
+            catch (CardFileException e)
             {
                 _logger.LogInfo($"While signing up: {e.Message}");
                 return BadRequest(e.Message);
@@ -108,7 +108,7 @@ namespace CardFileApi.Controllers
 
                 return Ok();
             }
-            catch (Exception e)
+            catch (CardFileException e)
             {
                 _logger.LogInfo($"While sending an email confirmation link: {e.Message}");
                 return BadRequest(e.Message);
@@ -185,7 +185,7 @@ namespace CardFileApi.Controllers
         /// <summary>
         /// Changes the user name of the user with given id to the new specified one
         /// </summary>
-        /// <param name="id">Id of the user</param>
+        /// <param name="id">Id of the user to update</param>
         /// <param name="model">New user name for the user</param>
         [HttpPut("{id}/userName")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -204,7 +204,14 @@ namespace CardFileApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Changes the email of the user with given id to the new specified email
+        /// </summary>
+        /// <param name="id">Id of the user to update</param>
+        /// <param name="model">New email for the user</param>
         [HttpPut("{id}/email")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType (StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeEmail(string id, [FromBody] ChangeEmailDTO model)
         {
             try

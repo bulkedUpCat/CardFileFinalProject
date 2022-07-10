@@ -250,7 +250,7 @@ namespace BLL.Services
             try
             {
                 user.Email = model.NewEmail;
-                //user.EmailConfirmed = false;
+                user.EmailConfirmed = false;
                 var result = await _userManager.UpdateAsync(user);
 
                 if (!result.Succeeded)
@@ -258,7 +258,7 @@ namespace BLL.Services
                     throw new CardFileException("Failed to change email");
                 }
 
-                //await SendConfirmationLink(user.Email);
+                await SendConfirmationLink(user.Email);
             }
             catch (Exception e)
             {

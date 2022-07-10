@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of CreateBanDTO
+    /// </summary>
     public class CreateBanDTOValidator: AbstractValidator<CreateBanDTO>
     {
         public CreateBanDTOValidator()

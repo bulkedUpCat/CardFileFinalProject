@@ -17,3 +17,12 @@
     font-size: 1.4em;
     text-align: center;
 }
+
+.print-button {
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.print-button:hover {
+    background-color: #FFF;
+}

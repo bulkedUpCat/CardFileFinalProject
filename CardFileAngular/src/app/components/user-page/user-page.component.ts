@@ -4,6 +4,7 @@ import { TextMaterialParameters, TextMaterialParams } from 'src/app/models/param
 import { TextMaterial } from 'src/app/models/TextMaterial';
 import { User } from 'src/app/models/user/User';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 import { SharedUserPageParamsService } from 'src/app/services/shared-user-page-params.service';
 import { TextMaterialService } from 'src/app/services/text-material.service';
 import { UserService } from 'src/app/services/user.service';
@@ -28,7 +29,8 @@ export class UserPageComponent implements OnInit {
     private textMaterialService: TextMaterialService,
     private sharedParams: SharedUserPageParamsService,
     private authService: AuthService,
-    public router: Router) { }
+    public router: Router,
+    private notifier: NotifierService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -81,8 +83,10 @@ export class UserPageComponent implements OnInit {
 
   sendTextMaterialsOfUser(){
     this.userService.sendListOfTextMaterials(this.userId, this.loggedUserEmail).subscribe(res => {
-      console.log('sent');
-    }, err => console.log(err));
+      this.notifier.showNotification(`List of text materials of ${this.user.userName} has been sent on your email`,'OK','SUCCESS');
+    }, err => {
+      this.notifier.showNotification(err.error,'OK','ERROR');
+    });
   }
 
   onNextPage(page: number){

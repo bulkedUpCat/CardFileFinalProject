@@ -1,5 +1,6 @@
 using BLL.Dependencies;
 using BLL.Validation.Validators;
+using CardFileApi;
 using CardFileApi.Extensions;
 using DAL.Dependencies;
 using FluentValidation.AspNetCore;
@@ -66,6 +67,8 @@ app.UseCors(options =>
     .AllowAnyHeader()
     .AllowCredentials();
 });
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

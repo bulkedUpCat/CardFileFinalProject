@@ -21,5 +21,6 @@ namespace BLL.Abstractions.cs.Interfaces
         void NotifyThatTextMaterialWasApproved(User user, TextMaterial textMaterial);
         void NotifyThatTextMaterialWasRejected(User user, TextMaterial textMaterial, string? rejectMessage = null);
         void SendListOfTextMaterialsOfTheUser(User user, string email);
+        void NotifyThatUserWasBanned(User user, Ban ban);
     }
 }

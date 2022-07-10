@@ -61,7 +61,7 @@ namespace CardFileApi.Extensions
 
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
-            services.AddScoped<ILoggerManager, LoggerManager>();
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
 
         public static void ConfigureAutoMapper(this IServiceCollection services)

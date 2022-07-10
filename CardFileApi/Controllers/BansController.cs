@@ -12,7 +12,7 @@ namespace CardFileApi.Controllers
     /// Controller that provides endpoints for working with bans
     /// </summary>
     [ApiVersion("1.0")]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -97,17 +97,17 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> BanUser([FromBody] CreateBanDTO ban)
         {
-            try
-            {
+            /*try
+            {*/
                 var createdBan = await _banService.BanUser(ban);
 
                 return CreatedAtRoute("GetBanById", new { id = createdBan.Id }, createdBan);
-            }
+           /* }
             catch (CardFileException e)
             {
                 _logger.LogInfo($"Failed to create a ban: {e.Message}");
                 return BadRequest(e.Message);
-            }
+            }*/
         }
 
         /// <summary>

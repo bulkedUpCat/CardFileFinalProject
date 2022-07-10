@@ -229,6 +229,33 @@ namespace BLL.Services
         }
 
         /// <summary>
+        /// Sends a notification on user's email if they were banned
+        /// </summary>
+        /// <param name="user">User that was banned</param>
+        /// <param name="ban">Ban information</param>
+        /// <exception cref="CardFileException"></exception>
+        public void NotifyThatUserWasBanned(User user, Ban ban)
+        {
+            var body = $"Unfortunately you were banned on website. Reason: {ban.Reason}" +
+                $"Expires on {ban.Expires.ToString("MM/dd/yyyy")}";
+
+            try
+            {
+                _emailSender.SendSmtpMail(new EmailTemplate()
+                {
+                    To = user.Email,
+                    Subject = "Ban on text materials website",
+                    Body = body,
+                    Attachment = null
+                });
+            }
+            catch (Exception e)
+            {
+                throw new CardFileException(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Sends a list of text materials of the specified user as a pdf file on specified email
         /// </summary>
         /// <param name="user">Id of the author of text materials</param>

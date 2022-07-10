@@ -257,8 +257,15 @@ export class SortingFormComponent implements OnInit {
     var fromDate = new Date(this.sortingParamsForm.get('filterFromDate').value);
     var toDate = new Date(this.sortingParamsForm.get('filterToDate').value);
 
-    if ((fromDate.getTime() > toDate.getTime() && this.sortingParamsForm.get('filterToDate').value) ||
-        fromDate.getTime() > currentDate.getTime()){
+    // if ((fromDate.getTime() > toDate.getTime() && this.sortingParamsForm.get('filterToDate').value) ||
+    //     fromDate.getTime() > currentDate.getTime()){
+    //   this.sortingParamsForm.get('filterFromDate').setValue(this.datePipe.transform(currentDate,'yyyy-MM-dd'));
+    // }
+
+    if (this.sortingParamsForm.get('filterToDate').value && fromDate.getTime() > toDate.getTime()){
+      this.sortingParamsForm.get('filterFromDate').setValue(this.datePipe.transform(toDate,'yyyy-MM-dd'));
+    }
+    else if (fromDate.getTime() > currentDate.getTime()){
       this.sortingParamsForm.get('filterFromDate').setValue(this.datePipe.transform(currentDate,'yyyy-MM-dd'));
     }
   }

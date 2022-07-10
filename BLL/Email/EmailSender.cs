@@ -39,7 +39,7 @@ namespace BLL.Email
             mail.IsBodyHtml = true;
             mail.Body = emailTemplate.Body;
             mail.Subject = emailTemplate.Subject;
-            mail.From = new MailAddress("cardFileWeb@outlook.com");
+            mail.From = new MailAddress("cardFileWeb2@outlook.com");
             mail.To.Add(emailTemplate.To);
 
             if (emailTemplate.Attachment != null)

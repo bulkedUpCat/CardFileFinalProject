@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BLL.Validation.Validators
 {
+    /// <summary>
+    /// Validator of UpdateBanDTO
+    /// </summary>
     public class UpdateBanDTOValidator: AbstractValidator<UpdateBanDTO>
     {
         public UpdateBanDTOValidator()

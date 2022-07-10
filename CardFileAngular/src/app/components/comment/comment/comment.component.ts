@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActiveComment } from 'src/app/models/comment/ActiveComment';
 import { Comment } from 'src/app/models/comment/Comment';
+import { CommentService } from 'src/app/services/comment.service';
 
 @Component({
   selector: 'app-comment',
@@ -25,7 +26,7 @@ export class CommentComponent implements OnInit {
   canEdit: boolean;
   canDelete: boolean;
 
-  constructor() { }
+  constructor(private commentService: CommentService) { }
 
   ngOnInit(): void {
     this.replyId = this.parentId ? this.parentId : this.comment.id;
