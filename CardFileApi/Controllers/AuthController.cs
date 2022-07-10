@@ -27,21 +27,17 @@ namespace CardFileApi.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IJwtHandler _jwtHandler;
-        private readonly ILoggerManager _logger;
 
         /// <summary>
-        /// Constructor with accepts services for working with authentication and authorization, Jwt helper for generating a Jwt token and a logger to log information
+        /// Constructor with accepts services for working with authentication and authorization, Jwt helper for generating a Jwt token
         /// </summary>
         /// <param name="authService">Instance of class that implements IAuthService interface for working with authentication and authorization</param>
         /// <param name="jwtHandler">Instance of class JWtHandler which contains logic to create a Jwt token</param>
-        /// <param name="logger">Instance of class that implements ILoggerManager interface to log information</param>
         public AuthController(IAuthService authService,
-            IJwtHandler jwtHandler,
-            ILoggerManager logger)
+            IJwtHandler jwtHandler)
         {
             _authService = authService;
             _jwtHandler = jwtHandler;
-            _logger = logger;
         }
 
         /// <summary>

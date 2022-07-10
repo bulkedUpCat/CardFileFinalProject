@@ -1,8 +1,5 @@
-﻿using BLL.Services;
-using BLL.Validation;
-using CardFileApi.Logging;
+﻿using BLL.Abstractions.cs.Interfaces;
 using Core.DTOs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -19,14 +16,15 @@ namespace CardFileApi.Controllers
     [Route("api/bans")]
     public class BansController : ControllerBase
     {
-        private readonly BanService _banService;
-        private readonly ILoggerManager _logger;
+        private readonly IBanService _banService;
 
-        public BansController(BanService banService,
-            ILoggerManager logger)
+        /// <summary>
+        /// Constructor which accepts a service for working with bans
+        /// </summary>
+        /// <param name="banService">Instance of class that implements IBanService interface</param>
+        public BansController(IBanService banService)
         {
             _banService = banService;
-            _logger = logger;
         }
 
         /// <summary>
@@ -53,12 +51,6 @@ namespace CardFileApi.Controllers
         {
             var ban = await _banService.GetBanById(id);
 
-            if (ban == null)
-            {
-                _logger.LogInfo($"Ban with id {id} doesn't exist");
-                return NotFound();
-            }
-
             return Ok(ban);
         }
 
@@ -68,16 +60,11 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the user</param>
         [HttpGet("users/{id}", Name = "GetBanByUserId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByUserId(string id)
         {
             var ban = await _banService.GetBanByUserId(id);
-
-            if (ban == null)
-            {
-                _logger.LogInfo($"User with id {id} doesn't have a ban");
-                return NotFound();
-            }
 
             return Ok(ban);
         }
@@ -91,17 +78,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> BanUser([FromBody] CreateBanDTO ban)
         {
-            /*try
-            {*/
-                var createdBan = await _banService.BanUser(ban);
+            var createdBan = await _banService.BanUser(ban);
 
-                return CreatedAtRoute("GetBanById", new { id = createdBan.Id }, createdBan);
-           /* }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to create a ban: {e.Message}");
-                return BadRequest(e.Message);
-            }*/
+            return CreatedAtRoute("GetBanById", new { id = createdBan.Id }, createdBan);
         }
 
         /// <summary>
@@ -114,17 +93,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateBan(int id, [FromBody] UpdateBanDTO ban)
         {
-            try
-            {
-                var updateddBan = await _banService.UpdateExistingBan(ban);
+            var updateddBan = await _banService.UpdateExistingBan(ban);
 
-                return Ok(updateddBan);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to update a ban: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok(updateddBan);
         }
 
         /// <summary>
@@ -136,17 +107,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBanById(int id)
         {
-            try
-            {
-                await _banService.DeleteBanById(id);
+            await _banService.DeleteBanById(id);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to delete a ban by its id: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
 
         /// <summary>
@@ -158,17 +121,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBanByUserId(string id)
         {
-            try
-            {
-                await _banService.DeleteBanByUserId(id);
+            await _banService.DeleteBanByUserId(id);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to delete a ban by user id: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BLL.Services;
+﻿using BLL.Abstractions.cs.Interfaces;
+using BLL.Services;
 using BLL.Validation;
 using Core.DTOs;
 using Core.Models;
@@ -22,10 +23,11 @@ namespace CardFileTests.BusinessTests.ServicesTests
             // Arrange
             var expected = GetBanModels;
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.BanRepository.GetAsync())
                 .ReturnsAsync(GetBanEntities);
-            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             var actual = await banService.GetAllBans();
@@ -41,10 +43,11 @@ namespace CardFileTests.BusinessTests.ServicesTests
             // Arrange
             var expected = GetBanModels.FirstOrDefault(b => b.Id == id);
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.BanRepository.GetByIdAsync(id))
                 .ReturnsAsync(GetBanEntities.FirstOrDefault(b => b.Id == id));
-            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             var actual = await banService.GetBanById(id);
@@ -60,10 +63,14 @@ namespace CardFileTests.BusinessTests.ServicesTests
             // Arrange
             var expected = GetBanModels.FirstOrDefault(b => b.UserId == userId);
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetByIdAsync(userId))
+                .ReturnsAsync(new User());
             mockUnitOfWork
                 .Setup(x => x.BanRepository.GetByUserIdAsync(userId))
                 .ReturnsAsync(GetBanEntities.FirstOrDefault(b => b.UserId == userId));
-            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             var actual = await banService.GetBanByUserId(userId);
@@ -83,6 +90,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 Reason = "no reason"
             };
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(new User());
@@ -93,7 +101,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork
                 .Setup(x => x.SaveChangesAsync());
 
-            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             await banService.BanUser(ban);
@@ -115,6 +123,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
                 Reason = "no reason"
             };
             var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var mockEmailService = new Mock<IEmailService>();
             mockUnitOfWork
                 .Setup(x => x.UserRepository.GetByIdAsync(It.IsAny<string>()));
             mockUnitOfWork
@@ -124,7 +133,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork
                 .Setup(x => x.SaveChangesAsync());
 
-            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var banService = new BanService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile(), mockEmailService.Object);
 
             // Act
             Func<Task> act = async() => await banService.BanUser(ban);

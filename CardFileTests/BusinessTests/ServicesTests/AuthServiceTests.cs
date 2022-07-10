@@ -88,7 +88,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             Func<Task> act = async () => await authService.LogInAsync(user);
 
             // Assert
-            await act.Should().ThrowAsync<CardFileException>();
+            await act.Should().ThrowAsync<UnauthorizedException>();
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             Func<Task> act = async () => await authService.LogInAsync(user);
 
             // Assert
-            await act.Should().ThrowAsync<CardFileException>();
+            await act.Should().ThrowAsync<UnauthorizedException>();
         }
 /*
         [Test]

@@ -16,7 +16,7 @@ namespace BLL.Services
     /// Service to perform various operations regarding Ban entities such as getting all bans from database, getting ban by its or user's id,
     /// banning and unbanning users
     /// </summary>
-    public class BanService
+    public class BanService: IBanService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -61,6 +61,12 @@ namespace BLL.Services
         public async Task<BanDTO> GetBanById(int id)
         {
             var ban = await _unitOfWork.BanRepository.GetByIdAsync(id);
+
+            if (ban == null)
+            {
+                throw new NotFoundException($"Ban with id {id} doesn't exist");
+            }
+
             return _mapper.Map<BanDTO>(ban);
         }
 
@@ -71,7 +77,20 @@ namespace BLL.Services
         /// <returns>Single ban with specified user id</returns>
         public async Task<BanDTO> GetBanByUserId(string userId)
         {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new CardFileException($"User with id {userId} doesn't exist");
+            }
+
             var ban = await _unitOfWork.BanRepository.GetByUserIdAsync(userId);
+
+            if (ban == null)
+            {
+                throw new NotFoundException($"User with id {userId} isn't banned");
+            }
+
             return _mapper.Map<BanDTO>(ban);
         }
 
