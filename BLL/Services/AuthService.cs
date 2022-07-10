@@ -46,28 +46,28 @@ namespace BLL.Services
         /// </summary>
         /// <param name="user">Credentials: email and password</param>
         /// <returns>User if credentials were valid</returns>
-        /// <exception cref="CardFileException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
         public async Task<User> LogInAsync(UserLoginDTO user)
         {
             var foundUser = await _userManager.FindByEmailAsync(user.Email);
 
             if (foundUser == null)
             {
-                throw new CardFileException("Wrong email or password");
+                throw new UnauthorizedException("Wrong email or password");
             }
 
             var result = await _signInManager.PasswordSignInAsync(foundUser, user.Password, false, false);
 
             if (!result.Succeeded)
             {
-                throw new CardFileException("Wrong email or password");
+                throw new UnauthorizedException("Wrong email or password");
             }
 
             var userBan = await _unitOfWork.BanRepository.GetByUserIdAsync(foundUser.Id);
 
             if (userBan != null && userBan.Expires > DateTime.Now)
             {
-                throw new CardFileException($"User with email {foundUser.Email} is banned till {userBan.Expires.ToString("MM/dd/yyyy")}");
+                throw new UnauthorizedException($"User with email {foundUser.Email} is banned till {userBan.Expires.ToString("MM/dd/yyyy")}");
             }
 
             return foundUser;

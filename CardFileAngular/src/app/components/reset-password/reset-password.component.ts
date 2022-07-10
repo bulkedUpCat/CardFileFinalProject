@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResetPasswordDTO } from 'src/app/models/user/ResetPasswordDTO';
 import { AuthService } from 'src/app/services/auth.service';
@@ -26,9 +26,24 @@ export class ResetPasswordComponent implements OnInit {
 
   createForm(){
     this.passwordResetForm = this.fb.group({
-      password: [null,[Validators.required]],
+      password: [null,[Validators.required, Validators.minLength(6),
+        this.patternValidator(/\d/, { hasNumber: true }),
+        this.patternValidator(/[a-z]/, { hasLowerCase: true }),
+        this.patternValidator(/(?=.*?[#?!@$%^&*-])/, {hasSymbol: true})]],
       confirmPassword: [null,[Validators.required]]
     })
+  }
+
+  patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn{
+    return (control: AbstractControl): { [key: string]: any } => {
+      if (!control.value){
+        return null;
+      }
+
+      const valid = regex.test(control.value);
+
+      return valid ? null : error;
+    }
   }
 
   get password(){
@@ -60,8 +75,6 @@ export class ResetPasswordComponent implements OnInit {
       email: email,
       token: token
     };
-
-    console.log(model);
 
     this.authService.resetPassword(model).subscribe( p => {
       this.notifier.showNotification('Password has been successfully reset', 'Ok', 'SUCCESS');

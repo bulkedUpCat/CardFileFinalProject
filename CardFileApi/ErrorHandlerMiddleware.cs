@@ -34,17 +34,23 @@ namespace CardFileApi
 
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
+
                     case NotFoundException e:
 
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
+
+                    case UnauthorizedException e:
+
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+
                     default:
 
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
 
-                //var result = JsonSerializer.Serialize(new { message = error?.Message });
                 _logger.LogInfo(error?.Message);
                 var result = JsonSerializer.Serialize(error?.Message);
                 await response.WriteAsync(result);

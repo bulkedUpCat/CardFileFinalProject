@@ -54,25 +54,17 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> LogIn(UserLoginDTO user)
         {
-            try
-            {
-                var foundUser = await _authService.LogInAsync(user);
+            var foundUser = await _authService.LogInAsync(user);
 
-                var claims = await _jwtHandler.GetClaims(foundUser);
-                var signingCredentials = _jwtHandler.GetSigningCredentials();
-                var token = _jwtHandler.GenerateToken(signingCredentials, claims);
+            var claims = await _jwtHandler.GetClaims(foundUser);
+            var signingCredentials = _jwtHandler.GetSigningCredentials();
+            var token = _jwtHandler.GenerateToken(signingCredentials, claims);
 
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
-            }
-            catch (CardFileException e)
+            return Ok(new
             {
-                _logger.LogInfo(e.Message);
-                return Unauthorized(e.Message);
-            }
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo
+            });
         }
 
         /// <summary>
@@ -84,17 +76,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SignUp(UserRegisterDTO user)
         {
-            try
-            {
-                var newUser = await _authService.SignUpAsync(user);
+            var newUser = await _authService.SignUpAsync(user);
 
-                return Ok(newUser);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While signing up: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok(newUser);
         }
 
         [HttpPost("sendConfirmationLink")]
@@ -102,17 +86,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SendEmailConfirmationLink(SendEmailConfirmationLinkDTO model) 
         {
-            try
-            {
-                await _authService.SendConfirmationLink(model.Email);
+            await _authService.SendConfirmationLink(model.Email);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While sending an email confirmation link: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Email confirmation link sent");
         }
 
         /// <summary>
@@ -124,17 +100,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailDTO model)
         {
-            try
-            {
-                await _authService.ConfirmEmail(model);
+            await _authService.ConfirmEmail(model);
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                _logger.LogInfo($"While confirming email: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Email confirmed");
         }
 
         /// <summary>
@@ -147,17 +115,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
         {
-            try
-            {
-                await _authService.ForgotPassword(model);
+            await _authService.ForgotPassword(model);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While sending a reset password link: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Password reset link sent");
         }
 
         /// <summary>
@@ -169,17 +129,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
         {
-            try
-            {
-                await _authService.ResetPassword(model);
+            await _authService.ResetPassword(model);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While resetting the password: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Password reset");
         }
 
         /// <summary>
@@ -188,20 +140,13 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the user to update</param>
         /// <param name="model">New user name for the user</param>
         [HttpPut("{id}/userName")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeUserName(string id, [FromBody] ChangeUserNameDTO model)
         {
-            try
-            {
-                await _authService.ChangeUserName(id, model);
+            await _authService.ChangeUserName(id, model);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok("User name changed");
         }
 
         /// <summary>
@@ -210,20 +155,13 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the user to update</param>
         /// <param name="model">New email for the user</param>
         [HttpPut("{id}/email")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType (StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeEmail(string id, [FromBody] ChangeEmailDTO model)
         {
-            try
-            {
-                await _authService.ChangeEmail(id, model);
+            await _authService.ChangeEmail(id, model);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok("Email changed");
         }
     }
 }

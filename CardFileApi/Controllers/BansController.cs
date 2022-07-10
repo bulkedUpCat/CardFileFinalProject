@@ -39,12 +39,6 @@ namespace CardFileApi.Controllers
         {
             var bans = await _banService.GetAllBans();
 
-            if (bans == null)
-            {
-                _logger.LogInfo("No bans were found");
-                return NotFound();
-            }
-
             return Ok(bans);
         }
 

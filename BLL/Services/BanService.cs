@@ -44,6 +44,12 @@ namespace BLL.Services
         public async Task<IEnumerable<BanDTO>> GetAllBans()
         {
             var bans =  await _unitOfWork.BanRepository.GetAsync();
+
+            if (bans.Count() == 0)
+            {
+                throw new NotFoundException("No bans were found");
+            }
+
             return _mapper.Map<IEnumerable<BanDTO>>(bans);
         }
 
