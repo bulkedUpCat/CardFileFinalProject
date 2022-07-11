@@ -51,6 +51,12 @@ namespace BLL.Services
         public async Task<PagedList<UserDTO>> GetAll(UserParameters userParameters)
         {
             var users = await _unitOfWork.UserRepository.GetWithDetailsAsync(userParameters);
+
+            if (users.Count() == 0)
+            {
+                throw new NotFoundException("No users were found");
+            }
+
             var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
             
             foreach(var user in userDTOs)
@@ -73,14 +79,14 @@ namespace BLL.Services
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new CardFileException("Invalid id");
+                throw new CardFileException($"Invalid id {id}");
             }
 
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
 
             if (user == null)
             {
-                throw new CardFileException($"User with id {id} doesn't exist");
+                throw new NotFoundException($"User with id {id} doesn't exist");
             }
 
             var roles = await _userManager.GetRolesAsync(user);

@@ -27,21 +27,17 @@ namespace CardFileApi.Controllers
     public class TextMaterialController : ControllerBase
     {
         private readonly ITextMaterialService _textMaterialService;
-        private readonly ILoggerManager _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
         /// Constructor that takes three arguments
         /// </summary>
         /// <param name="textMaterialService">Instance of class that implements ITextMaterialService interface to work with text materials</param>
-        /// <param name="logger">Instance of class that implements ILoggerManager interface to log information</param>
         /// <param name="httpContextAccessor">Instance of class that implements IHhttpContextAccessor to fetch the current user info</param>
         public TextMaterialController(ITextMaterialService textMaterialService,
-            ILoggerManager logger,
             IHttpContextAccessor httpContextAccessor)
         {
             _textMaterialService = textMaterialService;
-            _logger = logger;
             _httpContextAccessor = httpContextAccessor;
         }
 

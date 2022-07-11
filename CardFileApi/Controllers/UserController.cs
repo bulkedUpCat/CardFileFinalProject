@@ -56,11 +56,6 @@ namespace CardFileApi.Controllers
         {
             var users = await _userService.GetAll(userParameters);
 
-            if (users == null)
-            {
-                return NotFound("No users were found");
-            }
-
             var metadata = new
             {
                 users.TotalCount,
@@ -84,18 +79,12 @@ namespace CardFileApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetById(string id)
         {
-            try
-            {
-                var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUserById(id);
 
-                return Ok(user);
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok(user);
         }
 
         /// <summary>
@@ -106,31 +95,25 @@ namespace CardFileApi.Controllers
         [HttpGet("{id}/textMaterials", Name = "GetTextMaterialsByUserId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get(string id, [FromQuery] TextMaterialParameters textMaterialParams)
         {
-            try
+            var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id, textMaterialParams);
+
+            var metadata = new
             {
-                var textMaterials = await _textMaterialService.GetTextMaterialsOfUser(id, textMaterialParams);
+                textMaterials.TotalCount,
+                textMaterials.PageSize,
+                textMaterials.CurrentPage,
+                textMaterials.TotalPages,
+                textMaterials.HasNext,
+                textMaterials.HasPrevious
+            };
 
-                var metadata = new
-                {
-                    textMaterials.TotalCount,
-                    textMaterials.PageSize,
-                    textMaterials.CurrentPage,
-                    textMaterials.TotalPages,
-                    textMaterials.HasNext,
-                    textMaterials.HasPrevious
-                };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
-
-                return Ok(textMaterials);
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok(textMaterials);
         }
 
         /// <summary>
@@ -144,30 +127,22 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetSavedTextMaterials(string id, [FromQuery] TextMaterialParameters textMaterialParams)
         {
-            try
+            var savedTextMaterials = await _savedTextMaterialService.GetSavedTextMaterialsOfUser(id, textMaterialParams);
+
+            var metadata = new
             {
-                var savedTextMaterials = await _savedTextMaterialService.GetSavedTextMaterialsOfUser(id, textMaterialParams);
+                savedTextMaterials.TotalCount,
+                savedTextMaterials.PageSize,
+                savedTextMaterials.CurrentPage,
+                savedTextMaterials.TotalPages,
+                savedTextMaterials.HasNext,
+                savedTextMaterials.HasPrevious
+            };
 
-                var metadata = new
-                {
-                    savedTextMaterials.TotalCount,
-                    savedTextMaterials.PageSize,
-                    savedTextMaterials.CurrentPage,
-                    savedTextMaterials.TotalPages,
-                    savedTextMaterials.HasNext,
-                    savedTextMaterials.HasPrevious
-                };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
 
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
-
-                return Ok(savedTextMaterials);
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            return Ok(savedTextMaterials);
         }
 
         /// <summary>
@@ -181,21 +156,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddToSaved(string id, [FromBody] int textMaterialId)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return BadRequest("User id can't be null");
-            }
+            await _savedTextMaterialService.AddTextMaterialToSaved(id, textMaterialId);
 
-            try
-            {
-                await _savedTextMaterialService.AddTextMaterialToSaved(id, textMaterialId);
-
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
 
         /// <summary>
@@ -209,21 +172,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RemoveFromSaved(string id, [FromBody] int textMaterialId)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return BadRequest("User id can't be null");
-            }
+            await _savedTextMaterialService.RemoveTextMaterialFromSaved(id, textMaterialId);
 
-            try
-            {
-                await _savedTextMaterialService.RemoveTextMaterialFromSaved(id, textMaterialId);
-
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
 
         /// <summary>
@@ -235,16 +186,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetLikedTextMaterials(string id)
         {
-            try
-            {
-                var likedTextMaterials = await _likedTextMaterialService.GetLikedTextMaterialsByUserId(id);
+            var likedTextMaterials = await _likedTextMaterialService.GetLikedTextMaterialsByUserId(id);
 
-                return Ok(likedTextMaterials);
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok(likedTextMaterials);
         }
 
         /// <summary>
@@ -257,16 +201,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddTextMaterialToLiked(string id, [FromBody] int textMaterialId)
         {
-            try
-            {
-                await _likedTextMaterialService.AddTextMaterialToLiked(id, textMaterialId);
+            await _likedTextMaterialService.AddTextMaterialToLiked(id, textMaterialId);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
 
         /// <summary>
@@ -279,16 +216,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RemoveTextMaterialFromLiked(string id, [FromBody] int textMaterialId)
         {
-            try
-            {
-                await _likedTextMaterialService.RemoveTextMaterialFromLiked(id, textMaterialId);
+            await _likedTextMaterialService.RemoveTextMaterialFromLiked(id, textMaterialId);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return NoContent();
         }
 
         /// <summary>
@@ -301,16 +231,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ToggleReceiveNotifications(string id, [FromBody] bool receiveNotifications)
         {
-            try
-            {
-                var user = await _userService.ToggleReceiveNotifications(id, receiveNotifications);
+            var user = await _userService.ToggleReceiveNotifications(id, receiveNotifications);
 
-                return Ok(user);
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok(user);
         }
 
         /// <summary>
@@ -323,16 +246,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SendListOfTextMaterialsAsPdf(string id, [FromQuery] string email)
         {
-            try
-            {
-                await _userService.SendListOfTextMaterialsAsPdf(id, email);
+            await _userService.SendListOfTextMaterialsAsPdf(id, email);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Ok();
         }
     }
 }
