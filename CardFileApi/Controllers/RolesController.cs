@@ -46,12 +46,6 @@ namespace CardFileApi.Controllers
         {
             var roles = await _roleService.GetRolesAsync();
 
-            if (roles == null)
-            {
-                _logger.LogInfo($"No roles were found");
-                return NotFound("No roles were found");
-            }
-
             return Ok(roles);
         }
 
@@ -60,21 +54,13 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="userRole">Model that contains data of the user and the role</param>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddUserToRole(UserRoleDTO userRole)
         {
-            try
-            {
-                await _roleService.AddUserRoleAsync(userRole.UserId, userRole.RoleName);
+            await _roleService.AddUserRoleAsync(userRole.UserId, userRole.RoleName);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While adding user with id {userRole.UserId} to role with name {userRole.RoleName}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("User added to role");
         }
 
         /// <summary>
@@ -82,21 +68,13 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="userRole">Model that contains data of the user and the role</param>
         [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RemoveUserFromRole(UserRoleDTO userRole)
         {
-            try
-            {
-                await _roleService.RemoveUserFromRole(userRole.UserId, userRole.RoleName);
+            await _roleService.RemoveUserFromRole(userRole.UserId, userRole.RoleName);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While removing a user with id {userRole.UserId} from role with name {userRole.RoleName}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("User removed from role");
         }
     }
 }

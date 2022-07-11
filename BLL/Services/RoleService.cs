@@ -39,6 +39,12 @@ namespace BLL.Services
         public async Task<IEnumerable<string>> GetRolesAsync()
         {
             var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+
+            if (roles.Count() == 0)
+            {
+                throw new NotFoundException("No roles were found");
+            }
+
             return roles;
         }
 
