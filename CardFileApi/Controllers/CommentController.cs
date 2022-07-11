@@ -19,18 +19,14 @@ namespace CardFileApi.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
-        private readonly ILoggerManager _logger;
 
         /// <summary>
-        /// Constructor with two parameters
+        /// Constructor that accepts comment service to work with comments
         /// </summary>
         /// <param name="commentService">Instance of the class which implements ICommentService interface</param>
-        /// <param name="logger">Instance of class that implements ILoggerManager interface to log information</param>
-        public CommentController(ICommentService commentService,
-            ILoggerManager logger)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
-            _logger = logger;
         }
 
         /// <summary>
@@ -41,19 +37,12 @@ namespace CardFileApi.Controllers
         [HttpGet("textMaterials/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByTextMaterialId(int id)
         {
-            try
-            {
-                var comments = await _commentService.GetCommentsOfTextMaterial(id);
+            var comments = await _commentService.GetCommentsOfTextMaterial(id);
 
-                return Ok(comments);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While getting comments by text material id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok(comments);
         }
 
         /// <summary>
@@ -65,17 +54,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateCommentDTO commentDTO)
         {
-            try
-            {
-                var comment = await _commentService.CreateComment(commentDTO);
+            var comment = await _commentService.CreateComment(commentDTO);
 
-                return Ok(comment);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While creating a new comment with author id {commentDTO.UserId} and text material id {commentDTO.TextMaterialId}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok(comment);
         }
 
         /// <summary>
@@ -83,21 +64,13 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="commentDTO">Data transfer object that contains data of the existing comment to update</param>
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Put([FromBody] UpdateCommentDTO commentDTO)
         {
-            try
-            {
-                var comment = await _commentService.UpdateComment(commentDTO);
+            var comment = await _commentService.UpdateComment(commentDTO);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While updating a comment with id {commentDTO.Id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Comment updated");
         }
 
         /// <summary>
@@ -105,21 +78,13 @@ namespace CardFileApi.Controllers
         /// </summary>
         /// <param name="id">Id of the existing comment to delete</param>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _commentService.DeleteComment(id);
+            await _commentService.DeleteComment(id);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"While deleting a comment with id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Comment deleted");
         }
     }
 }

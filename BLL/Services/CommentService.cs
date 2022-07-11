@@ -50,6 +50,11 @@ namespace BLL.Services
 
             var comments = await _unitOfWork.CommentRepository.GetCommentsOfTextMaterial(textMaterialId);
 
+            if (comments.Count() == 0)
+            {
+                throw new NotFoundException("No comments were found");
+            }
+
             return _mapper.Map<IEnumerable<CommentDTO>>(comments);
         }
 
