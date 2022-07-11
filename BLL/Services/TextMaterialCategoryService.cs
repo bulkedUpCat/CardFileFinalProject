@@ -41,6 +41,11 @@ namespace BLL.Services
         {
             var categories = await _unitOfWork.TextMaterialCategoryRepository.GetAsync();
 
+            if (categories.Count() == 0)
+            {
+                throw new NotFoundException("No categories were found");
+            }
+
             return _mapper.Map<IEnumerable<TextMaterialCategoryDTO>>(categories);
         }
 
@@ -52,6 +57,11 @@ namespace BLL.Services
         public async Task<TextMaterialCategoryDTO> GetTextMaterialCategoryById(int id)
         {
             var category = await _unitOfWork.TextMaterialCategoryRepository.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                throw new NotFoundException($"Category with id {id} doesn't exist");
+            }
 
             return _mapper.Map<TextMaterialCategoryDTO>(category);
         }

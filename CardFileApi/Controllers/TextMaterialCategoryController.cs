@@ -45,12 +45,6 @@ namespace CardFileApi.Controllers
         {
             var categories = await _textMaterialCategoryService.GetTextMaterialCategoriesAsync();
 
-            if (categories == null)
-            {
-                _logger.LogInfo("No categories were found");
-                return NotFound("No categories were found");
-            }
-
             return Ok(categories);
         }
 
@@ -65,12 +59,6 @@ namespace CardFileApi.Controllers
         {
             var category = await _textMaterialCategoryService.GetTextMaterialCategoryById(id);
 
-            if (category == null)
-            {
-                _logger.LogInfo($"Failed to find a category with id {id}");
-                return NotFound($"Failed to find a category with id {id}");
-            }
-
             return Ok(category);
         }
 
@@ -83,17 +71,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCategory(CreateTextMaterialCategoryDTO categoryDTO)
         {
-            try
-            {
-                var category = await _textMaterialCategoryService.CreateTextMaterialCategoryAsync(categoryDTO);
+            var category = await _textMaterialCategoryService.CreateTextMaterialCategoryAsync(categoryDTO);
 
-                return CreatedAtRoute("GetCategoryById", new { id = category.Id }, category);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to create a category with title {categoryDTO.Title}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return CreatedAtRoute("GetCategoryById", new { id = category.Id }, category);
         }
 
         /// <summary>
@@ -105,17 +85,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            try
-            {
-                await _textMaterialCategoryService.DeleteTextMaterialCategoryAsync(id);
+            await _textMaterialCategoryService.DeleteTextMaterialCategoryAsync(id);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to delete a category with id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok();
         }
     }
 }
