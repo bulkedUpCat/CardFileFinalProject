@@ -48,11 +48,6 @@ namespace BLL.Services
         {
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(parameters);
 
-            if (textMaterials.Count() == 0)
-            {
-                throw new NotFoundException("No text materials were found");
-            }
-
             return PagedList<TextMaterialDTO>
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
         }
@@ -74,11 +69,6 @@ namespace BLL.Services
             }
 
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUserId(user.Id, textMaterialParams);
-
-            if (textMaterials.Count() == 0)
-            {
-                throw new NotFoundException($"No text materials of author with id {user.Id} were found");
-            }
 
             return PagedList<TextMaterialDTO>
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials), textMaterialParams.PageNumber, textMaterialParams.PageSize);

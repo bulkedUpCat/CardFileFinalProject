@@ -52,11 +52,6 @@ namespace BLL.Services
         {
             var users = await _unitOfWork.UserRepository.GetWithDetailsAsync(userParameters);
 
-            if (users.Count() == 0)
-            {
-                throw new NotFoundException("No users were found");
-            }
-
             var userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
             
             foreach(var user in userDTOs)

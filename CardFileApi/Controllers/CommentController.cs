@@ -37,7 +37,6 @@ namespace CardFileApi.Controllers
         [HttpGet("textMaterials/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByTextMaterialId(int id)
         {
             var comments = await _commentService.GetCommentsOfTextMaterial(id);

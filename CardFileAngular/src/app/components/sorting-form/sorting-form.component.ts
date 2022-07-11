@@ -347,8 +347,6 @@ export class SortingFormComponent implements OnInit {
       }
     }
 
-    console.log(this.textMaterialParams.orderBy);
-
     this.onSubmit();
   }
 
@@ -431,8 +429,6 @@ export class SortingFormComponent implements OnInit {
       }
     }
 
-    console.log(this.textMaterialParams.orderBy);
-
     this.onSubmit();
   }
 
@@ -475,8 +471,6 @@ export class SortingFormComponent implements OnInit {
         }
       }
     }
-
-    console.log(this.textMaterialParams.orderBy);
 
     this.onSubmit();
   }

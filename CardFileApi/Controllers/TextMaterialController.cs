@@ -47,7 +47,6 @@ namespace CardFileApi.Controllers
         /// <param name="parameters">Parameters that will be taken into account when return text materials</param>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<TextMaterialDTO>>> Get([FromQuery] TextMaterialParameters parameters)
         {
             var textMaterials = await _textMaterialService.GetTextMaterials(parameters);

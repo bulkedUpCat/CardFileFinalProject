@@ -51,7 +51,6 @@ namespace CardFileApi.Controllers
         /// <param name="userParameters">Parameters that will be taken into account when returning users from the database</param>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<UserDTO>>> Get([FromQuery] UserParameters userParameters)
         {
             var users = await _userService.GetAll(userParameters);
