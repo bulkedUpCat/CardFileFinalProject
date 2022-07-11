@@ -22,18 +22,14 @@ namespace CardFileApi.Controllers
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;
-        private readonly ILoggerManager _logger;
 
         /// <summary>
-        /// Constructor with two parameter
+        /// Constructor that accepts role service to work with roles
         /// </summary>
         /// <param name="roleService">Instance of class that implements IRoleService interface to work with roles</param>
-        /// <param name="logger">Instance of class ILoggerManager to log information</param>
-        public RolesController(IRoleService roleService,
-            ILoggerManager logger)
+        public RolesController(IRoleService roleService)
         {
             _roleService = roleService;
-            _logger = logger;
         }
 
         /// <summary>

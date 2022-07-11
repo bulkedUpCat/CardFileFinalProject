@@ -56,12 +56,6 @@ namespace CardFileApi.Controllers
         {
             var textMaterials = await _textMaterialService.GetTextMaterials(parameters);
 
-            if (textMaterials == null)
-            {
-                _logger.LogInfo("No text materials were found");
-                return NotFound("No text materials were found");
-            }
-
             var metadata = new
             {
                 textMaterials.TotalCount,
@@ -84,16 +78,10 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the text material to return</param>
         [HttpGet("{id}", Name = "GetTextMaterialById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TextMaterialDTO>> GetById(int id)
         {
             var textMaterial = await _textMaterialService.GetTextMaterialById(id);
-
-            if (textMaterial == null)
-            {
-                _logger.LogInfo($"Text material with id {id} does not exist");
-                return NotFound($"Text material with id {id} does not exist");
-            }
 
             return Ok(textMaterial);
         }
@@ -107,17 +95,9 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateTextMaterialDTO textMaterialDTO)
         {
-            try
-            {
-                var textMaterial = await _textMaterialService.CreateTextMaterial(textMaterialDTO);
+            var textMaterial = await _textMaterialService.CreateTextMaterial(textMaterialDTO);
 
-                return CreatedAtRoute("GetTextMaterialById", new { id = textMaterial.Id }, textMaterial);
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to create a text material: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return CreatedAtRoute("GetTextMaterialById", new { id = textMaterial.Id }, textMaterial);
         }
 
         /// <summary>
@@ -131,19 +111,11 @@ namespace CardFileApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SendAsPdf(int id, [FromQuery] EmailParameters emailParams)
         {
-            try
-            {
-                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                await _textMaterialService.SendTextMaterialAsPdf(userId, id, emailParams);
+            await _textMaterialService.SendTextMaterialAsPdf(userId, id, emailParams);
 
-                return Ok();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to send as a pdf file: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Text material sent as pdf");
         }
 
         /// <summary>
@@ -152,21 +124,13 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the text material to approve</param>
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
         [HttpPut("{id}/approve")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Approve(int id)
         {
-            try
-            {
-                await _textMaterialService.ApproveTextMaterial(id);
+            await _textMaterialService.ApproveTextMaterial(id);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to approve a text material with id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Text material approved");
         }
 
         /// <summary>
@@ -176,21 +140,13 @@ namespace CardFileApi.Controllers
         /// <param name="rejectMessage">Reason why the text material is rejected</param>
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Manager")]
         [HttpPut("{id}/reject")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Reject(int id,[FromBody] RejectMessageDTO rejectMessage)
         {
-            try
-            {
-                await _textMaterialService.RejectTextMaterial(id, rejectMessage.RejectMessage);
+            await _textMaterialService.RejectTextMaterial(id, rejectMessage.RejectMessage);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to reject a text material with id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Text material rejected");
         }
 
         /// <summary>
@@ -201,19 +157,12 @@ namespace CardFileApi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Put([FromBody]UpdateTextMaterialDTO textMaterialDTO)
         {
-            try
-            {
-                await _textMaterialService.UpdateTextMaterial(textMaterialDTO);
-                
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to update a text material with id {textMaterialDTO.Id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            await _textMaterialService.UpdateTextMaterial(textMaterialDTO);
+
+            return Ok();
         }
 
         /// <summary>
@@ -222,21 +171,14 @@ namespace CardFileApi.Controllers
         /// <param name="id">Id of the text material to delete</param>
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _textMaterialService.DeleteTextMaterial(id);
+            await _textMaterialService.DeleteTextMaterial(id);
 
-                return NoContent();
-            }
-            catch (CardFileException e)
-            {
-                _logger.LogInfo($"Failed to delete a text material with id {id}: {e.Message}");
-                return BadRequest(e.Message);
-            }
+            return Ok("Text material deleted");
         }
     }
 }

@@ -48,6 +48,11 @@ namespace BLL.Services
         {
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetWithDetailsAsync(parameters);
 
+            if (textMaterials.Count() == 0)
+            {
+                throw new NotFoundException("No text materials were found");
+            }
+
             return PagedList<TextMaterialDTO>
                 .ToPagedList(_mapper.Map<IEnumerable<TextMaterialDTO>>(textMaterials),parameters.PageNumber,parameters.PageSize);
         }
@@ -70,9 +75,9 @@ namespace BLL.Services
 
             var textMaterials = await _unitOfWork.TextMaterialRepository.GetByUserId(user.Id, textMaterialParams);
 
-            if (textMaterials == null)
+            if (textMaterials.Count() == 0)
             {
-                throw new CardFileException($"No text materials of author with id {user.Id} were found");
+                throw new NotFoundException($"No text materials of author with id {user.Id} were found");
             }
 
             return PagedList<TextMaterialDTO>
@@ -87,6 +92,11 @@ namespace BLL.Services
         public async Task<TextMaterialDTO> GetTextMaterialById(int id)
         {
             var textMaterial = await _unitOfWork.TextMaterialRepository.GetByIdWithDetailsAsync(id);
+
+            if (textMaterial == null)
+            {
+                throw new NotFoundException($"Text material with id {id} doesn't exist");
+            }
 
             return _mapper.Map<TextMaterialDTO>(textMaterial);
         }
@@ -148,7 +158,7 @@ namespace BLL.Services
 
             if (textMaterial == null)
             {
-                throw new CardFileException($"Failed to find a text material with id {textMaterialDTO.Id}");
+                throw new NotFoundException($"Failed to find a text material with id {textMaterialDTO.Id}");
             }
 
             try
@@ -179,7 +189,7 @@ namespace BLL.Services
 
             if (textMaterial == null)
             {
-                throw new CardFileException($"Failed to find a text material with id {id}");
+                throw new NotFoundException($"Failed to find a text material with id {id}");
             }
 
             try

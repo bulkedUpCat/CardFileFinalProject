@@ -215,7 +215,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             Func<Task> act = async () => await textMaterialService.UpdateTextMaterial(textMaterial);
 
             // Assert
-            await act.Should().ThrowAsync<CardFileException>();
+            await act.Should().ThrowAsync<NotFoundException>();
         }
 
         [TestCase(1)]
@@ -260,7 +260,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             Func<Task> act = async () => await textMaterialService.DeleteTextMaterial(id);
 
             // Assert
-            await act.Should().ThrowAsync<CardFileException>();
+            await act.Should().ThrowAsync<NotFoundException>();
         }
 
         [Test]

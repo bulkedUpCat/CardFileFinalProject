@@ -192,13 +192,13 @@ namespace CardFileTests.IntegrationTests
 
         [TestCase(0)]
         [TestCase(-1)]
-        public async Task TextMaterialController_Delete_ReturnsBadRequestIfIdInvalid(int id)
+        public async Task TextMaterialController_Delete_ReturnsNotFoundIfIdInvalid(int id)
         {
             // Act
             var httpResponse = await _client.DeleteAsync(RequestUri + id);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Test]

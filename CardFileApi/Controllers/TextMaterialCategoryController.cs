@@ -21,18 +21,14 @@ namespace CardFileApi.Controllers
     public class TextMaterialCategoryController : ControllerBase
     {
         private readonly ITextMaterialCategoryService _textMaterialCategoryService;
-        private readonly ILoggerManager _logger;
 
         /// <summary>
-        /// Constructor with accepts service to work with text material categories and logger to log information
+        /// Constructor with accepts service to work with text material categories
         /// </summary>
         /// <param name="textMaterialCategoryService">Instance of class that implements ITextMaterialCategory interface to work with text material categories</param>
-        /// <param name="logger">Instance of class that implements ILoggerManager interface to log the information</param>
-        public TextMaterialCategoryController(ITextMaterialCategoryService textMaterialCategoryService,
-            ILoggerManager logger)
+        public TextMaterialCategoryController(ITextMaterialCategoryService textMaterialCategoryService)
         {
             _textMaterialCategoryService = textMaterialCategoryService;
-            _logger = logger;
         }
 
         /// <summary>
