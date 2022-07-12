@@ -47,3 +47,7 @@ textarea {
     cursor: pointer;
     padding: 1%;
 }
+
+.error {
+    color: #02314D;
+}

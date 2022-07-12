@@ -15,7 +15,9 @@ namespace BLL.Validation.Validators
     {
         public UpdateCommentDTOValidator()
         {
-            RuleFor(c => c.Content).NotEmpty().WithMessage("{PropertyName} must not be empty");
+            RuleFor(c => c.Content)
+                .NotEmpty().WithMessage("{PropertyName} must not be empty")
+                .Length(1, 400).WithMessage("{PropertyName} must be 1 to 400 characters long");
         }
     }
 }

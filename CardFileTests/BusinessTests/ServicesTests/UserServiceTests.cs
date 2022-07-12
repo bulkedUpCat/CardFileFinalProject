@@ -70,7 +70,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             actual.Should().BeEquivalentTo(expected);
         }
 
-        [TestCase("")]
+        [TestCase("0")]
         [TestCase("-222")]
         public async Task UserService_GetUserById_ThrowsExceptionIfIdIsInvalid(string id)
         {
@@ -91,7 +91,7 @@ namespace CardFileTests.BusinessTests.ServicesTests
             Func<Task> act = async () => await userService.GetUserById(id);
 
             // Assert
-            await act.Should().ThrowAsync<CardFileException>();
+            await act.Should().ThrowAsync<NotFoundException>();
         }
 
         [TestCase("1",true)]

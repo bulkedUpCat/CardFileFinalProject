@@ -68,7 +68,7 @@ namespace CardFileTests.IntegrationTests
             var httpResponse = await _client.GetAsync(RequestUri + id);
 
             // Assert
-            httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [TestCase("1")]

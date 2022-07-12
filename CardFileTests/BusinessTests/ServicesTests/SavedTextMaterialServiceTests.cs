@@ -65,32 +65,6 @@ namespace CardFileTests.BusinessTests.ServicesTests
             mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
         }
 
-        [Test]
-        public async Task SavedTextMaterialService_RemoveTextMaterialFromSaved_RemovesTextMaterialFromUsersSaved()
-        {
-            // Arrange
-            var user = GetUserEntities.First();
-            var textMaterial = GetTextMaterialEntities.First();
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            mockUnitOfWork
-                .Setup(x => x.UserRepository.GetByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
-            mockUnitOfWork
-                .Setup(x => x.TextMaterialRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
-                .ReturnsAsync(textMaterial);
-            mockUnitOfWork
-                .Setup(x => x.TextMaterialRepository.Update(It.IsAny<TextMaterial>()));
-
-            var savedTextMaterialService = new SavedTextMaterialService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
-
-            // Act
-            await savedTextMaterialService.RemoveTextMaterialFromSaved(user.Id, textMaterial.Id);
-
-            // Assert
-            mockUnitOfWork.Verify(x => x.TextMaterialRepository.Update(It.Is<TextMaterial>(tm => tm.Id == textMaterial.Id && !tm.UsersWhoSaved.Any(u => u.Id == user.Id))), Times.Once());
-            mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
-        }
-
         public List<User> GetUserEntities =>
            new List<User>()
            {

@@ -8,6 +8,8 @@ import { CreateCommentDTO } from 'src/app/models/comment/CreateCommentDTO';
   styleUrls: ['./comment-form.component.css']
 })
 export class CommentFormComponent implements OnInit {
+  submitted: boolean;
+
   @Input() submitLabel: string;
   @Input() initialText: string = '';
   @Input() hasCancelButton: boolean = false;
@@ -26,11 +28,21 @@ export class CommentFormComponent implements OnInit {
 
   createForm(){
     this.commentForm = this.fb.group({
-      content: [this.initialText,[Validators.required]]
+      //content: [this.initialText,[Validators.required]]
+      content: [this.initialText,[Validators.required, Validators.minLength(1), Validators.maxLength(400)]]
     });
   }
 
+  get content(){
+    return this.commentForm.get('content');
+  }
+
   onSubmit(){
+    this.submitted = true;
+    if (!this.commentForm.valid){
+      return;
+    }
+
     this.handleSubmit.emit(this.commentForm.value.content);
     this.commentForm.reset();
   }

@@ -11,6 +11,7 @@ namespace Core.Models
     public class TextMaterial
     {
         public int Id { get; set; }
+        [Column(TypeName = "nvarchar(100)")]
         public string Title { get; set; }
         public string Content { get; set; }
         public int LikesCount { get; set; }

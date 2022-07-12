@@ -46,7 +46,6 @@ export class CommentListComponent implements OnInit {
       content: commentContent
     }
 
-    console.log(comment);
 
     this.commentService.postComment(comment).subscribe(x => {
       this.commentService.getCommentsByTextMaterialId(this.textMaterialId).subscribe(c => {
@@ -58,15 +57,12 @@ export class CommentListComponent implements OnInit {
   }
 
   updateComment({content, id}){
-    console.log(content);
-    console.log(id);
 
     const comment = {
       id: id,
       content: content
     };
 
-    console.log(comment);
     this.commentService.updateComment(comment).subscribe(x => {
       this.commentService.getCommentsByTextMaterialId(this.textMaterialId).subscribe(c => {
         this.comments = c.reverse();
